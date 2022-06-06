@@ -1,0 +1,57 @@
+"""
+用户信息数据
+"""
+type MenuData {
+  """
+  菜单ID
+  """
+  id: ID
+
+  """
+  菜单父ID
+  """
+  parentId: ID
+
+  """
+  创建时间
+  """
+  createTime: String
+
+  """
+  更新时间
+  """
+  updateTime: String
+
+  """
+  type类型
+  """
+  type: Int
+}
+
+"""
+菜单信息
+"""
+type Menu {
+  """
+  请求状态
+  """
+  code: Int
+  """
+  用户信息数据
+  """
+  data: MenuData
+  """
+  请求信息
+  """
+  message: String
+}
+
+extend type Query {
+  #! 是必填参数
+  queryMenu: Menu
+}
+
+# extend type Mutation {
+#   #! 是必填参数
+#   getUserInfo(user:UserInfoInput!): UserInfo
+# }

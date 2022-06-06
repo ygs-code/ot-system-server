@@ -1,0 +1,43 @@
+"""
+用户信息数据
+"""
+type UserData {
+  """
+  用户昵称
+  """
+  name: String
+  """
+  用户手机号码
+  """
+  phone: String
+}
+
+"""
+用户信息
+"""
+type UserInfo {
+  """
+  请求状态
+  """
+  code: Int
+  """
+  用户信息数据
+  """
+  data: UserData
+  """
+  请求信息
+  """
+  message: String 
+}
+
+#union UnionUserId = String | ID
+
+extend type Query {
+  #! 是必填参数
+  getUserInfo(id:ID): UserInfo
+}
+
+# extend type Mutation {
+#   #! 是必填参数
+#   getUserInfo(user:UserInfoInput!): UserInfo
+# }
