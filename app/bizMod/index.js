@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-24 16:21:28
- * @LastEditTime: 2022-06-08 18:28:56
+ * @LastEditTime: 2022-06-08 19:44:17
  * @LastEditors: Yao guan shou
  * @Description: In User Settings Edit
  * @FilePath: /Blogs/BlogsServer/app/bizMod/index.js
@@ -66,7 +66,7 @@ import {
 //   };
 // })();
 
-console.log('setSchema=======', setSchema)
+// console.log('setSchema=======', setSchema)
 
 export const schema = (() => {
   // 动态添加模块
@@ -78,7 +78,7 @@ export const schema = (() => {
     // ...menuSchema,
   }
 
-  console.log('schemas======', schemas)
+  // console.log('schemas======', schemas)
 
   let newSchemas = []
   for (let key in schemas) {
@@ -86,14 +86,14 @@ export const schema = (() => {
       newSchemas.push(schemas[key])
     }
   }
-  console.log('newSchemas=', newSchemas)
+  // console.log('newSchemas=', newSchemas)
   return newSchemas
 })()
 
 export const router = (app, router) => {
   let routers = {
     // abnormityRouter,
-    // performanceRouter,
+    // performanceRouter, 
     // projectListRouter,
     // menuRouter,
     setRouter,

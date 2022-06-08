@@ -1,10 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2020-12-24 16:21:28
- * @LastEditTime: 2022-04-22 18:59:14
+ * @LastEditTime: 2022-06-08 19:48:47
  * @LastEditors: Yao guan shou
  * @Description: In User Settings Edit
- * @FilePath: /error-sytem/server/app/bizMod/set/bizMod/user/router/index.js
+ * @FilePath: /Blogs/BlogsServer/app/bizMod/set/bizMod/user/router/index.js
  */
 import controller from "../controller";
 import koaRoute from "koa-router"; // koa 路由中间件
@@ -82,7 +82,7 @@ class router {
       var parameter = ctx.request.body; // 获取请求参数
       // console.log("parameter=", parameter);
 
-      await verifyToken(parameter.token)
+      await verifyToken(parameter.token) 
         .then((data) => {
           ctx.response.body = {
             code: 200,
@@ -100,7 +100,7 @@ class router {
     });
   }
   verifyCode() {
-    console.log('getVerifyCode==========')
+    // console.log('getVerifyCode==========')
     // 添加 接口
     this.threeLevelRoute.get("/getVerifyCode", controller.verifyCode);
   }
