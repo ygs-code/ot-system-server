@@ -1,10 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2020-12-29 09:32:02
- * @LastEditTime: 2022-04-22 20:06:38
+ * @LastEditTime: 2022-06-08 18:24:46
  * @LastEditors: Yao guan shou
  * @Description: In User Settings Edit
- * @FilePath: /error-sytem/server/app/index.js
+ * @FilePath: /Blogs/BlogsServer/app/index.js
  */
 import "@babel/polyfill";
 import koa from "koa";

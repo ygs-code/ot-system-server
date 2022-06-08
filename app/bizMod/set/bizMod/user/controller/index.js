@@ -6,7 +6,7 @@ import { setVerifyCode, getVerifyCode } from "../../../redis";
 // console.log('captureClassError==========',captureClassError)
 // console.log('CheckDataType==========',CheckDataType)
 
-console.log("aa==========", aa);
+
 
 @captureClassError()
 class Controller {
