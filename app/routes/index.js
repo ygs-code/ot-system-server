@@ -1,24 +1,4 @@
-import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLSchema,
-  GraphQLString,
-  GraphQLList,
-} from 'graphql/type'
-import {
-  graphql,
-  Source,
-  validateSchema,
-  parse,
-  validate,
-  execute,
-  formatError,
-  getOperationAST,
-  specifiedRules,
-  validationRules,
-  // gql,
-} from 'graphql'
-import httpError from 'http-errors'
+
 import {
   createToken,
   verifyToken,
@@ -39,8 +19,6 @@ import { schema } from '@/graphql/schema'
 import CheckGraphql from '@/graphql/CheckGraphql'
 import { validateGraphql } from '@/graphql'
 import chalk from 'chalk'
-// import colors from "colors-console";
-
 class Route {
   constructor(app) {
     this.app = app
@@ -73,7 +51,7 @@ class Route {
           await next()
         })
         .catch((error) => {
-          console.log('getTokenUserInfo catch=', error)
+          // console.log('getTokenUserInfo catch=', error)
           response.userInfo = null
           ctx.response.body = {
             ...unauthorized,
@@ -87,20 +65,7 @@ class Route {
     bizModRouter(this.app, this.router)
     //验证Token
     this.verifyToken()
-    // console.log("serverSchema=", schema.typeDefs.schema);
-    // console.log("resolvers=", schema.resolvers);
-    // console.log("resolvers=", schema.resolvers);
-    // 检验服务器 Schema
-    // CheckGraphql.validateSeverSchema({
-    //   serverSchema: {
-    //     schema: schema.typeDefs.schema,
-    //     resolvers: schema.resolvers,
-    //   },
-    // }).catch((error) => {
-    //   // console.error("error=", chalk.red(error));
-    //   // console.error("schema.typeDefs.schema=", schema.typeDefs.schema);
-    //   // console.error("schema.resolvers=", schema.resolvers);
-    // });
+
     // 查询
     this.router.get('/data', async (ctx, next) => {
       const {
@@ -113,19 +78,17 @@ class Route {
           // mutation = '', variables = {}
         },
       } = request
-      console.log('clientSchema=', clientSchema)
-      console.log('variables=', variables)
-      // console.log("resolvers=", schema.resolvers);
-      // console.log("resolvers=", schema.resolvers);
+
       // response.console.error("这个是红色error日志", __filename);
       // response.console.info("这个是info", __filename);
       // response.console.warn("这个是warn", __filename);
       // response.console.log("这个是log", __filename);
       // response.console.debug("这个是DEBUG", __filename);
+
       response.console.info(
-        `[clientSchema=${clientSchema}]`,
-        `[variables=${variables}]`,
-        `[${__filename}]`,
+        `\n客户端graphql请求:\n [operationName:${operationName}]\n [clientSchema:${clientSchema}]\n [variables:${JSON.stringify(
+          variables,
+        )}]\n`,
       )
       await validateGraphql({
         rootValue: {
@@ -135,34 +98,11 @@ class Route {
         clientSchema: {
           schema: clientSchema,
           variables: variables || {},
-          //     schema: `
-          //   query{
-          //     getUser {
-          //           name
-          //           id
-          //           address
-          //   }
-          // }
-          // `,
-          //     variables: {},
           operationName,
-          //     schema: `
-          //   query{
-          //     getUser {
-          //           name
-          //           id
-          //           address
-          //   }
-          // }
-          // `,
-          //     variables: {},
-          //     operationName: 'getUser',
         },
       })
         .then((data) => {
-          console.log('validateGraphql======', data)
           const { errors } = data
-
           if (errors) {
             response.body = {
               ...graphqlError,
@@ -170,91 +110,21 @@ class Route {
             }
           } else {
             response.console.log(
-              `[body=${JSON.stringify(data)}]`,
-              `[${__filename}]`,
+              `\n 客户端graphql请求成功:\n [operationName:${operationName}]\n [clientSchema:${clientSchema}]\n [variables:${JSON.stringify(
+                variables,
+              )}]\n [body:${JSON.stringify(data)}]
+              `,
             )
             response.body = data
           }
         })
         .catch((error) => {
-          // console.error("clientSchema==", clientSchema);
-          // console.error("variables==", variables);
-          // console.error("serverSchema==", schema.typeDefs.schema);
-          // console.error("resolvers==", schema.resolvers);
+          response.console.error(
+            `\n graphql 校验语法错误：\n[operationName:${operationName}]\n [clientSchema:${clientSchema}]\n [variables:${JSON.stringify(
+              variables,
+            )}]\n error=${error.toString()} `,
+          )
         })
-
-      // await CheckGraphql.init({
-      //   context: {
-      //     ctx,
-      //     next,
-      //   },
-      //   serverSchema: {
-      //     //输入类型
-      //     // schemas: [
-      //     //   schema.typeDefs.schema,
-      //     //   // `#定义输入类型
-      //     //   //   input UserInput {
-      //     //   //     account: String!
-      //     //   //     password: String!
-      //     //   //   }
-      //     //   //   `,
-      //     //   // `
-      //     //   //    type User{
-      //     //   //       id : ID!
-      //     //   //       email : String!
-      //     //   //       name : String!
-      //     //   //       phone: String!
-      //     //   //     }
-
-      //     //   //     extend type Query {
-      //     //   //       getUser(user:UserInput!):User
-      //     //   //     }
-      //     //   //  `,
-      //     // ],
-      //     schema: schema.typeDefs.schema,
-      //     resolvers: schema.resolvers,
-      //     // {
-      //     //   Mutation: {},
-      //     //   Subscription: {},
-      //     //   Query: {
-      //     //     getUser: (root, parameter, source, fieldASTs) => {
-      //     //       return {
-      //     //         id: 1,
-      //     //         email: "281113270@qq.com",
-      //     //         name: "张三",
-      //     //         phone: "18529531779",
-      //     //       };
-      //     //     },
-      //     //   },
-      //     // },
-      //   },
-      //   clientSchema: {
-      //     schema: clientSchema,
-      //     variables: variables ? JSON.parse(variables) : {},
-      //   },
-      // })
-      //   .then((data) => {
-      //     const { errors } = data;
-
-      //     if (errors) {
-      //       response.body = {
-      //         ...graphqlError,
-      //         errors,
-      //       };
-      //     } else {
-      //       response.console.log(
-      //         `[body=${JSON.stringify(data)}]`,
-      //         `[${__filename}]`
-      //       );
-      //       response.body = data;
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     // console.error("clientSchema==", clientSchema);
-      //     // console.error("variables==", variables);
-      //     // console.error("serverSchema==", schema.typeDefs.schema);
-      //     // console.error("resolvers==", schema.resolvers);
-      //   });
     })
     //变异
     this.router.post('/data', async (ctx, next) => {
@@ -267,12 +137,12 @@ class Route {
         body: { query, mutation, variables = {}, operationName },
       } = request
       const clientSchema = query || mutation
-      response.console.info(
-        `[clientSchema=${clientSchema}]`,
-        `[variables=${variables}]`,
-        `[${__filename}]`,
-      )
 
+      response.console.info(
+        `\n 客户端graphql请求:\n [operationName:${operationName}]\n [clientSchema:${clientSchema}]\n [variables:${JSON.stringify(
+          variables,
+        )}]`,
+      )
       await validateGraphql({
         rootValue: {
           ctx,
@@ -281,107 +151,40 @@ class Route {
         clientSchema: {
           schema: clientSchema,
           variables: variables || {},
-          //     schema: `
-          //   query{
-          //     getUser {
-          //           name
-          //           id
-          //           address
-          //   }
-          // }
-          // `,
-          //     variables: {},
+
           operationName,
         },
-      }).then((data) => {
-        console.log('validateGraphql======', data)
-        const { errors } = data
+      })
+        .then((data) => {
+          const { errors } = data
 
-        if (errors) {
+          if (errors) {
+            response.body = {
+              ...graphqlError,
+              errors,
+            }
+          } else {
+            response.console.log(
+              `\n 客户端graphql请求成功:\n [operationName:${operationName}]\n [clientSchema:${clientSchema}]\n [variables:${JSON.stringify(
+                variables,
+              )}]\n [body:${JSON.stringify(data)}]
+              `,
+            )
+            response.body = data
+          }
+        })
+        .catch((error) => {
+          response.console.error(
+            `\n graphql 校验语法错误:\n [operationName:${operationName}]\n [clientSchema:${clientSchema}]\n [variables:${JSON.stringify(
+              variables,
+            )}]\n error=${error.toString()} `,
+          )
+
           response.body = {
             ...graphqlError,
-            errors,
+            errors: error.toString(),
           }
-        } else {
-          response.console.log(
-            `[body=${JSON.stringify(data)}]`,
-            `[${__filename}]`,
-          )
-          response.body = data
-        }
-      })
-      // await CheckGraphql.init({
-      //   context: {
-      //     ctx,
-      //     next,
-      //   },
-      //   serverSchema: {
-      //     //输入类型
-      //     // schemas: [
-      //     //   schema.typeDefs.schema,
-      //     //   // `#定义输入类型
-      //     //   //   input UserInput {
-      //     //   //     account: String!
-      //     //   //     password: String!
-      //     //   //   }
-      //     //   //   `,
-      //     //   // `
-      //     //   //    type User{
-      //     //   //       id : ID!
-      //     //   //       email : String!
-      //     //   //       name : String!
-      //     //   //       phone: String!
-      //     //   //     }
-
-      //     //   //     extend type Query {
-      //     //   //       getUser(user:UserInput!):User
-      //     //   //     }
-      //     //   //  `,
-      //     // ],
-      //     schema: schema.typeDefs.schema,
-      //     resolvers: schema.resolvers,
-      //     // {
-      //     //   Mutation: {},
-      //     //   Subscription: {},
-      //     //   Query: {
-      //     //     getUser: (root, parameter, source, fieldASTs) => {
-      //     //       return {
-      //     //         id: 1,
-      //     //         email: "281113270@qq.com",
-      //     //         name: "张三",
-      //     //         phone: "18529531779",
-      //     //       };
-      //     //     },
-      //     //   },
-      //     // },
-      //   },
-      //   clientSchema: {
-      //     schema: clientSchema,
-      //     variables: variables || {},
-      //   },
-      // })
-      //   .then((data) => {
-      //     const { errors } = data
-
-      //     if (errors) {
-      //       response.body = {
-      //         ...graphqlError,
-      //         errors,
-      //       }
-      //     } else {
-      //       response.console.log(
-      //         `[body=${JSON.stringify(data)}]`,
-      //         `[${__filename}]`,
-      //       )
-      //       response.body = data
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     // console.error("clientSchema==", clientSchema);
-      //     // console.error("variables==", variables);
-      //     // console.error("serverSchema==", schema.typeDefs.schema);
-      //     // console.error("resolvers==", schema.resolvers);
-      //   })
+        })
     })
 
     // 挂载路由中间件

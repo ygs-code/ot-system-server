@@ -1,10 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2020-12-07 09:39:49
- * @LastEditTime: 2021-09-28 11:11:49
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-06-09 11:47:09
+ * @LastEditors: Yao guan shou
  * @Description: In User Settings Edit
- * @FilePath: /error-sytem/server/app/db/mysql.js
+ * @FilePath: /Blogs/BlogsServer/app/db/mysql.js
  */
 import mysql from "mysql";
 import { MYSQL_CONF } from "../config/index";
@@ -16,8 +16,8 @@ const exec = async function () {
   const parameter = arguments;
   return await new Promise((resolve, reject) => {
     connection.query(...parameter, (err, result) => {
-        console.log('err=',err)
-        console.log('result=',result)
+        // console.log('err=',err)
+        // console.log('result=',result)
       if (err) {
         reject(err);
         return;
