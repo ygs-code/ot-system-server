@@ -6,17 +6,17 @@
  * @Description: In User Settings Edit
  * @FilePath: /error-sytem/server/app/bizMod/set/redis/user.js
  */
-import { Redis, redisClient, RedisClass } from "@/redis";
-import { verifyCodeExpires } from "../config";
+
+import RedisClass, { Redis, redisClient } from "./redis";
+import { verifyCodeExpires } from "@/config";
 export const setVerifyCode = (key, value, time) => {
-  Redis.set(key, value);
-  Redis.pexpire(key, time || verifyCodeExpires);
+  redisClient.set(key, value);
+  redisClient.pexpire(key, time || verifyCodeExpires);
 };
 
 export const getVerifyCode = (key) => {
   if (key === undefined) {
     return Promise.reject();
   }
-  return Redis.get(key);
+  return redisClient.get(key);
 };
- 

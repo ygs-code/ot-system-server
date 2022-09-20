@@ -1,21 +1,17 @@
 """
-用户信息数据
+验证码数据
 """
-type UserData {
+type VerifyCodeData {
   """
-  用户昵称
+  验证码图片
   """
-  name: String
-  """
-  用户手机号码
-  """
-  phone: String
+  svg: String
 }
 
 """
-用户信息
+验证码信息
 """
-type UserInfo {
+type VerifyCodeInfo {
   """
   请求状态
   """
@@ -23,7 +19,7 @@ type UserInfo {
   """
   用户信息数据
   """
-  data: UserData
+  data: VerifyCodeData
   """
   请求信息
   """
@@ -34,7 +30,7 @@ type UserInfo {
 
 extend type Query {
   #! 是必填参数
-  getUserInfo(id: ID): UserInfo
+  getVerifyCode: VerifyCodeInfo
 }
 
 # extend type Mutation {

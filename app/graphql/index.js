@@ -11,14 +11,13 @@ import { validateGraphql } from 'graphql-modules-validate'
 // import { default as baseSchema } from './schema'
 // 数组
 import { schema as bizModSchema } from '../bizMod'
-
-// console.log('baseSchema=======',baseSchema)
-// console.log('bizModSchema=======', bizModSchema)
+import { default as schema } from './schema'
 
 const $validateGraphql = validateGraphql({
   lang: 'zh-CN',
-  modules: [
+  modules: [ 
     ...bizModSchema,
+    ...schema,
     {
       id: 'user2-module', // id不能与其他模块重名
       dirname: __dirname,

@@ -73,7 +73,7 @@ class router {
   }
   login() {
     // 添加 接口
-    controller.a
+    // controller.a
     this.threeLevelRoute.post("/login", controller.login);
   }
   verifyToken() {
@@ -82,7 +82,7 @@ class router {
       var parameter = ctx.request.body; // 获取请求参数
       // console.log("parameter=", parameter);
 
-      await verifyToken(parameter.token) 
+      await verifyToken(parameter.token)
         .then((data) => {
           ctx.response.body = {
             code: 200,
@@ -100,7 +100,6 @@ class router {
     });
   }
   verifyCode() {
-    // console.log('getVerifyCode==========')
     // 添加 接口
     this.threeLevelRoute.get("/getVerifyCode", controller.verifyCode);
   }

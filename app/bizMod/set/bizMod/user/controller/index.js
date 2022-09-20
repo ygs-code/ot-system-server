@@ -1,12 +1,7 @@
 import userService from "../service";
 import { unsupported, unauthorized } from "@/constant";
-import { CheckDataType, captureFnError, captureClassError, aa } from "utils";
+import { CheckDataType, captureFnError, captureClassError } from "utils";
 import { setVerifyCode, getVerifyCode } from "../../../redis";
-// console.log('captureFnError==========',captureFnError)
-// console.log('captureClassError==========',captureClassError)
-// console.log('CheckDataType==========',CheckDataType)
-
-
 
 @captureClassError()
 class Controller {
@@ -32,6 +27,8 @@ class Controller {
           message: "注册成功",
         }),
       };
+
+      console.log("status====", status);
       return message[status]();
     };
     ctx.response.body = getMessage(data);
@@ -145,7 +142,6 @@ class Controller {
         console.log("error======", error);
         let { message, code } = error;
         if (code) {
-          
         } else if (error) {
           message = "系统错误";
           code = 500;

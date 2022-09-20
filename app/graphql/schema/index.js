@@ -8,8 +8,12 @@
  */
 
 //  会员模块
-import { default as userSchema } from './user'
+// import { default as userSchema } from "./user";
+import { default as common } from "./common";
 
 // console.log('userSchema=',userSchema)
 
-export default userSchema
+export default [
+  // userSchema,
+  common,
+];

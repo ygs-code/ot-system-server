@@ -103,6 +103,7 @@ const captureClassError = () => {
               try {
                 return oTarget[sKey].apply(target, ags);
               } catch (error) {
+                console.log('error:',error)
                 // '可以发短信或者邮件给开发者'
                 console.error("node js 发生错误：", error);
               }

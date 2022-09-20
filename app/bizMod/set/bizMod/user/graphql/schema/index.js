@@ -6,29 +6,27 @@
  * @FilePath: /Blogs/BlogsServer/app/bizMod/set/bizMod/user/graphql/schema/index.js
  * @Description:
  */
-import * as resolvers from './resolvers'
-import * as typeDefs from './typeDefs'
+import * as resolvers from "./resolvers";
+import * as typeDefs from "./typeDefs";
 
 //脚本模块
 // export default { resolvers, typeDefs };
-
-// console.log('typeDefs==========', typeDefs)
 
 // typeDefs.map((item, key) => {
 //   console.log('item======', item)
 // })
 
-let newTypeDefs = []
+let newTypeDefs = [];
 for (let key in typeDefs) {
   if (typeDefs.hasOwnProperty(key)) {
-    newTypeDefs.push(typeDefs[key])
+    newTypeDefs.push(typeDefs[key]);
   }
 }
 
 export default {
-  id: 'user-module', // id不能与其他模块重名
+  id: "user-module", // id不能与其他模块重名
   dirname: __dirname,
   typeDefs: newTypeDefs,
   // 这里并没有校验resolvers重复性，所以需要我们自己实现校验
   resolvers,
-}
+};
