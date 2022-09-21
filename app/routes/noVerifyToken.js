@@ -1,1 +1,1 @@
-export default ["getVerifyCode"];
+export default ["getVerifyCode", "createUser"];

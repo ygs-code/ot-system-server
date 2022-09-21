@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "declarationDir": "./dist/types/",
+    "declarationMap": true,
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "module": "commonjs",
+    "target": "es5",
+    "jsx": "react",
+    "declaration": true
+  },
+
+  "awesomeTypescriptLoaderOptions": {}
+}

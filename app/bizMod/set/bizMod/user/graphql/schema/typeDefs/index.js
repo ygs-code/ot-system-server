@@ -1,1 +1,1 @@
-export {default as schema} from "./typeDefs";
+export default from "./typeDefs";

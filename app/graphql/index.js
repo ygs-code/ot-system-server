@@ -6,7 +6,7 @@
  * @FilePath: /Blogs/BlogsServer/app/graphql/index.js
  * @Description:
  */
-import { validateGraphql } from 'graphql-modules-validate'
+import { validateGraphql } from './graphql-modules-validate'
 //  会员模块
 // import { default as baseSchema } from './schema'
 // 数组

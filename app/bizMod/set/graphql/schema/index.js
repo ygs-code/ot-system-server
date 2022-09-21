@@ -7,7 +7,7 @@
  * @FilePath: /error-sytem/server/app/bizMod/set/graphql/schema/index.js
  */
 // export { schema as scriptSchema } from "../../bizMod/script"; //scriptSchema
-export { schema as userSchema } from "../../bizMod/user"; //userSchema
+export { schema as userSchema } from "@/bizMod/set/bizMod/user"; //userSchema
  
 
  

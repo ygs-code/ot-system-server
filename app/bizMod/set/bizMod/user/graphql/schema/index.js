@@ -7,7 +7,7 @@
  * @Description:
  */
 import * as resolvers from "./resolvers";
-import * as typeDefs from "./typeDefs";
+import  typeDefs from "./typeDefs";
 
 //脚本模块
 // export default { resolvers, typeDefs };
@@ -16,17 +16,16 @@ import * as typeDefs from "./typeDefs";
 //   console.log('item======', item)
 // })
 
-let newTypeDefs = [];
-for (let key in typeDefs) {
-  if (typeDefs.hasOwnProperty(key)) {
-    newTypeDefs.push(typeDefs[key]);
-  }
-}
-
+// let newTypeDefs = [];
+// for (let key in typeDefs) {
+//   if (typeDefs.hasOwnProperty(key)) {
+//     newTypeDefs.push(typeDefs[key]);
+//   }
+// }
 export default {
   id: "user-module", // id不能与其他模块重名
   dirname: __dirname,
-  typeDefs: newTypeDefs,
+  typeDefs: [typeDefs],
   // 这里并没有校验resolvers重复性，所以需要我们自己实现校验
   resolvers,
 };

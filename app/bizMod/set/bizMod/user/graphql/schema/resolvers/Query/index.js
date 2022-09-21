@@ -8,8 +8,7 @@
  */
 import { outHttpLog } from "@/utils";
 
-
-
+import userService from "@/bizMod/set/bizMod/user/service";
 
 export const getUserInfo = (root, parameter, source, fieldASTs) => {
   const { ctx: { request, response } = {} } = root;
@@ -30,8 +29,23 @@ export const getUserInfo = (root, parameter, source, fieldASTs) => {
     code: 200,
     message: "请求成功",
     data: {
-      name:'name',
-      phone:'1232133213123',
+      name: "name",
+      phone: "1232133213123",
     },
+  };
+};
+
+export const getVerifyCode = async (root, parameter, source, fieldASTs) => {
+  const { ctx, next } = root;
+  const { request, response } = ctx;
+  const { id } = parameter || {};
+
+  //  //添加service
+  const data = await userService.getVerifyCode(ctx, next, parameter);
+
+  return {
+    code: 200,
+    data,
+    message: "验证码获取成功",
   };
 };

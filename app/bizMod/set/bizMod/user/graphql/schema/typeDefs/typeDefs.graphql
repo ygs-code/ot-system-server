@@ -37,7 +37,51 @@ extend type Query {
   getUserInfo(id: ID): UserInfo
 }
 
-# extend type Mutation {
-#   #! 是必填参数
-#   getUserInfo(user:UserInfoInput!): UserInfo
-# }
+"""
+验证码数据
+"""
+type VerifyCodeData {
+  """
+  验证码图片
+  """
+  svg: String
+}
+
+"""
+验证码信息
+"""
+type VerifyCodeInfo {
+  """
+  请求状态
+  """
+  code: Int
+  """
+  用户信息数据
+  """
+  data: VerifyCodeData
+  """
+  请求信息
+  """
+  message: String
+}
+
+#union UnionUserId = String | ID
+
+extend type Query {
+  #! 是必填参数
+  getVerifyCode: VerifyCodeInfo
+}
+
+#定义输入类型
+input UserInfoInput {
+  username: String!
+  phone: String!
+  password: String!
+  confirmPassword: String!
+  verificationCode: String! 
+}
+
+extend type Mutation {
+  #! 是必填参数
+  createUser(userInfoInput: UserInfoInput!): UserInfo
+}

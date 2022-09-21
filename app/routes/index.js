@@ -4,6 +4,7 @@ import {
   getTokenUserInfo,
   destroyToken,
 } from "@/redis/index";
+import _ from "lodash";
 import { graphqlError } from "@/constant";
 import Router from "koa-router";
 import { common } from "@/middleware/index";
@@ -41,9 +42,11 @@ class Route {
         body: { query, mutation, operationName: bodyOperationName },
         header,
       } = request;
+
       method = method.toUpperCase();
       let operationName =
         method === "GET" ? queryOperationName : bodyOperationName;
+
       if (!operationName) {
         response.console.error("客户端graphql请求错误缺少operationName参数");
         return (response.body = {
@@ -64,7 +67,6 @@ class Route {
           await next();
         })
         .catch((error) => {
-          // console.log('getTokenUserInfo catch=', error)
           response.userInfo = null;
           ctx.response.body = {
             ...unauthorized,
@@ -83,7 +85,7 @@ class Route {
     // 查询
     this.router.get("/data", async (ctx, next) => {
       const {
-        query: { query, variables, operationName },
+        query: { query, variables={}, operationName },
         response,
         request,
       } = ctx;
@@ -120,7 +122,7 @@ class Route {
         },
         clientSchema: {
           schema: clientSchema,
-          variables: variables || {},
+          variables,
           operationName,
         },
       })
@@ -175,14 +177,15 @@ class Route {
           variables
         )}]`
       );
+
       await validateGraphql({
         rootValue: {
           ctx,
           next,
         },
         clientSchema: {
-          schema: clientSchema,
-          variables: variables || {},
+          schema:clientSchema,
+          variables,
           operationName,
         },
       })
