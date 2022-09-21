@@ -33,7 +33,4 @@ extend type Query {
   getVerifyCode: VerifyCodeInfo
 }
 
-# extend type Mutation {
-#   #! 是必填参数
-#   getUserInfo(user:UserInfoInput!): UserInfo
-# }
+ 

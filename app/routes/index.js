@@ -85,7 +85,7 @@ class Route {
     // 查询
     this.router.get("/data", async (ctx, next) => {
       const {
-        query: { query, variables={}, operationName },
+        query: { query, variables = {}, operationName },
         response,
         request,
       } = ctx;
@@ -162,6 +162,10 @@ class Route {
         body: { query, mutation, variables = {}, operationName },
       } = request;
 
+      console.log(
+        "Object.prototype.toString=",
+        Object.prototype.toString.call(variables)
+      );
       if (!mutation) {
         response.console.error("客户端graphql请求错误缺少mutation参数");
         return (response.body = {
@@ -184,7 +188,7 @@ class Route {
           next,
         },
         clientSchema: {
-          schema:clientSchema,
+          schema: clientSchema,
           variables,
           operationName,
         },

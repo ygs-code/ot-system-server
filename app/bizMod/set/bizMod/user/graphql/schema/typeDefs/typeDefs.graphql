@@ -83,5 +83,5 @@ input UserInfoInput {
 
 extend type Mutation {
   #! 是必填参数
-  createUser(userInfoInput: UserInfoInput!): UserInfo
+  createUser(userInfo: UserInfoInput!): UserInfo
 }
