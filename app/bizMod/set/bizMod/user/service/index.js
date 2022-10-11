@@ -86,6 +86,7 @@ class Service {
   }
   // 登录
   static async login(ctx, next, parameter = {}) {
+    
     const { username: name, phone, password } = parameter;
     const { request, response, cookies } = ctx;
 

@@ -90,22 +90,28 @@ const outHttpLog = ({ source, __filename, response }) => {
     `[http request : ${source[sourceKeys[0]].name}]`,
     `[path : /${__filename}]`
   );
-}; 
-const aa = function(){}
+};
+const aa = function () {};
 const captureClassError = () => {
   return (target) => {
     return new Proxy(target, {
       get(oTarget, sKey) {
-        return ["[object Function]", "[object AsyncFunction]"].includes(
-          Object.prototype.toString.call(oTarget[sKey])
-        )
+        return oTarget[sKey] instanceof Function
           ? (...ags) => {
               try {
-                return oTarget[sKey].apply(target, ags);
+                let data = oTarget[sKey].apply(target, ags);
+                if (data instanceof Promise) {
+                  return data.catch((error) => {
+                    // '可以发短信或者邮件给开发者'
+                    console.error("node js 发生错误：", error);
+                    throw error;
+                  });
+                }
+                return data;
               } catch (error) {
-                console.log('error:',error)
                 // '可以发短信或者邮件给开发者'
                 console.error("node js 发生错误：", error);
+                throw error;
               }
             }
           : oTarget[sKey];

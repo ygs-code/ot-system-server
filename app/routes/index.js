@@ -44,14 +44,15 @@ class Route {
       } = request;
 
       method = method.toUpperCase();
+    
       let operationName =
         method === "GET" ? queryOperationName : bodyOperationName;
 
       if (!operationName) {
-        response.console.error("客户端graphql请求错误缺少operationName参数");
+        response.console.error("客户端graphql请求错误:缺少operationName参数");
         return (response.body = {
           ...graphqlError,
-          message: "客户端graphql请求错误缺少operationName参数",
+          message: "客户端graphql请求错误:缺少operationName参数",
         });
       }
 

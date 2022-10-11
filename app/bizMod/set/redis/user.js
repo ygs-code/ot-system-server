@@ -9,14 +9,14 @@
 import { Redis, redisClient, RedisClass } from "@/redis";
 import { verifyCodeExpires } from "../config";
 export const setVerifyCode = (key, value, time) => {
-  redisClient.set(key, value);
-  redisClient.pexpire(key, time || verifyCodeExpires);
+  Redis.set(key, value);
+  Redis.pexpire(key, time || verifyCodeExpires);
 };
 
 export const getVerifyCode = (key) => {
   if (key === undefined) {
     return Promise.reject();
   }
-  return redisClient.get(key);
+  return Redis.get(key);
 };
  

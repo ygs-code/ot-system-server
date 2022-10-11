@@ -34,17 +34,17 @@ class Controller {
     ctx.response.body = getMessage(data);
   }
   static async register(ctx, next) {
-    console.log("register=", register);
     const { request, response } = ctx;
 
     const parameter = request.body; // 获取请求参数
-    const { verificationCode } = parameter;
+    const { variables: { userInfo = {} } = {} } = parameter;
+    const { verificationCode } = userInfo;
 
-    getVerifyCode(verificationCode)
+    return getVerifyCode(verificationCode)
       .then(async () => {
         //添加service
-        const data = await userService.register(ctx, next, parameter);
-        console.log("data=========", data);
+        const data = await userService.register(ctx, next, userInfo);
+
         const getMessage = (data) => {
           const { status } = data;
           const message = {
@@ -63,7 +63,8 @@ class Controller {
           };
           return message[status]();
         };
-        response.body = getMessage(data);
+
+        return getMessage(data);
       })
       .catch((error) => {
         let message = "";
@@ -81,7 +82,13 @@ class Controller {
           code = 400;
         }
 
-        response.body = {
+        // response.body = {
+        //   message,
+        //   code,
+        //   data: {},
+        // };
+
+        return {
           message,
           code,
           data: {},

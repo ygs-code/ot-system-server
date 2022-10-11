@@ -1,14 +1,15 @@
+import userController from "@/bizMod/set/bizMod/user/controller";
 export const createUser = async (root, parameter, source, fieldASTs) => {
-  console.log("createUser================");
-//   const { ctx, next } = root;
-//   const { request, response } = ctx;
-//   const { id } = parameter || {};
+  const { ctx, next } = root;
+  const { request, response } = ctx;
+  const { id } = parameter || {};
 
-  //  //添加service
-  //   const data = await userService.getVerifyCode(ctx, next, parameter);
+  const data = await userController.register(ctx, next, parameter);
+  console.log("data=============", data);
 
   return {
     code: 200,
     message: "用户创建成功",
+    ...data
   };
 };
