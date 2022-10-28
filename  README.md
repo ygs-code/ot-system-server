@@ -94,13 +94,13 @@ CREATE TABLE `role_permission` (
 
 ## 6、测试数据
 
-INSERT INTO `role_permission` VALUES ('1','1','1'), ('2','2','2'), ('3','3','3');
-
-INSERT INTO `t_permission` VALUES ('1','小说收藏',NULL), ('2','小说发布',NULL), ('3','广告发布',NULL);
-
 INSERT INTO `t_role` VALUES ('1','读者',NULL), ('2','作者',NULL), ('3','管理员',NULL);
 
 INSERT INTO `t_user` VALUES ('u1','reader'), ('u11','reader1'), ('u2','author'), ('u22','author2'), ('u3','admin'), ('u33','admin2');
+
+INSERT INTO `t_permission` VALUES ('1','小说收藏',NULL), ('2','小说发布',NULL), ('3','广告发布',NULL);
+
+INSERT INTO `role_permission` VALUES ('1','1','1'), ('2','2','2'), ('3','3','3');
 
 INSERT INTO `user_role` VALUES ('1','u1','1'), ('2','u2','2'), ('3','u3','3'), ('4','u11','1'), ('5','u22','2'), ('6','u33','3');
 

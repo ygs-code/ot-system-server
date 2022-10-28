@@ -10,6 +10,7 @@ import "@babel/polyfill";
 import koa from "koa";
 import { promise } from "./utils";
 import { CheckTable, connection, exec, addUser } from "./db/index.js";
+import initTable from "./db/sql/initTable.sql";
 import { Redis } from "./redis";
 import Route from "./routes/index";
 import kill from "kill-port";
@@ -27,6 +28,9 @@ class App {
     await this.connectRedis();
     // 数据库连接
     await this.connectSql();
+
+    // 初始化表
+    await this.initTable();
     //加载路由
     this.addRoute();
     // 设置监听端口
@@ -48,12 +52,12 @@ class App {
     await promise((reslove, reject) => {
       connection.connect((err) => {
         if (err) {
-          console.log("数据库连失败");
+          console.log("Mysql数据库连失败");
           reject();
           throw err;
         }
         // new CheckTable();
-        console.log("mysql数据库连接成功");
+        console.log("Mysql数据库连接成功");
         reslove();
       });
       //   connection.end((err) => {
@@ -64,6 +68,10 @@ class App {
       //     }
       //   });
     });
+  }
+  async initTable() {
+    await exec(initTable);
+    console.log("Mysql表初始化成功");
   }
   addRoute() {
     // 导入路由
