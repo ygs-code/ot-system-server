@@ -114,7 +114,7 @@ class Controller {
     // console.log(" request=", request);
     console.log(" request.body=", request.body);
     console.log(" ctx.params=", ctx.params);
-    console.log("aa=", aa);
+    // console.log("aa=", aa);
 
     await getVerifyCode(verificationCode)
       .then(async () => {

@@ -7,5 +7,4 @@
  * @FilePath: /error-sytem/server/app/bizMod/abnormity/db/index.js
  */
 export { connection, exec, CheckTable } from "@/db";
-export { default as tables } from "./tables";
-export * from "./user";
+export * from "./user"; 

@@ -7,9 +7,12 @@
  * @FilePath: /error-sytem/server/app/bizMod/abnormity/router/index.js
  */
 import koaRoute from "koa-router"; // koa 路由中间件
+// import { async } from "regenerator-runtime";
 // import { router as scriptRouter } from "../bizMod/script"; //scriptRouter 路由
 import { router as userRouter } from "../bizMod/user"; //userRouter 路由
-import { tables, CheckTable } from "../db"; //  db
+import initTable from "@/bizMod/set/db/sql/initTable.sql";
+import { connection, exec, addUser } from "@/db/index.js";
+// import { tables, CheckTable } from "../db"; //  db
 class router {
   constructor(app, parentRouter) {
     this.app = app;
@@ -21,6 +24,10 @@ class router {
       prefix: "/set", // 给路由统一加个前缀：
     });
     return this.twoLevelRoute;
+  }
+  async initTable() {
+    await exec(initTable);
+    console.log("Set模块，mysql表初始化成功");
   }
   middleware() {
     // 处理404
@@ -37,7 +44,7 @@ class router {
     // });
   }
   // 添加路由
-  addRouters() {
+  async addRouters() {
     // 为script模块添加路由
     // new scriptRouter(this.app, this.twoLevelRoute);
     new userRouter(this.app, this.twoLevelRoute);
@@ -45,6 +52,7 @@ class router {
     this.router.use(this.twoLevelRoute.routes()); //挂载二级路由
   }
   async init() {
+    await this.initTable();
     // 检查表
     // await new CheckTable(tables);
     // 创建路由
