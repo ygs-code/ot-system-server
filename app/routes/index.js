@@ -44,7 +44,7 @@ class Route {
       } = request;
 
       method = method.toUpperCase();
-    
+
       let operationName =
         method === "GET" ? queryOperationName : bodyOperationName;
 
@@ -86,7 +86,7 @@ class Route {
     // 查询
     this.router.get("/data", async (ctx, next) => {
       const {
-        query: { query, variables = {}, operationName },
+        query: { query, variables = '{}', operationName },
         response,
         request,
       } = ctx;
@@ -116,6 +116,9 @@ class Route {
           variables
         )}]\n`
       );
+
+      console.log("variables==", JSON.parse(variables));
+
       await validateGraphql({
         rootValue: {
           ctx,
@@ -123,7 +126,7 @@ class Route {
         },
         clientSchema: {
           schema: clientSchema,
-          variables,
+          variables: JSON.parse(variables),
           operationName,
         },
       })
