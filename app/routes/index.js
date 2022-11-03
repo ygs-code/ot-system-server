@@ -85,8 +85,9 @@ class Route {
 
     // 查询
     this.router.get("/data", async (ctx, next) => {
+      let errorMessage = "";
       const {
-        query: { query, variables = '{}', operationName },
+        query: { query, variables = "{}", operationName },
         response,
         request,
       } = ctx;
@@ -104,10 +105,11 @@ class Route {
       // response.console.debug("这个是DEBUG", __filename);
 
       if (!clientSchema) {
-        response.console.error("客户端graphql请求错误缺少query参数");
+        errorMessage = "客户端graphql请求错误缺少query参数";
+        response.console.error(errorMessage);
         return (response.body = {
           ...graphqlError,
-          message: "客户端graphql请求错误缺少query参数",
+          message: errorMessage,
         });
       }
 
@@ -116,8 +118,6 @@ class Route {
           variables
         )}]\n`
       );
-
-      console.log("variables==", JSON.parse(variables));
 
       await validateGraphql({
         rootValue: {
@@ -148,11 +148,14 @@ class Route {
           }
         })
         .catch((error) => {
-          response.console.error(
-            `\n graphql 校验语法错误：\n[operationName:${operationName}]\n [clientSchema:${clientSchema}]\n [variables:${JSON.stringify(
-              variables
-            )}]\n ${error.toString()} `
-          );
+          errorMessage = `\n graphql 校验语法错误：\n[operationName:${operationName}]\n [clientSchema:${clientSchema}]\n [variables:${JSON.stringify(
+            variables
+          )}]\n ${error} `;
+          response.console.error(errorMessage);
+          return (response.body = {
+            ...graphqlError,
+            message: errorMessage,
+          });
         });
     });
     //变异
@@ -165,11 +168,6 @@ class Route {
       const {
         body: { query, mutation, variables = {}, operationName },
       } = request;
-
-      console.log(
-        "Object.prototype.toString=",
-        Object.prototype.toString.call(variables)
-      );
       if (!mutation) {
         response.console.error("客户端graphql请求错误缺少mutation参数");
         return (response.body = {

@@ -8,7 +8,8 @@
  */
 import { outHttpLog } from "@/utils";
 
-import userService from "@/bizMod/set/bizMod/user/service";
+// import userService from "@/bizMod/set/bizMod/user/service";
+import userController from "@/bizMod/set/bizMod/user/controller";
 
 export const getUserInfo = (root, parameter, source, fieldASTs) => {
   const { ctx: { request, response } = {} } = root;
@@ -41,7 +42,7 @@ export const getVerifyCode = async (root, parameter, source, fieldASTs) => {
   const { id } = parameter || {};
 
   //  //添加service
-  const data = await userService.getVerifyCode(ctx, next, parameter);
+  const data = await userController.getVerifyCode(ctx, next, parameter);
 
   return {
     code: 200,
@@ -50,5 +51,14 @@ export const getVerifyCode = async (root, parameter, source, fieldASTs) => {
   };
 };
 
-
 // 登录接口
+export const login = async (root, parameter, source, fieldASTs) => {
+  const { ctx, next } = root;
+  const { request, response } = ctx;
+  const { id } = parameter || {};
+
+  //   //添加service
+  const data = await userController.login(ctx, next, parameter);
+
+  return data;
+};

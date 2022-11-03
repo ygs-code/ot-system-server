@@ -10,6 +10,10 @@ type UserData {
   用户手机号码
   """
   phone: String
+  """
+  用户ID
+  """
+  id: Int
 }
 
 """
@@ -78,10 +82,42 @@ input UserInfoInput {
   phone: String!
   password: String!
   confirmPassword: String!
-  verificationCode: String! 
+  verificationCode: String!
 }
 
 extend type Mutation {
   #! 是必填参数
   createUser(userInfo: UserInfoInput!): UserInfo
+}
+
+type LoginData {
+  token: String
+  userInfo: UserData
+}
+
+"""
+登录状态
+"""
+type LoginInfo {
+  """
+  请求状态
+  """
+  code: Int
+  """
+  用户信息数据
+  """
+  data: LoginData
+  """
+  请求信息
+  """
+  message: String
+}
+
+extend type Query {
+  #! 是必填参数
+  login(
+    password: String!
+    username: String!
+    verificationCode: String!
+  ): LoginInfo
 }

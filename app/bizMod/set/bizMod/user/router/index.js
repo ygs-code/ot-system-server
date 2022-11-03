@@ -75,7 +75,7 @@ class router {
   login() {
     // 添加 接口
     // controller.a
-    this.threeLevelRoute.post("/login", controller.login);
+    // this.threeLevelRoute.post("/login", controller.login);
   }
   verifyToken() {
     //检查token
@@ -102,7 +102,7 @@ class router {
   }
   verifyCode() {
     // 添加 接口
-    this.threeLevelRoute.get("/getVerifyCode", controller.verifyCode);
+    // this.threeLevelRoute.get("/getVerifyCode", controller.verifyCode);
   }
 }
 

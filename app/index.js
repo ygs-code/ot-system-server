@@ -43,7 +43,7 @@ class App {
         reslove();
       });
       Redis.error(() => {
-        console.log("Redis 链接错误");
+        console.log("Redis 发生错误");
         reject();
       });
     });

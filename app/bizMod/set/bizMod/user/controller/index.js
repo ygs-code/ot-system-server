@@ -28,7 +28,6 @@ class Controller {
         }),
       };
 
-      console.log("status====", status);
       return message[status]();
     };
     ctx.response.body = getMessage(data);
@@ -45,26 +44,26 @@ class Controller {
         //添加service
         const data = await userService.register(ctx, next, userInfo);
 
-        const getMessage = (data) => {
-          const { status } = data;
-          const message = {
-            1: () => ({
-              ...unsupported,
-              message: "该用户名已经被注册过,请重新输入用户名",
-            }),
-            2: () => ({
-              ...unsupported,
-              message: "该手机号码已经被注册过,请重新输入手机号码",
-            }),
-            3: () => ({
-              code: 200,
-              message: "注册成功",
-            }),
-          };
-          return message[status]();
-        };
+        // const getMessage = (data) => {
+        //   const { status } = data;
+        //   const message = {
+        //     1: () => ({
+        //       ...unsupported,
+        //       message: "该用户名已经被注册过,请重新输入用户名",
+        //     }),
+        //     2: () => ({
+        //       ...unsupported,
+        //       message: "该手机号码已经被注册过,请重新输入手机号码",
+        //     }),
+        //     3: () => ({
+        //       code: 200,
+        //       message: "注册成功",
+        //     }),
+        //   };
+        //   return message[status]();
+        // };
 
-        return getMessage(data);
+        // return getMessage(data);
       })
       .catch((error) => {
         let message = "";
@@ -106,21 +105,16 @@ class Controller {
     // ctx.response.body = "d";
   }
   // @captureFnError()
-  static async login(ctx, next) {
+  static async login(ctx, next, parameter) {
     const { request, response } = ctx;
-    var parameter = request.body; // 获取请求参数
+    // var parameter = request.body; // 获取请求参数
     const { verificationCode } = parameter;
-    // console.log(" ctx=", ctx);
-    // console.log(" request=", request);
-    console.log(" request.body=", request.body);
-    console.log(" ctx.params=", ctx.params);
-    // console.log("aa=", aa);
 
-    await getVerifyCode(verificationCode)
+    return await getVerifyCode(verificationCode)
       .then(async () => {
-        console.log("getVerifyCode then =======");
         //添加service
         const data = await userService.login(ctx, next, parameter);
+
         const getMessage = (data) => {
           const { status, token, userInfo } = data;
           const message = {
@@ -143,24 +137,23 @@ class Controller {
           };
           return message[status]();
         };
-        response.body = getMessage(data);
+
+        return getMessage(data);
       })
       .catch((error) => {
-        console.log("error======", error);
-        let { message, code } = error;
-        if (code) {
-        } else if (error) {
-          message = "系统错误";
-          code = 500;
-          response.console.error(
-            typeof error === "object" ? JSON.stringify(error) : error,
-            __filename
-          );
+        let message;
+        let code;
+        if (error) {
+          message = `系统错误:${
+            typeof error === "object" ? JSON.stringify(error) : error
+          }`;
         } else {
           message = "验证码错误,或者已过期";
           code = 400;
         }
-        response.body = {
+
+        response.console.error(message, __filename);
+        return {
           message,
           code,
           data: {},
@@ -170,18 +163,20 @@ class Controller {
     //   console.log("e===============", e);
     // }
   }
-  static async verifyCode(ctx, next) {
+  static async getVerifyCode(ctx, next) {
     // ctx.set("Content-Type", "application/json")
     var parameter = ctx.request.body; // 获取请求参数
 
     //添加service
-    const data = await userService.verifyCode(ctx, next, parameter);
+    const data = await userService.getVerifyCode(ctx, next, parameter);
 
-    ctx.response.body = {
-      code: 200,
-      data,
-      message: "验证码获取成功",
-    };
+    return data;
+
+    // ctx.response.body = {
+    //   code: 200,
+    //   data,
+    //   message: "验证码获取成功",
+    // };
   }
 }
 

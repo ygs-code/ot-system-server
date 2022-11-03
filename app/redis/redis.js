@@ -92,7 +92,6 @@ class RedisClass {
     });
   }
   pexpire(key, time) {
-   
     this.redisClient.pexpire(`${key}`, time);
   }
   init() {
