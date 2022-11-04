@@ -64,6 +64,7 @@ class Route {
       const token = cookies.get("token") || header.token;
       await verifyToken(token)
         .then(async (value) => {
+          console.log('value======',value)
           response.userInfo = value;
           await next();
         })

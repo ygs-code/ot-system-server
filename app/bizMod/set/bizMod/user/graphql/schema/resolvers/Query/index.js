@@ -14,25 +14,23 @@ import userController from "@/bizMod/set/bizMod/user/controller";
 export const getUserInfo = (root, parameter, source, fieldASTs) => {
   const { ctx: { request, response } = {} } = root;
   const { id } = parameter || {};
-  console.log("parameter=", parameter);
+  console.log("paramete11111=", parameter);
   // outHttpLog({
   //   source,
   //   response,
   //   __filename,
   // });
-  // let data = {};
+  let data = {};
   // const { name, phone } = response.userInfo;
-  // if (id) {
-  // } else {
-  //   data = response.userInfo;
-  // }
+  if (id) {
+  } else {
+    data = response.userInfo;
+  }
+  console.log("data=====", data);
   return {
     code: 200,
     message: "请求成功",
-    data: {
-      name: "name",
-      phone: "1232133213123",
-    },
+    data,
   };
 };
 
