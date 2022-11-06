@@ -6,11 +6,11 @@ import { setVerifyCode, getVerifyCode } from "@/bizMod/set/redis";
 @captureClassError()
 class Controller {
   static a = 123;
-  static async query(ctx, next) {
+  static async query(ctx, next ,parameter) {
     // ctx.set("Content-Type", "application/json")
-    const parameter = ctx.request.body; // 获取请求参数
+    // const parameter = ctx.request.body; // 获取请求参数
     //添加service
-    const data = await userService.add(ctx, next, parameter);
+    const data = await userService.query(ctx, next, parameter);
     const getMessage = (data) => {
       const { status } = data;
       const message = {

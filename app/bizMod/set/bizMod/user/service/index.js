@@ -80,8 +80,8 @@ class Service {
   // 编辑用户
   static async edit(ctx, next, parameter) {}
   // 数据库中查询用户
-  static async queryUser(...ags) {
-    const userData = await queryUser(...ags);
+  static async query(ctx, next, parameter) {
+    const userData = await queryUser(parameter);
     return userData;
   }
   // 登录
@@ -107,6 +107,7 @@ class Service {
     }
 
     userInfo = await this.queryUser({
+      name,
       password,
     });
 
@@ -117,10 +118,10 @@ class Service {
       };
     }
 
-    userInfo = await queryUser({
-      name,
-      password,
-    });
+    // userInfo = await queryUser({
+    //   name,
+    //   password,
+    // });
 
     userInfo = userInfo.length >= 1 ? userInfo[0] : null;
 

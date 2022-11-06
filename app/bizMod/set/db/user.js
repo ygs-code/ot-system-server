@@ -8,7 +8,7 @@
  */
 import jwa from "jwa";
 import { connection, exec, CheckTable } from "@/db";
-
+// 密码加密
 const hmac = jwa("HS256");
 // 添加用户
 const addUser = async ({ name, phone, password }) => {
@@ -20,12 +20,13 @@ const addUser = async ({ name, phone, password }) => {
   });
 };
 
-//查询用户
+//查询用户  可以单独查询 id name  phone password
 const queryUser = async (data) => {
   const { id, name, phone, password } = data;
   // id 查询 名称查询，手机查询, 用户名+密码查询
   let sql = "";
   let whereConditions = "";
+  // 登录情况
   if (name && password) {
     sql = `select * from user where name =${connection.escape(
       name
