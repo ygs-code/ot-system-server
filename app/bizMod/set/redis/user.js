@@ -8,11 +8,12 @@
  */
 import { Redis, redisClient, RedisClass } from "@/redis";
 import { verifyCodeExpires } from "../config";
+// 设置验证码
 export const setVerifyCode = (key, value, time) => {
   Redis.set(key, value);
   Redis.pexpire(key, time || verifyCodeExpires);
 };
-
+// 获取验证码
 export const getVerifyCode = (key) => {
   if (key === undefined) {
     return Promise.reject();

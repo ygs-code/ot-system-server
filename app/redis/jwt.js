@@ -9,7 +9,7 @@
 import { Redis, redisClient } from "./redis";
 import jwt from "./jsonwebtoken";
 import { merge, promise } from "@/utils";
-import { tokenExpires } from "@/config";
+import { tokenExpires  } from "@/config";
 
 // 创建Token
 const createToken = async (userInfo = {}, payload = {}) => {
@@ -54,6 +54,8 @@ const destroyToken = async (token) => {
   await Redis.del(token);
   return "成功删除token";
 };
+
+
 //获取用户信息
 const getTokenUserInfo = (token) => {
   return promise((resolve, reject) => {

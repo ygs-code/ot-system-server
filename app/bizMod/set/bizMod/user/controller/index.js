@@ -1,7 +1,7 @@
 import userService from "../service";
 import { unsupported, unauthorized } from "@/constant";
 import { CheckDataType, captureFnError, captureClassError } from "utils";
-import { setVerifyCode, getVerifyCode } from "../../../redis";
+import { setVerifyCode, getVerifyCode } from "@/bizMod/set/redis";
 
 @captureClassError()
 class Controller {
