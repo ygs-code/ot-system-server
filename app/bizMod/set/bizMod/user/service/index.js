@@ -130,15 +130,15 @@ class Service {
     */
     delete userInfo.password;
     const token = await createToken(userInfo);
-
     ctx.response.userInfo = userInfo;
-
     cookies.set("token", token, {
-      httpOnly: false,
-      overwrite: false,
+      httpOnly: true, //  服务器可访问 cookie, 默认是 true 前端不能修改 cookie
+      overwrite: false, // 一个布尔值，表示是否覆盖以前设置的同名的 cookie (默认是 false). 如果是 true, 在同一个请求中设置相同名称的所有 Cookie
+      secure :true, // 安全 cookie 设置后只能通过https来传递cookie
       // 设置过期时间
       expires: new Date(new Date().getTime() + tokenExpires),
-      // domain: 'http://localhost/',
+      path :'/',  // cookie 路径, 默认是'/'
+      // domain: 'http://localhost/',  // 设置cookie访问域名
     });
     if (userInfo) {
       //登录成功
