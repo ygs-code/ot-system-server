@@ -6,57 +6,79 @@
  * @Description: In User Settings Edit
  * @FilePath: /Blogs/BlogsServer/app/bizMod/set/bizMod/user/graphql/schema/resolvers/Query/index.js
  */
-import { outHttpLog } from "@/utils";
+// import { outHttpLog } from "@/utils";
+import { addUser, removeUser, queryUser } from '@/bizMod/set/db';
+import userController from '@/bizMod/set/bizMod/user/controller';
 
-// import userService from "@/bizMod/set/bizMod/user/service";
-import userController from "@/bizMod/set/bizMod/user/controller";
+export const getUserInfo = async (root, parameter, source, fieldASTs) => {
+    const { ctx: { request, response } = {} } = root;
+    const { id } = parameter || {};
+    // outHttpLog({
+    //   source,
+    //   response,
+    //   __filename,
+    // });
+    let data = {};
+    if (id) {
+        data = await queryUser({
+            id,
+        })
+            .then((data) => {
+                if (data.length && data[0]) {
+                    return {
+                        code: 200,
+                        message: '请求成功',
+                        data: data[0],
+                    };
+                } else {
+                    return {
+                        code: 200,
+                        message: '查询不到用户',
+                        data: null,
+                    };
+                }
+            })
+            .catch(() => {
+                return {
+                    code: 200,
+                    message: '查询不到用户',
+                    data: null,
+                };
+            });
+    } else {
+        data = {
+            code: 200,
+            message: '请求成功',
+            data: response.userInfo,
+        };
+    }
 
-export const getUserInfo = (root, parameter, source, fieldASTs) => {
-  const { ctx: { request, response } = {} } = root;
-  const { id } = parameter || {};
-  console.log("paramete11111=", parameter);
-  // outHttpLog({
-  //   source,
-  //   response,
-  //   __filename,
-  // });
-  let data = {};
-  // const { name, phone } = response.userInfo;
-  if (id) {
-  } else {
-    data = response.userInfo;
-  }
-  console.log("data=====", data);
-  return {
-    code: 200,
-    message: "请求成功",
-    data,
-  };
+    return data;
 };
 
 export const getVerifyCode = async (root, parameter, source, fieldASTs) => {
-  const { ctx, next } = root;
-  const { request, response } = ctx;
-  const { id } = parameter || {};
+    const { ctx, next } = root;
+    const { request, response } = ctx;
+    const { id } = parameter || {};
 
-  //  //添加service
-  const data = await userController.getVerifyCode(ctx, next, parameter);
+    //  //添加service
+    const data = await userController.getVerifyCode(ctx, next, parameter);
 
-  return {
-    code: 200,
-    data,
-    message: "验证码获取成功",
-  };
+    return {
+        code: 200,
+        data,
+        message: '验证码获取成功',
+    };
 };
 
 // 登录接口
 export const login = async (root, parameter, source, fieldASTs) => {
-  const { ctx, next } = root;
-  const { request, response } = ctx;
-  const { id } = parameter || {};
+    const { ctx, next } = root;
+    const { request, response } = ctx;
+    const { id } = parameter || {};
 
-  //   //添加service
-  const data = await userController.login(ctx, next, parameter);
+    //   //添加service
+    const data = await userController.login(ctx, next, parameter);
 
-  return data;
+    return data;
 };

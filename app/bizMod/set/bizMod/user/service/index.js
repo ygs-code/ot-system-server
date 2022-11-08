@@ -1,5 +1,4 @@
-import { addUser, removeUser, queryUser } from "../../../db";
-import { unsupported, unauthorized } from "@/constant";
+import { addUser, removeUser, queryUser } from "@/bizMod/set/db";
 import { merge } from "@/utils";
 import svgCaptcha from "svg-captcha";
 import { v4 as uuidv4 } from "uuid";
@@ -46,7 +45,7 @@ class Service {
      2 查询手机号码是否被注册过
      3 如果都没有被注册那么就可以注册
     */
-    let userInfo = await this.queryUser({
+    let userInfo = await queryUser({
       name,
     });
 
@@ -57,7 +56,7 @@ class Service {
       };
     }
 
-    userInfo = await this.queryUser({
+    userInfo = await queryUser({
       phone,
     });
     userInfo = userInfo.length >= 1 ? userInfo[0] : null;
@@ -95,7 +94,7 @@ class Service {
       3.创建token,存储到redis中
       4.把用户信息挂载response中
     */
-    let userInfo = await this.queryUser({
+    let userInfo = await queryUser({
       name,
     });
 
@@ -106,12 +105,13 @@ class Service {
       };
     }
 
-    userInfo = await this.queryUser({
+    userInfo = await queryUser({
       name,
       password,
     });
-
+    console.log('userInfo==',userInfo)
     userInfo = userInfo.length >= 1 ? userInfo[0] : null;
+ 
     if (!userInfo) {
       return {
         status: 2,
@@ -122,8 +122,7 @@ class Service {
     //   name,
     //   password,
     // });
-
-    userInfo = userInfo.length >= 1 ? userInfo[0] : null;
+    // userInfo = userInfo.length >= 1 ? userInfo[0] : null;
 
     /*
      创建 createToken  
@@ -134,7 +133,7 @@ class Service {
     cookies.set("token", token, {
       httpOnly: true, //  服务器可访问 cookie, 默认是 true 前端不能修改 cookie
       overwrite: false, // 一个布尔值，表示是否覆盖以前设置的同名的 cookie (默认是 false). 如果是 true, 在同一个请求中设置相同名称的所有 Cookie
-      secure :true, // 安全 cookie 设置后只能通过https来传递cookie
+      // secure :true, // 安全 cookie 设置后只能通过https来传递cookie
       // 设置过期时间
       expires: new Date(new Date().getTime() + tokenExpires),
       path :'/',  // cookie 路径, 默认是'/'

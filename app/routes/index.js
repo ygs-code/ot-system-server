@@ -120,6 +120,8 @@ class Route {
         )}]\n`
       );
 
+      console.log('variables==',variables)
+
       await validateGraphql({
         rootValue: {
           ctx,
