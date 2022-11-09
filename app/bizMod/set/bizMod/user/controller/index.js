@@ -6,7 +6,7 @@ import { setVerifyCode, getVerifyCode } from "@/bizMod/set/redis";
 @captureClassError()
 class Controller {
   static a = 123;
-  static async query(ctx, next ,parameter) {
+  static async query(ctx, next, parameter) {
     // ctx.set("Content-Type", "application/json")
     // const parameter = ctx.request.body; // 获取请求参数
     //添加service
@@ -20,9 +20,13 @@ class Controller {
         }),
         2: () => ({
           ...unsupported,
-          message: "该手机号码已经被注册过,请重新输入手机号码",
+          message: "该手邮箱地址被注册过,请重新输入邮箱地址",
         }),
         3: () => ({
+          ...unsupported,
+          message: "该手机号码已经被注册过,请重新输入手机号码",
+        }),
+        4: () => ({
           code: 200,
           message: "注册成功",
         }),
@@ -43,27 +47,31 @@ class Controller {
       .then(async () => {
         //添加service
         const data = await userService.register(ctx, next, userInfo);
+        // const { status, token, userInfo } = data;
+        const getMessage = (data) => {
+          const { status } = data;
+          const message = {
+            1: () => ({
+              ...unsupported,
+              message: "该用户名已经被注册过,请重新输入用户名",
+            }),
+            2: () => ({
+              ...unsupported,
+              message: "该手机号码已经被注册过,请重新输入手机号码",
+            }),
+            3: () => ({
+              ...unsupported,
+              message: "该邮箱地址已被注册过,请重新输入邮箱地址",
+            }),
+            4: () => ({
+              code: 200,
+              message: "注册成功",
+            }),
+          };
+          return message[status]();
+        };
 
-        // const getMessage = (data) => {
-        //   const { status } = data;
-        //   const message = {
-        //     1: () => ({
-        //       ...unsupported,
-        //       message: "该用户名已经被注册过,请重新输入用户名",
-        //     }),
-        //     2: () => ({
-        //       ...unsupported,
-        //       message: "该手机号码已经被注册过,请重新输入手机号码",
-        //     }),
-        //     3: () => ({
-        //       code: 200,
-        //       message: "注册成功",
-        //     }),
-        //   };
-        //   return message[status]();
-        // };
-
-        // return getMessage(data);
+        return getMessage(data);
       })
       .catch((error) => {
         let message = "";

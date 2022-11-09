@@ -8,9 +8,9 @@
  */
 import { connection, exec } from "./mysql";
 // 添加用户
-const addUser = async ({ name, phone, password }) => {
+const addUser = async ({ name, phone, password, email }) => {
   const sql = `insert into user(name,phone,password) values('${name}','${phone}',md5('${password}'));`;
- 
+
   return await exec(sql);
 };
 
@@ -43,7 +43,6 @@ const queryUser = async (andConditionData = {}, orConditionData = {}, sql) => {
       ? sql.substring(0, sql.length - 2)
       : sql;
 
-  
   return await exec(sql);
 };
 
