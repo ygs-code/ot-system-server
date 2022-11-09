@@ -26,20 +26,17 @@ const queryUser = async (data) => {
   // id 查询 名称查询，手机查询, 用户名+密码查询
   let sql = "";
   let whereConditions = "";
+  let nameStr = name ? "name" : "phone";
   // 登录情况
-  if (name && password) {
-    sql = `select * from user where name =${connection.escape(
+  if ((name || phone) && password) {
+    sql = `select * from user where ${nameStr} =${connection.escape(
       name
     )}  and  password=${connection.escape(hmac.sign(password, ""))}`;
     return await exec(sql);
   }
 
   whereConditions =
-    (id && "id") ||
-    (name && "name") ||
-    (phone && "phone") ||
-    (password && "password") ||
-    "";
+    (id && "id") || (name && "name") || (phone && "phone") || "";
 
   if (whereConditions) {
     sql = `select * from user where ${whereConditions} =?`;

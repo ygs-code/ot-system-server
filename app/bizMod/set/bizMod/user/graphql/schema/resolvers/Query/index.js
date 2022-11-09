@@ -7,31 +7,50 @@
  * @FilePath: /Blogs/BlogsServer/app/bizMod/set/bizMod/user/graphql/schema/resolvers/Query/index.js
  */
 import { outHttpLog } from "@/utils";
-
-// import userService from "@/bizMod/set/bizMod/user/service";
+import { addUser, removeUser, queryUser } from "@/bizMod/set/db";
 import userController from "@/bizMod/set/bizMod/user/controller";
+import { forbidden, success } from "@/constant/httpCode";
 
-export const getUserInfo = (root, parameter, source, fieldASTs) => {
+export const getUserInfo = async (root, parameter, source, fieldASTs) => {
   const { ctx: { request, response } = {} } = root;
   const { id } = parameter || {};
-  console.log("paramete11111=", parameter);
+
   // outHttpLog({
   //   source,
   //   response,
   //   __filename,
   // });
-  let data = {};
-  // const { name, phone } = response.userInfo;
+
   if (id) {
+    return await queryUser({
+      id,
+    })
+      .then((userInfo) => {
+         
+        userInfo = userInfo.length >= 1 ? userInfo[0] : null;
+        return userInfo
+          ? {
+              ...success,
+              data: userInfo,
+            }
+          : {
+              ...forbidden,
+              message: "用户id不正确，查询不到对应用户信息",
+              data: userInfo,
+            };
+      })
+      .catch((error) => {
+        return {
+          ...forbidden,
+          message: "用户id不正确，查询不到对应用户信息",
+        };
+      });
   } else {
-    data = response.userInfo;
+    return {
+      ...success,
+      data: response.userInfo,
+    };
   }
-  console.log("data=====", data);
-  return {
-    code: 200,
-    message: "请求成功",
-    data,
-  };
 };
 
 export const getVerifyCode = async (root, parameter, source, fieldASTs) => {

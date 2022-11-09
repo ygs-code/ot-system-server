@@ -35,7 +35,7 @@ class Service {
      2 查询手机号码是否被注册过
      3 如果都没有被注册那么就可以注册
     */
-        let userInfo = await this.queryUser({
+        let userInfo = await queryUser({
             name,
         });
 
@@ -46,7 +46,7 @@ class Service {
             };
         }
 
-        userInfo = await this.queryUser({
+        userInfo = await queryUser({
             phone,
         });
         userInfo = userInfo.length >= 1 ? userInfo[0] : null;
@@ -84,7 +84,7 @@ class Service {
       3.创建token,存储到redis中
       4.把用户信息挂载response中
     */
-        let userInfo = await this.queryUser({
+        let userInfo = await queryUser({
             name,
         });
 
@@ -95,7 +95,7 @@ class Service {
             };
         }
 
-        userInfo = await this.queryUser({
+        userInfo = await queryUser({
             password,
         });
         userInfo = userInfo.length >= 1 ? userInfo[0] : null;
