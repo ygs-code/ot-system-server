@@ -11,9 +11,10 @@ import { connection, exec, CheckTable } from "@/db";
 // 密码加密
 const hmac = jwa("HS256");
 // 添加用户
-const addUser = async ({ name, phone, password }) => {
-  const sql = "INSERT INTO user SET ?";
+const addUser = async ({ name, phone, password, email }) => {
+  const sql = "INSERT INTO t_user SET ?";
   return await exec(sql, {
+    email,
     name,
     phone,
     password: hmac.sign(password, ""),
@@ -22,38 +23,32 @@ const addUser = async ({ name, phone, password }) => {
 
 //查询用户  可以单独查询 id name  phone password
 const queryUser = async (data) => {
-  const { id, name, phone, password } = data;
+  const { id, name, phone, password, email } = data;
   // id 查询 名称查询，手机查询, 用户名+密码查询
   let sql = "";
-  let whereConditions = "";
+  let nameField =
+    (id && "id") ||
+    (name && "name") ||
+    (phone && "phone") ||
+    (email && "email") ||
+    "";
   // 登录情况
-  if (name && password) {
-    sql = `select * from user where name =${connection.escape(
-      name
+  if (nameField && password) {
+    sql = `select * from t_user where ${nameField} =${connection.escape(
+      data[nameField]
     )}  and  password=${connection.escape(hmac.sign(password, ""))}`;
     return await exec(sql);
   }
 
-  whereConditions =
-    (id && "id") ||
-    (name && "name") ||
-    (phone && "phone") ||
-    (password && "password") ||
-    "";
-
-  if (whereConditions) {
-    sql = `select * from user where ${whereConditions} =?`;
-    return await exec(sql, [
-      whereConditions === "password"
-        ? hmac.sign(password, "")
-        : data[whereConditions],
-    ]);
+  if (nameField) {
+    sql = `select * from t_user where ${nameField} =?`;
+    return await exec(sql, [data[nameField]]);
   }
 };
 
 //删除用户
 const removeUser = async (id) => {
-  const sql = `DELETE  FROM  user  WHERE ?;`;
+  const sql = `DELETE  FROM  t_user  WHERE ?;`;
   return await exec(sql, { id });
 };
 

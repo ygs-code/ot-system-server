@@ -82,7 +82,8 @@ extend type Query {
 
 #定义输入类型
 input UserInfoInput {
-  username: String!
+  name: String!
+  email: String!
   phone: String!
   password: String!
   confirmPassword: String!
@@ -121,7 +122,7 @@ extend type Query {
   #! 是必填参数
   login(
     password: String!
-    username: String!
+    name: String!
     verificationCode: String!
   ): LoginInfo
 }

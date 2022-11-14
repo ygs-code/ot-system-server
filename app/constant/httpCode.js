@@ -18,10 +18,22 @@ const unsupported = {
   message: "服务器已经理解请求，但是拒绝执行它",
 };
 
+const forbidden = {
+  // 状态码403表示授权失败，通常表示用户通过了身份验证，但缺少权限对给定的资源进行访问或者操作 场景：用户登录成功，但是无权进行读写操作。
+  code: 403,
+  message: "服务器已经理解请求，但是拒绝执行它",
+};
+
 const unauthorized = {
   // 当前请求需要用户验证. 如果验证不通过则返回401
   code: 401,
   message: "当前请求需要用户验证.",
 };
 
-export { graphqlError, unsupported, unauthorized };
+const success = {
+  // 当前请求成功
+  code: 200,
+  message: "操作成功",
+};
+
+export { graphqlError, unsupported, unauthorized, forbidden, success };

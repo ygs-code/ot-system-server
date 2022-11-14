@@ -9,14 +9,13 @@ import {
   destroyToken,
   getTokenUserInfo,
 } from "@/redis";
-import { setVerifyCode, getVerifyCode } from "../../../redis";
+import { setVerifyCode, getVerifyCode } from "@/bizMod/set/redis";
 import { tokenExpires } from "@/config";
 import { captureClassError } from "utils";
 
 @captureClassError()
 class Service {
   static list(page) {
-    console.log("page=", page);
     const dataList = {
       list: [
         {
@@ -39,7 +38,7 @@ class Service {
 
   //注册用户
   static async register(ctx, next, parameter) {
-    const { username: name, phone, password } = parameter;
+    const { name, phone, password, email } = parameter;
     /*
      1 查询用户名是否被注册过，
      2 查询手机号码是否被注册过
@@ -59,20 +58,37 @@ class Service {
     userInfo = await queryUser({
       phone,
     });
+
     userInfo = userInfo.length >= 1 ? userInfo[0] : null;
+
     if (userInfo && userInfo.id) {
       return {
         status: 2,
       };
     }
+
+    userInfo = await queryUser({
+      email,
+    });
+
+    userInfo = userInfo.length >= 1 ? userInfo[0] : null;
+
+    if (userInfo && userInfo.id) {
+      return {
+        status: 3,
+      };
+    }
+
     const data = await addUser({
+      email,
       name,
       phone,
       password,
     });
+
     if (data) {
       return {
-        status: 3,
+        status: 4,
       };
     }
   }
@@ -85,8 +101,9 @@ class Service {
   }
   // 登录
   static async login(ctx, next, parameter = {}) {
-    const { username: name, phone, password } = parameter;
+    const { name, phone, password } = parameter;
     const { request, response, cookies } = ctx;
+    let nameField = "name";
 
     /*
       1.先查询用户名是否正确，
@@ -94,35 +111,50 @@ class Service {
       3.创建token,存储到redis中
       4.把用户信息挂载response中
     */
+    // 用用户名查询
     let userInfo = await queryUser({
       name,
     });
 
-    userInfo = userInfo.length >= 1 ? userInfo[0] : null;
-    if (!userInfo) {
+    // 手机查询
+    if (!userInfo.length) {
+      nameField = "phone";
+      userInfo = await queryUser({
+        phone: name,
+      });
+    }
+
+    // 邮箱查询
+    if (!userInfo.length) {
+      nameField = "email";
+      userInfo = await queryUser({
+        email: name,
+      });
+    }
+
+    if (!userInfo.length) {
       return {
         status: 1,
       };
     }
 
+
+    // 用户查询
     userInfo = await queryUser({
-      name,
+      [nameField]: name,
       password,
     });
-    console.log('userInfo==',userInfo)
-    userInfo = userInfo.length >= 1 ? userInfo[0] : null;
- 
+
+
     if (!userInfo) {
       return {
         status: 2,
       };
     }
 
-    // userInfo = await queryUser({
-    //   name,
-    //   password,
-    // });
-    // userInfo = userInfo.length >= 1 ? userInfo[0] : null;
+
+    userInfo = userInfo[0];
+
 
     /*
      创建 createToken  
@@ -136,7 +168,7 @@ class Service {
       // secure :true, // 安全 cookie 设置后只能通过https来传递cookie
       // 设置过期时间
       expires: new Date(new Date().getTime() + tokenExpires),
-      path :'/',  // cookie 路径, 默认是'/'
+      path: "/", // cookie 路径, 默认是'/'
       // domain: 'http://localhost/',  // 设置cookie访问域名
     });
     if (userInfo) {
@@ -150,7 +182,7 @@ class Service {
   }
 
   static async getVerifyCode(ctx, next, parameter = {}) {
-    const { username: name, phone, password } = parameter;
+    const { name, phone, password } = parameter;
     const { request, response, cookies } = ctx;
     var codeConfig = {
       size: 5, // 验证码长度
