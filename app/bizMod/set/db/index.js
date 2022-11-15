@@ -7,4 +7,8 @@
  * @FilePath: /error-sytem/server/app/bizMod/abnormity/db/index.js
  */
 export { connection, exec, CheckTable } from "@/db";
-export * from "./user"; 
+import initTable from "@/bizMod/set/db/sql/initTable.sql";
+import initTableData from "@/bizMod/set/db/sql/initTableData.sql";
+
+export { initTable, initTableData };
+export * from "./user";

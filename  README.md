@@ -48,7 +48,7 @@ CREATE TABLE `user_role` (
 
   `id` int(11) NOT NULL AUTO_INCREMENT,
 
-  `user_id` varchar(40) NOT NULL,
+  `user_id` int(11) NOT NULL,
 
   `role_id` int(11) NOT NULL,
 
@@ -118,17 +118,20 @@ INSERT INTO `user_role` VALUES ('1','u1','1'), ('2','u2','2'), ('3','u3','3'), (
 
  
 
+```
+#查询拥有某角色的用户信息
 SELECT
-
-u.id,u.username
-
+u.id,   #查询字段
+u.name
 FROM
-
-   t_user u,t_role r,user_role ur
-
+   t_user u,  #用户表
+	 t_role r,  #角色表
+	 user_role ur #用户_角色表
 WHERE
+   r.id=1 AND  r.id=ur.role_id AND ur.user_id=u.id;  #查询条件
+```
 
-   r.id=1 AND  r.id=ur.role_id AND ur.user_id=u.id;
+
 
  ![img](https://www.pianshen.com/images/279/75947025d5160c206cb4c0cba67b1d87.png)
 
@@ -140,17 +143,36 @@ WHERE
 
  
 
+```
+	
 SELECT
-
-u.id,u.username,r.`name` role_name
-
+u.id  user_id, #重命名
+u.`name` user_name , #重命名
+r.`name` role_name  #重命名
 FROM
-
-   t_user u,t_role r,user_role ur
-
+   t_user u, #缩写表
+	 t_role r,  #缩写表
+	 user_role ur  #缩写表
 WHERE
+  u.name LIKE 'qq281113270' AND u.id=ur.user_id AND ur.role_id=r.id;  #查询条件
+  
+  
+  # 或者用id查询
+SELECT
+u.id  user_id, #重命名
+u.`name` user_name , #重命名
+r.`name` role_name  #重命名
+FROM
+   t_user u, #缩写表
+	 t_role r,  #缩写表
+	 user_role ur  #缩写表
+WHERE
+  u.id = 3 AND u.id=ur.user_id AND ur.role_id=r.id;  #查询条件  
+  
+  
+```
 
-  u.username LIKE 'a%' AND u.id=ur.user_id AND ur.role_id=r.id;
+
 
  ![img](https://www.pianshen.com/images/953/3ccbc1a29f2a6fb00494e97775f53689.png)
 
@@ -263,3 +285,118 @@ WHERE
 p.`name`='小说发布' AND p.id=rp.permission_id AND rp.role_id=r.id);
 
  ![img](https://www.pianshen.com/images/164/7d3a2fd6ccf519ac9404bad7edf5a5a4.png)
+
+
+
+
+
+## 7.查询某用户拥有的权限key
+
+```
+ # 查询某用户下的权限key 用户id 为3
+SELECT
+u.id  user_id, #重命名
+u.`name` user_name , #重命名
+r.`id` role_id,  #重命名
+r.`name` role_name,  #重命名
+p.`id` permission_id,  #重命名
+p.`name` permission_name , #重命名
+p.`auth_key` permission_auth_key,  #重命名
+p.`parent_auth_key` permission_parent_auth_key #重命名
+
+FROM
+     t_user u, #缩写表
+	 t_role r,  #缩写表
+	 user_role ur,  #缩写表
+	 t_permission p, #缩写表
+	 role_permission  rp #缩写表
+WHERE
+		u.id = 3 AND u.id=ur.user_id AND r.id=ur.role_id AND r.id= rp.role_id  AND p.id= rp.permission_id;  #查询条件
+		
+		
+```
+
+
+
+
+
+# 多表联查
+
+#### 数据结构说明：
+
+-- 学生表：student(学号,学生姓名,出生年月,性别)
+-- 成绩表：score(学号,课程号,成绩)
+-- 课程表：course(课程号,课程名称,教师号)
+-- 教师表：teacher(教师号,教师姓名)
+
+![img](https://upload-images.jianshu.io/upload_images/7856649-4e438df234c8a982.png?imageMogr2/auto-orient/strip|imageView2/2/w/724/format/webp)
+
+#### 创建数据
+
+```
+-- 1)创建学生表(t_student)
+CREATE TABLE `t_student` (
+`id` int(11) NOT NULL COMMENT '学号',        
+`name` varchar(50) DEFAULT NULL COMMENT '姓名',
+`date_birth` date DEFAULT NULL  COMMENT '出生日期',
+`sex` varchar(10) DEFAULT NULL   COMMENT '性别',
+ PRIMARY KEY (`id`) COMMENT '关键key'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- 2)创建教师表(t_teacher)
+CREATE TABLE `t_teacher` (
+`id` int(11) NOT NULL COMMENT '教师号',       
+`name` varchar(50) DEFAULT NULL COMMENT '教师姓名',
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+-- 3)创建课程表(t_course)
+CREATE TABLE `t_course` (
+`id` int(11) NOT NULL COMMENT '课程号',  
+`name`  int(11) NOT NULL COMMENT '课程名称',  
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+-- 4)学生表_课程表->成绩表   
+CREATE TABLE `t_score` (
+`id` int(11) NOT NULL COMMENT '成绩表id',  
+`student_id` int(11) NOT NULL COMMENT '学号',  
+`course_id` int(11) NOT NULL COMMENT '课程号',  
+`score` float(3,0) DEFAULT NULL COMMENT '成绩',  
+ PRIMARY KEY (`id`) COMMENT '主key',  
+ key `fk_t_score_t_teacher` (`student_id`)  ,   
+ CONSTRAINT `fk_t_score_t_teacher` FOREIGN KEY(`student_id`) REFERENCES t_student(id),   
+ key `fk_t_score_t_course` (`course_id`) ,   
+ CONSTRAINT `fk_t_score_t_course` FOREIGN KEY(`course_id`) REFERENCES t_course(id)   
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+
+-- 5)课程表_教师表->授课表  
+CREATE TABLE `t_teaching` (
+`id` int(11) NOT NULL COMMENT '授课id',  
+`teacher_id` int(11) NOT NULL COMMENT '教师id',  
+`course_id` int(11) NOT NULL COMMENT '课程号',  
+ PRIMARY KEY (`id`) COMMENT '主key',  
+ key `fk_t_teaching_t_teacher` (`teacher_id`)  ,   
+ CONSTRAINT `fk_t_teaching_t_teacher` FOREIGN KEY(`teacher_id`) REFERENCES t_teacher(id),   
+ key `fk_t_teaching_t_course` (`course_id`) ,   
+ CONSTRAINT `fk_t_teaching_t_course` FOREIGN KEY(`course_id`) REFERENCES t_course(id)   
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+```
+
+
+
+# MySQL外键约束（FOREIGN KEY）
+
+http://c.biancheng.net/view/2441.html
