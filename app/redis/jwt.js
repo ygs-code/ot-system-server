@@ -40,7 +40,6 @@ const createToken = async (userInfo = {}, payload = {}) => {
     `${token}`,
     JSON.stringify({
       token,
-      id,
       ...userInfo,
     })
   );

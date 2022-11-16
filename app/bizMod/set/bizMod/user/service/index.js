@@ -1,4 +1,9 @@
-import { addUser, removeUser, queryUser } from "@/bizMod/set/db";
+import {
+  addUser,
+  removeUser,
+  queryUser,
+  queryUserRolePermission,
+} from "@/bizMod/set/db";
 import { merge } from "@/utils";
 import svgCaptcha from "svg-captcha";
 import { v4 as uuidv4 } from "uuid";
@@ -138,30 +143,82 @@ class Service {
       };
     }
 
-
     // 用户查询
     userInfo = await queryUser({
       [nameField]: name,
       password,
     });
 
-
-    if (!userInfo) {
+    if (!userInfo.length) {
       return {
         status: 2,
       };
     }
-
-
+    console.log("userInfo 0=========", userInfo);
     userInfo = userInfo[0];
-
+    console.log("userInfo 1=========", userInfo);
 
     /*
      创建 createToken  
     */
     delete userInfo.password;
-    const token = await createToken(userInfo);
-    ctx.response.userInfo = userInfo;
+
+    // // 查询 权限key ,查询 角色
+    let userRolePermissionData = await queryUserRolePermission(userInfo.id);
+    if (userRolePermissionData.length) {
+      userRolePermissionData = userRolePermissionData[0];
+      userRolePermissionData = userRolePermissionData.reduce(
+        (acc, item, index) => {
+          console.log("acc=======", acc);
+          const { permissionData = [], authKeys = [], roleData = [] } = acc;
+          const {
+            permissionId,
+            permissionName,
+            permissionDescription,
+            permissionAuthKey,
+            permissionParentAuthKey,
+            roleId,
+            roleName,
+            roleDescription,
+          } = item;
+          permissionData.push({
+            id: permissionId,
+            name: permissionName,
+            description: permissionDescription,
+            authKey: permissionAuthKey,
+            parentAuthKey: permissionParentAuthKey,
+          });
+          authKeys.push(permissionAuthKey);
+          let flag = roleData.some((item) => {
+            return item.id == roleId;
+          });
+          if (!flag) {
+            roleData.push({
+              id: roleId,
+              name: roleName,
+              description: roleDescription,
+            });
+          }
+          return {
+            ...acc,
+            permissionData,
+            authKeys,
+            roleData,
+          };
+        },
+        {}
+      );
+    } else {
+      userRolePermissionData = {};
+    }
+
+    let data = {
+      userInfo,
+      ...userRolePermissionData,
+    };
+    const token = await createToken(data);
+
+    ctx.response.userInfo = data;
     cookies.set("token", token, {
       httpOnly: true, //  服务器可访问 cookie, 默认是 true 前端不能修改 cookie
       overwrite: false, // 一个布尔值，表示是否覆盖以前设置的同名的 cookie (默认是 false). 如果是 true, 在同一个请求中设置相同名称的所有 Cookie
@@ -171,14 +228,13 @@ class Service {
       path: "/", // cookie 路径, 默认是'/'
       // domain: 'http://localhost/',  // 设置cookie访问域名
     });
-    if (userInfo) {
-      //登录成功
-      return {
-        status: 3,
-        token,
-        userInfo,
-      };
-    }
+
+    //登录成功
+    return {
+      status: 3,
+      token,
+      userInfo:data,
+    };
   }
 
   static async getVerifyCode(ctx, next, parameter = {}) {

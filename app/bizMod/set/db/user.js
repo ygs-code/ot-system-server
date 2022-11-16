@@ -12,7 +12,7 @@ import { connection, exec, CheckTable } from "@/db";
 const hmac = jwa("HS256");
 // 添加用户
 const addUser = async ({ name, phone, password, email }) => {
-  const sql = "INSERT INTO t_user SET ?";
+  const sql = "INSERT INTO user SET ?";
   return await exec(sql, {
     email,
     name,
@@ -34,23 +34,52 @@ const queryUser = async (data) => {
     "";
   // 登录情况
   if (nameField && password) {
-    sql = `select * from t_user where ${nameField} =${connection.escape(
+    sql = `select * from user where ${nameField}=${connection.escape(
       data[nameField]
     )}  and  password=${connection.escape(hmac.sign(password, ""))}`;
     return await exec(sql);
   }
 
   if (nameField) {
-    sql = `select * from t_user where ${nameField} =?`;
+    sql = `select * from user where ${nameField}=?`;
     return await exec(sql, [data[nameField]]);
   }
 };
 
 //删除用户
 const removeUser = async (id) => {
-  const sql = `DELETE  FROM  t_user  WHERE ?;`;
+  const sql = `DELETE  FROM  user  WHERE ?;`;
   return await exec(sql, { id });
 };
 
+const queryUserRolePermission = async (id) => {
+  const sql = `
+SELECT
+  DISTINCT
+           p.id permissionId,  #重命名
+           p.name permissionName , #重命名
+           p.description permissionDescription , #重命名
+           p.auth_key permissionAuthKey , #重命名
+           p.parent_auth_key  permissionParentAuthKey, #重命名
+           u.id  userId, #重命名
+           u.name userName , #重命名
+           r.id roleId,  #重命名
+           r.name roleName,  #重命名
+           r.description roleDescription   #重命名   
+FROM
+   user u, #缩写表
+   role r,  #缩写表
+   user_role ur,  #缩写表
+   permission p, #缩写表
+   role_permission  rp #缩写表
+WHERE
+   u.id = ${connection.escape(
+     id
+   )} AND u.id=ur.user_id AND r.id=ur.role_id AND r.id= rp.role_id  AND p.id= rp.permission_id;  #查询条件
+  `;
+
+  return await exec(sql);
+};
+
 // 导出
-export { addUser, removeUser, queryUser };
+export { addUser, removeUser, queryUser, queryUserRolePermission };

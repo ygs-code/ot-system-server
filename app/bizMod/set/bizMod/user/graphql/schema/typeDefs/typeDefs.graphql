@@ -95,9 +95,27 @@ extend type Mutation {
   createUser(userInfo: UserInfoInput!): UserInfo
 }
 
+
+type PermissionData{
+      id: ID
+      name: String
+      description: String
+      authKey: String
+      parentAuthKey: String
+}
+
+type RoleData{
+      id: ID
+      name: String
+      description: String
+}
+
 type LoginData {
   token: String
   userInfo: UserData
+  permissionData:[PermissionData]
+  authKeys:[String]
+  roleData:[RoleData]
 }
 
 """
@@ -118,6 +136,7 @@ type LoginInfo {
   message: String
 }
 
+
 extend type Query {
   #! 是必填参数
   login(
@@ -126,3 +145,9 @@ extend type Query {
     verificationCode: String!
   ): LoginInfo
 }
+
+
+
+      # permissionData
+      #         authKeys
+      #         roleData

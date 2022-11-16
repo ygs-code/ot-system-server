@@ -139,13 +139,14 @@ class Controller {
               message: "登录成功",
               data: {
                 token,
-                userInfo,
+                ...userInfo,
               },
             }),
           };
           return message[status]();
         };
 
+        console.log('getMessage(data)==',getMessage(data))
         return getMessage(data);
       })
       .catch((error) => {
