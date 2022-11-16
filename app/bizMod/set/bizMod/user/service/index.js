@@ -170,7 +170,7 @@ class Service {
       userRolePermissionData = userRolePermissionData.reduce(
         (acc, item, index) => {
           console.log("acc=======", acc);
-          const { permissionData = [], authKeys = [], roleData = [] } = acc;
+          const { permission = [], authKeys = [], role = [] } = acc;
           const {
             permissionId,
             permissionName,
@@ -181,7 +181,7 @@ class Service {
             roleName,
             roleDescription,
           } = item;
-          permissionData.push({
+          permission.push({
             id: permissionId,
             name: permissionName,
             description: permissionDescription,
@@ -189,11 +189,11 @@ class Service {
             parentAuthKey: permissionParentAuthKey,
           });
           authKeys.push(permissionAuthKey);
-          let flag = roleData.some((item) => {
+          let flag = role.some((item) => {
             return item.id == roleId;
           });
           if (!flag) {
-            roleData.push({
+            role.push({
               id: roleId,
               name: roleName,
               description: roleDescription,
@@ -201,9 +201,9 @@ class Service {
           }
           return {
             ...acc,
-            permissionData,
+            permission,
             authKeys,
-            roleData,
+            role,
           };
         },
         {}

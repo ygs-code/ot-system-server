@@ -7,6 +7,6 @@
  * @Description:
  */
 // export   "./typeDefs";
-import verifyCode from "./verifyCode.graphql";
+import typeDefs from "./typeDefs.graphql";
 
-export default [verifyCode];
+export default [typeDefs];

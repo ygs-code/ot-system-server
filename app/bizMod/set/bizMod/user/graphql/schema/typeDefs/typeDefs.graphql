@@ -96,15 +96,15 @@ extend type Mutation {
 }
 
 
-type PermissionData{
+type Permission{
       id: ID
       name: String
-      description: String
+      description: String 
       authKey: String
       parentAuthKey: String
 }
 
-type RoleData{
+type Role{
       id: ID
       name: String
       description: String
@@ -113,9 +113,9 @@ type RoleData{
 type LoginData {
   token: String
   userInfo: UserData
-  permissionData:[PermissionData]
+  permission:[Permission]
   authKeys:[String]
-  roleData:[RoleData]
+  role:[Role]
 }
 
 """
@@ -147,7 +147,4 @@ extend type Query {
 }
 
 
-
-      # permissionData
-      #         authKeys
-      #         roleData
+ 
