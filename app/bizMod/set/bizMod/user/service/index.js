@@ -89,6 +89,7 @@ class Service {
       name,
       phone,
       password,
+      type
     });
 
     if (data) {

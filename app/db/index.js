@@ -6,5 +6,5 @@
  * @Description: In User Settings Edit
  * @FilePath: /error-sytem/server/app/db/index.js
  */
-export { connection, exec } from './mysql';
+export { connection, exec } from './mysql';   
 // export { addUser, removeUser, queryUser } from './user';

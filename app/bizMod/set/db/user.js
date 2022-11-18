@@ -17,6 +17,7 @@ const addUser = async ({ name, phone, password, email }) => {
     email,
     name,
     phone,
+    type,
     password: hmac.sign(password, ""),
   });
 };
