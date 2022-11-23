@@ -15,6 +15,65 @@ import { default as schema } from './schema'
 
 const $validateGraphql = validateGraphql({
   serverRootSchema:`
+
+  type Animal {
+    species: String
+  }
+  
+  extend type Animal {
+    owner: String
+    name: String
+  }
+
+ #这本身不是继承；而是继承。您只能扩展基本类型，而不能基于它创建新类型。注意，新类型没有名称。现有Animal类型已扩展。
+ 
+  
+  """
+    接口
+  """
+  interface Foo {
+    id: ID!
+    foo: Int!
+  }
+  """
+    实现接口
+  """
+  type Bar implements Foo  {
+    id: ID!
+    foo: Int!
+    bar: Int!
+  }
+  
+ 
+
+  
+      """
+      基础数据
+      """
+       type baseData {
+            dummy: String
+       }
+        """
+        基础信息
+        """
+        interface BaseInfo {
+                """
+                请求状态
+                """
+                code: Int
+                """
+                Data数据
+                """
+                data: baseData
+                """
+                请求信息
+                """
+                message: String
+        }
+
+
+
+
       type Query {
           dummy: String
       }

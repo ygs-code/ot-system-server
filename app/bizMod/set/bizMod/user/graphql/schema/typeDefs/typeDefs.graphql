@@ -42,7 +42,7 @@ type UserInfo {
 
 extend type Query {
   #! 是必填参数
-  getUserInfo(id: ID): UserInfo
+  getUserInfo(id: ID): LoginInfo
 }
 
 """

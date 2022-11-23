@@ -65,7 +65,7 @@ class Route {
       await verifyToken(token)
         .then(async (value) => {
           console.log('value======',value)
-          response.userInfo = value;
+          // response.userInfo = value;
           await next();
         })
         .catch((error) => {
