@@ -10,7 +10,7 @@ export default {
 
       glob.sync(globalPath).forEach((testJsPath) => {
         var basename = path.basename(testJsPath, path.extname(testJsPath));
-        console.log("match=", testJsPath.match(/\.js$/g));
+        // console.log("match=", testJsPath.match(/\.js$/g));
         pageName = testJsPath.replace(/\.js$/g, "");
 
         pageName = pageName.split("/app/")[1];

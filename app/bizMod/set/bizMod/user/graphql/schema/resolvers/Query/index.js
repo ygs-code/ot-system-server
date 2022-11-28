@@ -7,7 +7,7 @@
  * @FilePath: /Blogs/BlogsServer/app/bizMod/set/bizMod/user/graphql/schema/resolvers/Query/index.js
  */
 import { outHttpLog } from '@/utils';
-import { addUser, removeUser, queryUser } from '@/bizMod/set/db';
+import { addUser, removeUser, queryUser, queryUserList } from '@/bizMod/set/db';
 import userController from '@/bizMod/set/bizMod/user/controller';
 import { forbidden, success } from '@/constant/httpCode';
 import {
@@ -17,20 +17,11 @@ import {
     destroyToken,
 } from '@/redis/index';
 
-export const getUserInfo = async (root, parameter, source, fieldASTs) => {
-    const { ctx = {} } = root;
-    let {
-        request,
-        query: { query: clientSchema = '', operationName: queryOperationName },
-        cookies,
-        response,
-        method,
-    } = ctx;
-    const {
-        body: { query, mutation, operationName: bodyOperationName },
-        header,
-    } = request;
-    const { id } = parameter || {};
+export const getUserList = async (root, parameter, source, fieldASTs) => {
+    const { ctx = {}, next } = root;
+
+    // 获取用户
+    return await userController.queryList(ctx, next, parameter);
 
     // outHttpLog({
     //   source,
@@ -65,18 +56,15 @@ export const getUserInfo = async (root, parameter, source, fieldASTs) => {
         const token = cookies.get('token') || header.token;
         let data = await verifyToken(token)
             .then(async (value) => {
-                console.log('value111======', value);
                 return value;
                 // await next();
             })
             .catch((error) => {
-                // response.userInfo = null;
                 return {
                     ...unauthorized,
                     message: '登录回话已过期，请重新登录',
                 };
             });
-console.log('data============',data)
         return {
             ...success,
             data,
@@ -84,6 +72,15 @@ console.log('data============',data)
     }
 };
 
+// 获取用户信息
+export const getUserInfo = async (root, parameter, source, fieldASTs) => {
+    const { ctx = {}, next = {} } = root;
+
+    // 获取用户
+    return await userController.query(ctx, next, parameter);
+};
+
+// 获取验证码
 export const getVerifyCode = async (root, parameter, source, fieldASTs) => {
     const { ctx, next } = root;
     const { request, response } = ctx;
@@ -92,11 +89,7 @@ export const getVerifyCode = async (root, parameter, source, fieldASTs) => {
     //  //添加service
     const data = await userController.getVerifyCode(ctx, next, parameter);
 
-    return {
-        code: 200,
-        data,
-        message: '验证码获取成功',
-    };
+    return data;
 };
 
 // 登录接口
@@ -105,7 +98,7 @@ export const login = async (root, parameter, source, fieldASTs) => {
     const { request, response } = ctx;
     const { id } = parameter || {};
 
-    //   //添加service
+    //    登录
     const data = await userController.login(ctx, next, parameter);
 
     return data;
