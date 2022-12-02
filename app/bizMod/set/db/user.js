@@ -106,7 +106,7 @@ const queryUserList = async (parameter = {}) => {
    `;
     }
 
-    sql += ` limit ${connection.escape(
+    sql += `ORDER BY update_time DESC  limit ${connection.escape(
         (pageName - 1) * pageSize
     )}, ${connection.escape(pageSize)};`;
 
