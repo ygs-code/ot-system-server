@@ -7,15 +7,15 @@
  * @FilePath: /Blogs/BlogsServer/app/index.js
  */
 import "@babel/polyfill";
+
 import koa from "koa";
-import { promise } from "./utils";
-import {  connection, exec, addUser } from "./db/index.js";
+
+import { port } from "./config";
+import { connection, exec } from "./db/index.js";
 import initTable from "./db/sql/initTable.sql";
 import { Redis } from "./redis";
 import Route from "./routes/index";
-import kill from "kill-port";
-import { port } from "./config";
-// import myVue from 'myVue';
+import { promise } from "./utils";
 
 class App {
   constructor() {
@@ -65,7 +65,7 @@ class App {
       //       reject();
       //       throw err;
       //     }
-      //   });  
+      //   });
     });
   }
   async initTable() {
