@@ -6,7 +6,7 @@
  * @Description: In User Settings Edit
  * @FilePath: /error-sytem/server/app/bizMod/abnormity/db/index.js
  */
-export { connection, exec, CheckTable } from "@/db";
+export { connection, exec } from "@/db";
 import initTable from "@/bizMod/set/db/sql/initTable.sql";
 import initTableData from "@/bizMod/set/db/sql/initTableData.sql";
 

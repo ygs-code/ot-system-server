@@ -6,7 +6,7 @@
  * @Description: In User Settings Edit
  * @FilePath: /error-sytem/server/app/redis/index.js
  */
-import RedisClass, { Redis, redisClient } from "./redis";
+        import RedisClass, { Redis, redisClient } from "./redis";
 
 export { Redis, redisClient, RedisClass };
 

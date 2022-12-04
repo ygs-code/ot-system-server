@@ -22,54 +22,6 @@ export const getUserList = async (root, parameter, source, fieldASTs) => {
 
     // 获取用户
     return await userController.queryList(ctx, next, parameter);
-
-    // outHttpLog({
-    //   source,
-    //   response,
-    //   __filename,
-    // });
-
-    if (id) {
-        return await queryUser({
-            id,
-        })
-            .then((userInfo) => {
-                userInfo = userInfo.length >= 1 ? userInfo[0] : null;
-                return userInfo
-                    ? {
-                          ...success,
-                          data: userInfo,
-                      }
-                    : {
-                          ...forbidden,
-                          message: '用户id不正确，查询不到对应用户信息',
-                          data: userInfo,
-                      };
-            })
-            .catch((error) => {
-                return {
-                    ...forbidden,
-                    message: '用户id不正确，查询不到对应用户信息',
-                };
-            });
-    } else {
-        const token = cookies.get('token') || header.token;
-        let data = await verifyToken(token)
-            .then(async (value) => {
-                return value;
-                // await next();
-            })
-            .catch((error) => {
-                return {
-                    ...unauthorized,
-                    message: '登录回话已过期，请重新登录',
-                };
-            });
-        return {
-            ...success,
-            data,
-        };
-    }
 };
 
 // 获取用户信息
