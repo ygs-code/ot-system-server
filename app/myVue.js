@@ -1,3 +1,5 @@
-export default class Vue {
-  extends() {}
-}
+
+         export default class Vue {
+                extends() {}
+         }
+    
