@@ -9,13 +9,8 @@ import userService from "../service";
 class Controller {
   static a = 123;
 
-  static async queryList(ctx, next, parameter) {
-    const { pageSize = 10, pageNum = 1 } = parameter;
-    const data = await userService.queryList(ctx, next, {
-      ...parameter,
-      pageSize,
-      pageNum
-    });
+  static async queryList(ctx, next, { parameter }) {
+    const data = await userService.queryList(ctx, next, parameter);
 
     return {
       ...success,
@@ -63,8 +58,8 @@ class Controller {
 
     return mapData[status]();
   }
-
-  static async register(ctx, next) {
+  // 创建
+  static async create(ctx, next) {
     const { request, response } = ctx;
 
     const parameter = request.body; // 获取请求参数
@@ -74,7 +69,7 @@ class Controller {
     return getVerifyCode(verificationCode)
       .then(async () => {
         //添加service
-        const data = await userService.register(ctx, next, userInfo);
+        const data = await userService.create(ctx, next, userInfo);
         // const { status, token, userInfo } = data;
         const getMessage = (data) => {
           const { status } = data;
@@ -130,7 +125,7 @@ class Controller {
         };
       });
   }
-
+  // 编辑
   static edit(ctx) {
     ctx.set("Content-Type", "application/json");
 

@@ -6,14 +6,17 @@
  * @Description: In User Settings Edit
  * @FilePath: /Blogs/BlogsServer/app/bizMod/set/bizMod/user/router/index.js
  */
-import controller from "../controller";
 import koaRoute from "koa-router"; // koa 路由中间件
+
 import {
   createToken,
-  verifyToken,
   destroyToken,
   getTokenUserInfo,
+  verifyToken
 } from "@/redis";
+
+import controller from "../controller";
+
 class router {
   constructor(app, parentRouter) {
     this.app = app;
@@ -22,7 +25,7 @@ class router {
   }
   createRouter() {
     this.threeLevelRoute = new koaRoute({
-      prefix: "/user", // 给路由统一加个前缀：
+      prefix: "/user" // 给路由统一加个前缀：
     });
     return this.threeLevelRoute;
   }
@@ -45,7 +48,7 @@ class router {
     // // 注册路由
     this.login();
     this.query();
-    this.register();
+    this.create();
     this.edit();
     this.verifyToken();
     this.verifyCode();
@@ -58,15 +61,15 @@ class router {
     // 添加中间件
     this.middleware();
     // 添加路由
-    this.addRouters();
+    // this.addRouters();
   }
   query() {
     // 添加 接口
     this.threeLevelRoute.get("/query", controller.query);
   }
-  register() {
+  create() {
     // 添加 接口
-    this.threeLevelRoute.post("/register", controller.register);
+    this.threeLevelRoute.post("/register", controller.create);
   }
   edit() {
     // 添加 接口
@@ -88,14 +91,14 @@ class router {
           ctx.response.body = {
             code: 200,
             data,
-            message: "检查成功",
+            message: "检查成功"
           };
         })
         .catch(() => {
           ctx.response.body = {
             code: 200,
             data: {},
-            message: "token已失效",
+            message: "token已失效"
           };
         });
     });

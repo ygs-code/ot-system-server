@@ -7,6 +7,7 @@
  * @FilePath: /Blogs/BlogsServer/app/db/mysql.js
  */
 import mysql from "mysql";
+
 import { MYSQL_CONF } from "../config/index";
 
 // 创建链接对象
@@ -16,8 +17,8 @@ const exec = async function () {
   const parameter = arguments;
   return await new Promise((resolve, reject) => {
     connection.query(...parameter, (err, result) => {
-        // console.log('err=',err)
-        // console.log('result=',result)
+      // console.log('err=',err)
+      // console.log('result=',result)
       if (err) {
         reject(err);
         return;
