@@ -15,5 +15,5 @@ import { default as common } from "./common";
 
 export default [
   // userSchema,
-  common,
+  common
 ];

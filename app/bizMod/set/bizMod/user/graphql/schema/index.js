@@ -7,7 +7,7 @@
  * @Description:
  */
 import * as resolvers from "./resolvers";
-import  typeDefs from "./typeDefs";
+import typeDefs from "./typeDefs";
 
 //脚本模块
 // export default { resolvers, typeDefs };
@@ -27,5 +27,5 @@ export default {
   dirname: __dirname,
   typeDefs: [typeDefs],
   // 这里并没有校验resolvers重复性，所以需要我们自己实现校验
-  resolvers,
+  resolvers
 };

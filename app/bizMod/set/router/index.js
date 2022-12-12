@@ -7,11 +7,13 @@
  * @FilePath: /error-sytem/server/app/bizMod/abnormity/router/index.js
  */
 import koaRoute from "koa-router"; // koa 路由中间件
+
+import { initTable, initTableData } from "@/bizMod/set/db";
+import { addUser, connection, exec } from "@/db/index.js";
+
 // import { async } from "regenerator-runtime";
 // import { router as scriptRouter } from "../bizMod/script"; //scriptRouter 路由
 import { router as userRouter } from "../bizMod/user"; //userRouter 路由
-import {initTable ,initTableData}from "@/bizMod/set/db";
-import { connection, exec, addUser } from "@/db/index.js";
 // import { tables, CheckTable } from "../db"; //  db
 class router {
   constructor(app, parentRouter) {
@@ -21,7 +23,7 @@ class router {
   }
   createRouter() {
     this.twoLevelRoute = new koaRoute({
-      prefix: "/set", // 给路由统一加个前缀：
+      prefix: "/set" // 给路由统一加个前缀：
     });
     return this.twoLevelRoute;
   }

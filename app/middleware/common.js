@@ -7,10 +7,10 @@
  * @FilePath: /error-sytem/server/app/middleware/common.js
  */
 import bodyParser from "koa-bodyparser";
-import cors from "koa2-cors";
 import cookie from "koa-cookie";
-import { v4 as uuidv4 } from "uuid";
+import cors from "koa2-cors";
 import moment from "moment";
+import { v4 as uuidv4 } from "uuid";
 
 const getColors = (keys) => {
   const styles = {
@@ -35,7 +35,7 @@ const getColors = (keys) => {
     blueBG: "\x1B[44m", // 背景色为蓝色
     magentaBG: "\x1B[45m", // 背景色为品红
     cyanBG: "\x1B[46m", // 背景色为青色
-    whiteBG: "\x1B[47m", // 背景色为白色
+    whiteBG: "\x1B[47m" // 背景色为白色
   };
   let colors = "";
   if (typeof keys === "string") {
@@ -92,7 +92,7 @@ const LinkLog = (requestId, options = {}) => {
         "[ERROR]",
         ...ags
       );
-    },
+    }
   };
 };
 const common = (app, router) => {
@@ -150,7 +150,7 @@ const common = (app, router) => {
   app.use(
     cors({
       // origin: ['http://localhost:3000','http://127.0.0.1:3000'],    // 前端地址
-      credentials: true,
+      credentials: true
     })
   );
 
@@ -158,7 +158,7 @@ const common = (app, router) => {
     const {
       request: { header },
       cookies,
-      response,
+      response
     } = ctx;
     // 设置响应字段
     const requestId = header["request-id"] || uuidv4();

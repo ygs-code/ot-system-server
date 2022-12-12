@@ -7,6 +7,5 @@
  * @FilePath: /error-sytem/server/app/bizMod/set/index.js
  */
 
-export { default as router } from "./router";
 export * as schema from "./graphql/schema";
- 
+export { default as router } from "./router";

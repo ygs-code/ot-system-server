@@ -21,8 +21,8 @@
 import {
   // 动态导入模块
   router as setRouter,
-  schema as setSchema,
-} from './set'
+  schema as setSchema
+} from "./set";
 
 // 动态导入模块
 // import {
@@ -74,34 +74,34 @@ export const schema = (() => {
     // ...abnormitySchema,
     // ...performanceSchema,
     // ...projectListSchema,
-    ...setSchema,
+    ...setSchema
     // ...menuSchema,
-  }
+  };
 
   // console.log('schemas======', schemas)
 
-  let newSchemas = []
+  let newSchemas = [];
   for (let key in schemas) {
     if (schemas.hasOwnProperty(key)) {
-      newSchemas.push(schemas[key])
+      newSchemas.push(schemas[key]);
     }
   }
   // console.log('newSchemas=', newSchemas)
-  return newSchemas
-})()
+  return newSchemas;
+})();
 
 export const router = (app, router) => {
   let routers = {
     // abnormityRouter,
-    // performanceRouter, 
+    // performanceRouter,
     // projectListRouter,
     // menuRouter,
-    setRouter,
-  }
+    setRouter
+  };
   // 动态添加模块
   for (let key in routers) {
     if (routers.hasOwnProperty(key)) {
-      new routers[key](app, router)
+      new routers[key](app, router);
     }
   }
 
@@ -110,4 +110,4 @@ export const router = (app, router) => {
   // new setRouter(app, router)
   // new projectListRouter(app, router);
   // new menuRouter(app, router);
-}
+};

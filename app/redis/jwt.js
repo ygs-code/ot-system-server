@@ -6,10 +6,11 @@
  * @Description: In User Settings Edit
  * @FilePath: /error-sytem/server/app/redis/jwt.js
  */
-import { Redis, redisClient } from "./redis";
-import jwt from "./jsonwebtoken";
+import { tokenExpires } from "@/config";
 import { merge, promise } from "@/utils";
-import { tokenExpires  } from "@/config";
+
+import jwt from "./jsonwebtoken";
+import { Redis, redisClient } from "./redis";
 
 // 创建Token
 const createToken = async (userInfo = {}, payload = {}) => {
@@ -18,7 +19,7 @@ const createToken = async (userInfo = {}, payload = {}) => {
   payload = {
     ...payload,
     createTime: new Date().getTime(), //创建时间
-    exp: new Date().getTime() + tokenExpires,
+    exp: new Date().getTime() + tokenExpires
   };
 
   //创建token
@@ -40,7 +41,7 @@ const createToken = async (userInfo = {}, payload = {}) => {
     `${token}`,
     JSON.stringify({
       token,
-      ...userInfo,
+      ...userInfo
     })
   );
   //更新token时间
@@ -53,7 +54,6 @@ const destroyToken = async (token) => {
   await Redis.del(token);
   return "成功删除token";
 };
-
 
 //获取用户信息
 const getTokenUserInfo = (token) => {
@@ -112,6 +112,6 @@ export {
   createToken,
   destroyToken,
   getTokenUserInfo,
-  verifyToken,
   updateRequestTime,
+  verifyToken
 };

@@ -13,7 +13,7 @@ import typeDefs from "./typeDefs";
 // export default { resolvers, typeDefs };
 export default {
   id: "common", // id不能与其他模块重名
-  dirname: __dirname,
+  dirname: __dirname
   // typeDefs: typeDefs,
   // 这里并没有校验resolvers重复性，所以需要我们自己实现校验
   // resolvers,

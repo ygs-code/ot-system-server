@@ -1,8 +1,3 @@
-import common from './common'
- 
+import common from "./common";
 
-export{
-    common, 
-}
-     
- 
+export { common };

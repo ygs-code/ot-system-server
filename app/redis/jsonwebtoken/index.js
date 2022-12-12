@@ -8,6 +8,7 @@
  */
 
 import jwa from "jwa";
+
 class Jsonwebtoken {
   static tokensCache = {};
   static sign(payload = {}, signingKey, callback = () => {}) {
@@ -23,9 +24,9 @@ class Jsonwebtoken {
       iat: new Date().getTime(), //创建token时间
       exp, //过期时间
       body: {
-        ...payload,
+        ...payload
       },
-      hmac,
+      hmac
     };
     return token;
   }
@@ -37,7 +38,7 @@ class Jsonwebtoken {
       }
       const {
         updateExp, // 更新过期时间  例子 new Date().getTime() + 30 * 60 * 1000 ; // 设置如果没有请求 30分钟token登录失效
-        ignoreExpiration, // 布尔值 忽略 过期时间的
+        ignoreExpiration // 布尔值 忽略 过期时间的
       } = options;
       let falg = false;
       if (this.tokensCache[token]) {
@@ -45,7 +46,7 @@ class Jsonwebtoken {
           body: payload,
           hmac,
           iat, //创建token时间
-          exp, //过期时间
+          exp //过期时间
         } = this.tokensCache[token];
         const secret = `${signingKey}`;
         const input =
@@ -54,8 +55,8 @@ class Jsonwebtoken {
           iat,
           exp,
           body: {
-            ...payload,
-          },
+            ...payload
+          }
         };
 
         if (!ignoreExpiration && exp) {
@@ -66,14 +67,14 @@ class Jsonwebtoken {
             exp,
             nowTime,
             body: {
-              ...payload,
-            },
+              ...payload
+            }
           };
           //有时间校验的
           if (nowTime > exp) {
             callback(
               {
-                message: "token有效期已过",
+                message: "token有效期已过"
               },
               info
             );
@@ -88,21 +89,20 @@ class Jsonwebtoken {
           ? callback(null, info)
           : callback(
               {
-                message: "token校验失败",
+                message: "token校验失败"
               },
               info
             );
 
         return falg;
-      } else {
-        callback(
-          {
-            message: "无效token",
-          },
-          {}
-        );
-        return falg;
       }
+      callback(
+        {
+          message: "无效token"
+        },
+        {}
+      );
+      return falg;
     } catch (error) {
       console.error("error=========", error, __filename);
     }
@@ -121,22 +121,22 @@ class Jsonwebtoken {
           body: payload = {},
           hmac,
           iat, //创建token时间
-          exp, //过期时间
+          exp //过期时间
         } = this.tokensCache[token];
         this.tokensCache[token] = {
           body: {
             ...payload,
-            ...body,
-          },
+            ...body
+          }
         };
         let info = {
           iat,
           exp,
-          body: this.tokensCache[token].body,
+          body: this.tokensCache[token].body
         };
         callback(
           {
-            message: "成功更新body",
+            message: "成功更新body"
           },
           info
         );

@@ -6,7 +6,6 @@
  * @Description: In User Settings Edit
  * @FilePath: /error-sytem/server/app/bizMod/abnormity/bizMod/user/graphql/schema/resolvers/Query/index.js
  */
- 
 
 // export const UnionUserId = {
 //   __resolveType(obj, context, info){

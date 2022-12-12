@@ -2,13 +2,13 @@ import Router from "koa-router";
 
 // import _ from "lodash";
 import { router as bizModRouter } from "@/bizMod/index";
-import { graphqlError } from "@/constant";
-import { unauthorized } from "@/constant";
+import { graphqlError, unauthorized } from "@/constant";
 import { validateGraphql } from "@/graphql";
 import { common } from "@/middleware/index";
 import { verifyToken } from "@/redis/index";
 
 import noVerifyToken from "./noVerifyToken";
+
 class Route {
   constructor(app) {
     this.app = app;

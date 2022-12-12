@@ -1,6 +1,8 @@
 import redis from "redis";
-import { merge, promise } from "../utils";
+
 import { REDIS_CONF } from "../config";
+import { merge, promise } from "../utils";
+
 class RedisClass {
   constructor(port, url, options = {}) {
     this.port = port;

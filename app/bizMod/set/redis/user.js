@@ -6,7 +6,8 @@
  * @Description: In User Settings Edit
  * @FilePath: /error-sytem/server/app/bizMod/set/redis/user.js
  */
-import { Redis, redisClient, RedisClass } from "@/redis";
+import { Redis, RedisClass, redisClient } from "@/redis";
+
 import { verifyCodeExpires } from "../config";
 // 设置验证码
 export const setVerifyCode = (key, value, time) => {
@@ -20,4 +21,3 @@ export const getVerifyCode = (key) => {
   }
   return Redis.get(key);
 };
- 

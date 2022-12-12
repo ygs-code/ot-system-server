@@ -6,15 +6,15 @@
  * @FilePath: /Blogs/BlogsServer/app/graphql/index.js
  * @Description:
  */
-import { validateGraphql } from './graphql-modules-validate/esm/ValidateGraphql'
 //  会员模块
 // import { default as baseSchema } from './schema'
 // 数组
-import { schema as bizModSchema } from '../bizMod'
-import { default as schema } from './schema'
+import { schema as bizModSchema } from "../bizMod";
+import { validateGraphql } from "./graphql-modules-validate/esm/ValidateGraphql";
+import { default as schema } from "./schema";
 
 const $validateGraphql = validateGraphql({
-  serverRootSchema:`
+  serverRootSchema: `
 
   type Animal {
     species: String
@@ -89,23 +89,23 @@ const $validateGraphql = validateGraphql({
           subscription: Subscription
       }
   `,
-  lang: 'zh-CN',
-  modules: [ 
+  lang: "zh-CN",
+  modules: [
     ...bizModSchema,
-    ...schema,
+    ...schema
     // {
     //   id: 'user2-module', // id不能与其他模块重名
     //   dirname: __dirname,
     //   typeDefs: [
     //     `
-   
+
     //             type UserTow {
     //                 id: ID
     //                 name: String
     //                 address: String!
     //                 type:Int!
     //             }
-    
+
     //             extend type Query {
     //                 getUserTow: UserTow
     //             }
@@ -135,7 +135,7 @@ const $validateGraphql = validateGraphql({
     // ...bizModSchema,
     // ...MarketingModule,
     // ...LogisticsModule,
-  ],
-})
+  ]
+});
 
-export { $validateGraphql as validateGraphql }
+export { $validateGraphql as validateGraphql };
