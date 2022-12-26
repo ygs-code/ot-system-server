@@ -43,9 +43,9 @@ const cacheLoader = (happypackId) => {
       ]
     : [`happypack/loader?id=${happypackId}`];
 };
-console.log("__dirname : " + __dirname);
-console.log("resolve   : " + resolve("./"));
-console.log("cwd       : " + process.cwd());
+// console.log("__dirname : " + __dirname);
+// console.log("resolve   : " + resolve("./"));
+// console.log("cwd       : " + process.cwd());
 export default {
   // 基目录，绝对路径，用于解析配置中的入口点和加载器。
   // context: path.join(process.cwd(), "/app"),
