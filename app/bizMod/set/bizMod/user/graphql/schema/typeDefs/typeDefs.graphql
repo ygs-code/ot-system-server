@@ -2,191 +2,203 @@
 用户信息数据
 """
 type UserData {
-	"""
-	用户昵称
-	"""
-	name: String
-	"""
-	用户手机号码
-	"""
-	phone: String
-	"""
-	用户ID
-	"""
-	id: ID
-	"""
-	用户token
-	"""
-	token: String
-	"""
-	用户类型
-	"""
-	type: Int
+  """
+  用户昵称
+  """
+  name: String
+  """
+  用户手机号码
+  """
+  phone: String
+  """
+  用户ID
+  """
+  id: ID
+  """
+  用户token
+  """
+  token: String
+  """
+  用户类型
+  """
+  type: Int
 
-	"""
-	用户email
-	"""
-	email: String
+  """
+  用户email
+  """
+  email: String
 
-	"""
-	用户创建时间
-	"""
-	createTime: String
+  """
+  用户创建时间
+  """
+  createTime: String
 
-	"""
-	用户更新时间
-	"""
-	updateTime: String
+  """
+  用户更新时间
+  """
+  updateTime: String
 }
 
 """
 用户信息
 """
 type UserInfo {
-	"""
-	请求状态
-	"""
-	code: Int
-	"""
-	用户信息数据
-	"""
-	data: UserData
-	"""
-	请求信息
-	"""
-	message: String
+  """
+  请求状态
+  """
+  code: Int
+  """
+  用户信息数据
+  """
+  data: UserData
+  """
+  请求信息
+  """
+  message: String
 }
 
 """
 验证码数据
 """
 type VerifyCodeData {
-	"""
-	验证码图片
-	"""
-	svg: String
+  """
+  验证码图片
+  """
+  svg: String
 }
 
 """
 验证码信息
 """
 type VerifyCodeInfo {
-	"""
-	请求状态
-	"""
-	code: Int
-	"""
-	用户信息数据
-	"""
-	data: VerifyCodeData
-	"""
-	请求信息
-	"""
-	message: String
+  """
+  请求状态
+  """
+  code: Int
+  """
+  用户信息数据
+  """
+  data: VerifyCodeData
+  """
+  请求信息
+  """
+  message: String
 }
 
 # 定义输入类型
-input UserInfoInput {
-	name: String!
-	email: String!
-	phone: String!
-	password: String!
-	confirmPassword: String!
-	verificationCode: String!
-	type: Int!
+input CreateUserInfoInput {
+  name: String!
+  email: String!
+  phone: String!
+  password: String!
+  confirmPassword: String!
+  verificationCode: String!
+  type: Int!
+}
+
+# 定义输入类型
+input EditUserInfoInput {
+  id:ID!	
+  name: String!
+  email: String!
+  phone: String!
+  type: Int!
 }
 
 type Permission {
-	id: ID
-	name: String
-	description: String
-	authKey: String
-	parentAuthKey: String
+  id: ID
+  name: String
+  description: String
+  authKey: String
+  parentAuthKey: String
 }
 
 type Role {
-	id: ID
-	name: String
-	description: String
+  id: ID
+  name: String
+  description: String
 }
 
 type LoginData {
-	token: String
-	user: UserData
-	permission: [Permission]
-	authKeys: [String]
-	role: [Role]
+  token: String
+  user: UserData
+  permission: [Permission]
+  authKeys: [String]
+  role: [Role]
 }
 
 """
 登录状态
 """
 type LoginInfo {
-	"""
-	请求状态
-	"""
-	code: Int
-	"""
-	用户信息数据
-	"""
-	data: LoginData
-	"""
-	请求信息
-	"""
-	message: String
+  """
+  请求状态
+  """
+  code: Int
+  """
+  用户信息数据
+  """
+  data: LoginData
+  """
+  请求信息
+  """
+  message: String
 }
 
 """
 用户列表数据
 """
 type UserListData {
-	hasNextPage: Boolean
-	pageNum: Int
-	pageSize: Int
-	pages: Int
-	total: Int
-	list: [UserData]
+  hasNextPage: Boolean
+  pageNum: Int
+  pageSize: Int
+  pages: Int
+  total: Int
+  list: [UserData]
 }
 
 """
 用户列表
 """
 type UserListInfo {
-	"""
-	请求状态
-	"""
-	code: Int
-	"""
-	用户信息数据
-	"""
-	data: UserListData
-	"""
-	请求信息
-	"""
-	message: String
+  """
+  请求状态
+  """
+  code: Int
+  """
+  用户信息数据
+  """
+  data: UserListData
+  """
+  请求信息
+  """
+  message: String
 }
 
 # 定义输入类型
 input UserListInfoInput {
-	pageSize: Int
-	pageNum: Int
-	email: String
-	id: ID
-	name: String
-	phone: String
+  pageSize: Int
+  pageNum: Int
+  email: String
+  id: ID
+  name: String
+  phone: String
 }
 
 extend type Query {
-	getUserList(parameter: UserListInfoInput): UserListInfo
-	# ! 是必填参数
-	getUserInfo(id: ID): LoginInfo
-	# ! 是必填参数
-	getVerifyCode: VerifyCodeInfo
-	# ! 是必填参数
-	login(password: String!, name: String!, verificationCode: String!): LoginInfo
+  getUserList(parameter: UserListInfoInput): UserListInfo
+  # ! 是必填参数
+  getUserInfo(id: ID): LoginInfo
+  # ! 是必填参数
+  getVerifyCode: VerifyCodeInfo
+  # ! 是必填参数
+  login(password: String!, name: String!, verificationCode: String!): LoginInfo
 }
 
 extend type Mutation {
-	# ! 是必填参数
-	createUser(userInfo: UserInfoInput!): UserInfo
+  # ! 是必填参数
+  createUser(userInfo: CreateUserInfoInput!): UserInfo
+
+  # ! 编辑用户
+  editUser(userInfo: EditUserInfoInput!): UserInfo
 }

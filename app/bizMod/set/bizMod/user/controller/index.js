@@ -59,11 +59,10 @@ class Controller {
     return mapData[status]();
   }
   // 创建
-  static async create(ctx, next) {
-    const { request, response } = ctx;
+  static async create(ctx, next, parameter) {
+    const { response } = ctx;
+    const { userInfo = {} } = parameter;
 
-    const parameter = request.body; // 获取请求参数
-    const { variables: { userInfo = {} } = {} } = parameter;
     const { verificationCode } = userInfo;
 
     return getVerifyCode(verificationCode)
@@ -126,26 +125,23 @@ class Controller {
       });
   }
   // 编辑
-  static edit(ctx) {
-    ctx.set("Content-Type", "application/json");
-
-    var page = ctx.params.page; // 获取请求参数
-    console.log(page);
-    //添加service
-    // const data = userService.list(page);
-
-    // ctx.response.body = "d";
+  static async edit(ctx, next, parameter) {
+    const { data, status } = await userService.edit(ctx, next, parameter);
   }
 
+  // 登录
   static async login(ctx, next, parameter) {
     const { response } = ctx;
     // var parameter = request.body; // 获取请求参数
     const { verificationCode } = parameter;
 
+    console.log("parameter=======", parameter);
+
     return await getVerifyCode(verificationCode)
       .then(async () => {
         //添加service
         const data = await userService.login(ctx, next, parameter);
+        console.log("data======", data);
 
         const getMessage = (data) => {
           const { status, token, userInfo } = data;
@@ -196,6 +192,7 @@ class Controller {
     //   console.log("e===============", e);
     // }
   }
+  // 验证码
   static async getVerifyCode(ctx, next) {
     // ctx.set("Content-Type", "application/json")
     var parameter = ctx.request.body; // 获取请求参数

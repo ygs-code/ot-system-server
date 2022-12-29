@@ -10,7 +10,7 @@ import userController from "@/bizMod/set/bizMod/user/controller";
 
 export const getUserList = async (root, parameter) => {
   const { ctx = {}, next } = root;
-
+  console.log("getUserList=========");
   // 获取用户
   return await userController.queryList(ctx, next, parameter);
 };
