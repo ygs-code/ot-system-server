@@ -3,6 +3,7 @@ import { captureClassError, getPagParameters } from "utils";
 
 import {
   addUser,
+  editUser,
   queryUser,
   queryUserList,
   queryUserRolePermission,
@@ -22,7 +23,7 @@ import {
 class Service {
   // 查询列表
   static async queryList(ctx, next, parameter) {
-    const { pageNum, pageSize, email, id, name, phone } = parameter;
+    const { pageNum, pageSize, email, id, name, phone, type } = parameter;
 
     // 查询出列表
     let [list, total] = await queryUserList(
@@ -30,7 +31,8 @@ class Service {
         and: {
           email,
           id,
-          phone
+          phone,
+          type
         },
         andLike: { name }
       },
@@ -108,7 +110,68 @@ class Service {
     }
   }
   // 编辑用户
-  static async edit(ctx, next, parameter) {}
+  static async edit(ctx, next, parameter) {
+    const {
+      userInfo: { email, id, name, phone, type }
+    } = parameter;
+    let isHasUser = [];
+    /*
+     1 查询用户
+    */
+    let userInfo = await queryUser({
+      id
+    });
+    userInfo = userInfo[0] || {};
+
+    // 更新name
+    if (name !== userInfo.name) {
+      isHasUser = await queryUser({
+        name
+      });
+      console.log("isHasUser==", isHasUser);
+      if (isHasUser.length) {
+        return {
+          status: 1
+        };
+        // console.log(`该用户名${name}已存在，请重新修改用户名`);
+      }
+    }
+
+    // 更新email
+    if (email !== userInfo.email) {
+      isHasUser = await queryUser({
+        email
+      });
+      console.log("isHasUser==", isHasUser);
+      if (isHasUser.length) {
+        return {
+          status: 2
+        };
+        // console.log(`该用邮箱地址${email}已存在，请重新修改邮箱地址`);
+      }
+    }
+
+    // 更新email
+    if (phone !== userInfo.phone) {
+      isHasUser = await queryUser({
+        phone
+      });
+      console.log("isHasUser==", isHasUser);
+      if (isHasUser.length) {
+        return {
+          status: 3
+        };
+        // console.log(`该用手机号码${phone}已存在，请重新修改手机号码`);
+      }
+    }
+
+    console.log("editUser=", { email, id, name, phone, type });
+    await editUser({ email, id, name, phone, type });
+
+    return {
+      status: 4
+    };
+  }
   // 数据库中查询用户
   static async query(ctx, next, parameter) {
     let {

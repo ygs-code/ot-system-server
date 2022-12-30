@@ -98,7 +98,7 @@ input CreateUserInfoInput {
 
 # 定义输入类型
 input EditUserInfoInput {
-  id:ID!	
+  id: ID!
   name: String!
   email: String!
   phone: String!
@@ -183,6 +183,7 @@ input UserListInfoInput {
   id: ID
   name: String
   phone: String
+  type: String
 }
 
 extend type Query {

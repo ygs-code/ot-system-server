@@ -120,29 +120,23 @@ const queryUserList = async (options = {}, page = {}) => {
   return await exec(sql);
 };
 
-const editUser = async (options = {}, page = {}) => {
-  const { pageNum = 1, pageSize = 10 } = page;
-  //   更新某一行中的一个列
-
-  // 我们为 lastname 是 "Wilson" 的人添加 firstname：
-
-  let sql = ` UPDATE Person SET FirstName = 'beijing' WHERE LastName = 'shanghai'
+const editUser = async (parameter) => {
+  const { email, id, name, phone, type } = parameter;
+  let sql = `
+   UPDATE user 
+    SET 
+      email = ${connection.escape(email)}, 
+      name =  ${connection.escape(name)}, 
+      phone =  ${connection.escape(phone)}, 
+      type =  ${connection.escape(type)}
+   WHERE id = ${connection.escape(id)}
     `;
-
-  sql += mergeCondition(options);
-
-  sql += `  ORDER BY update_time DESC  limit ${connection.escape(
-    (pageNum - 1) * pageSize
-  )}, ${connection.escape(pageSize)};`;
-
-  // total 查询
-  sql += ` SELECT FOUND_ROWS() as total;`;
-
   return await exec(sql);
 };
 // 导出
 export {
   addUser,
+  editUser,
   queryUser,
   queryUserList,
   queryUserRolePermission,

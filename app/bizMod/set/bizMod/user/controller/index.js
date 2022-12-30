@@ -126,7 +126,34 @@ class Controller {
   }
   // 编辑
   static async edit(ctx, next, parameter) {
+    const {
+      userInfo: { email, id, name, phone, type }
+    } = parameter;
     const { data, status } = await userService.edit(ctx, next, parameter);
+    const getMessage = (status) => {
+      const message = {
+        1: () => ({
+          ...unsupported,
+          // console.log(`该用户名${name}已存在，请重新修改用户名`);
+          message: `该用户名${name}已存在，请重新修改用户名`
+        }),
+        2: () => ({
+          ...unsupported,
+          message: `该用邮箱地址${email}已存在，请重新修改邮箱地址`
+        }),
+        3: () => ({
+          ...unsupported,
+          message: `该用手机号码${phone}已存在，请重新修改手机号码`
+        }),
+        4: () => ({
+          code: 200,
+          message: "操作成功"
+        })
+      };
+      return message[status]();
+    };
+
+    return getMessage(status);
   }
 
   // 登录
@@ -135,13 +162,10 @@ class Controller {
     // var parameter = request.body; // 获取请求参数
     const { verificationCode } = parameter;
 
-    console.log("parameter=======", parameter);
-
     return await getVerifyCode(verificationCode)
       .then(async () => {
         //添加service
         const data = await userService.login(ctx, next, parameter);
-        console.log("data======", data);
 
         const getMessage = (data) => {
           const { status, token, userInfo } = data;
