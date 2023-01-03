@@ -8,6 +8,7 @@
  */
 export default {
   EN: {
+    name: "name",
     moduleID: "module ID",
     path: "path",
     andModule: "With the module ID",
@@ -30,11 +31,12 @@ export default {
       "The client Schema and request parameters failed to verify with the server's Schema"
   },
   "zh-CN": {
+    name: "名称",
     moduleID: "模块ID",
     path: "路径",
     and: "与",
     their: "它们的",
-    duplicationName: "发生重名冲突，请重新修改。",
+    duplicationName: "发生重名冲突，请重新修改",
     schemaVerified: "服务器schema验证通过",
     errorMessage: "错误信息",
     serverSchemaVerification: "服务器schema验证失败",

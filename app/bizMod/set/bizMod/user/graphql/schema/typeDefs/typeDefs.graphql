@@ -110,7 +110,6 @@ type Permission {
   name: String
   description: String
   authKey: String
-  parentAuthKey: String
 }
 
 type Role {

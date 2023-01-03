@@ -300,7 +300,6 @@ class Service {
             permissionName,
             permissionDescription,
             permissionAuthKey,
-            permissionParentAuthKey,
             roleId,
             roleName,
             roleDescription
@@ -309,8 +308,7 @@ class Service {
             id: permissionId,
             name: permissionName,
             description: permissionDescription,
-            authKey: permissionAuthKey,
-            parentAuthKey: permissionParentAuthKey
+            authKey: permissionAuthKey
           });
           authKeys.push(permissionAuthKey);
           let flag = role.some((item) => {

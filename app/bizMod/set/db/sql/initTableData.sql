@@ -47,17 +47,17 @@ insert
         name,
         auth_key,
         description,
-        parent_auth_key
+        parent_id
     )
 VALUES (
         2,
         '系统设置',
         'admin.system',
         '系统设置权限',
-        'admin'
+        1
     );
 
-#  role_permission 为root 角色添加管理权限key 
+#  role_permission 为 root 角色添加管理权限key 
 insert
     ignore into role_permission (id, role_id, permission_id)
 VALUES (2, 1, 2);
@@ -68,17 +68,17 @@ insert
         name,
         auth_key,
         description,
-        parent_auth_key
+        parent_id
     )
 VALUES (
         3,
         '账号权限',
         'admin.system.accountAuth',
         '账号权限',
-        'admin.system'
+        2
     );
 
-#  role_permission 为root 角色添加管理权限key 
+#  role_permission 为 root 角色添加管理权限key 
 insert
     ignore into role_permission (id, role_id, permission_id)
 VALUES (3, 1, 3);
@@ -89,17 +89,17 @@ insert
         name,
         auth_key,
         description,
-        parent_auth_key
+        parent_id
     )
 VALUES (
         4,
         '账号管理',
         'admin.system.accountAuth.accountManagement',
         '账号管理权限',
-        'admin.system.accountAuth'
+        3
     );
 
-#  role_permission 为root 角色添加管理权限key 
+#  role_permission 为 root 角色添加管理权限key 
 insert
     ignore into role_permission (id, role_id, permission_id)
 VALUES (4, 1, 4);
@@ -110,17 +110,17 @@ insert
         name,
         auth_key,
         description,
-        parent_auth_key
+        parent_id
     )
 VALUES (
         5,
         '角色管理',
         'admin.system.accountAuth.roleManagement',
         '角色管理权限',
-        'admin.system.accountAuth'
+        4
     );
 
-#  role_permission 为root 角色添加管理权限key 
+#  role_permission 为 root 角色添加管理权限key 
 insert
     ignore into role_permission (id, role_id, permission_id)
 VALUES (5, 1, 5);

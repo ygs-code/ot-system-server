@@ -10,6 +10,8 @@
 import initTable from "@/bizMod/set/db/sql/initTable.sql";
 import initTableData from "@/bizMod/set/db/sql/initTableData.sql";
 
+export * from "./permission";
+export * from "./role";
 export * from "./user";
 export { connection, exec } from "@/db";
 

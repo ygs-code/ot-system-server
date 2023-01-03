@@ -26,19 +26,19 @@ CREATE TABLE
 # 权限表
 CREATE TABLE
     IF NOT EXISTS `permission` (
-        `id` int NOT NULL AUTO_INCREMENT,
+        `id` int(0)  NOT NULL AUTO_INCREMENT,
         `name` varchar(20) NOT NULL,
         `auth_key` varchar(255) NOT NULL,
-        `parent_auth_key` varchar(255) DEFAULT NULL,
         `description` varchar(255) DEFAULT NULL,
         `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
         `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+         `parent_id` int(0) NULL DEFAULT NULL,
         PRIMARY KEY (`id`)
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 
 
-## 4、用户_角色关系表
+# 用户_角色关系表
 CREATE TABLE
   IF NOT EXISTS `user_role` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -52,8 +52,6 @@ CREATE TABLE
     CONSTRAINT `fk_user_role_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT `fk_user_role_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
-
 # 角色_权限表
 CREATE TABLE
     IF NOT EXISTS `role_permission` (

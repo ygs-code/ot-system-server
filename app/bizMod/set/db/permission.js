@@ -6,67 +6,53 @@
  * @Description: In User Settings Edit
  * @FilePath: /error-sytem/server/app/bizMod/abnormity/db/user.js
  */
-import jwa from "jwa";
 
 import { connection, exec, mergeCondition, sqlObjToAnd } from "@/db";
-// 密码加密
-const hmac = jwa("HS256");
+
 // 添加用户
-const addUser = async ({ name, phone, password, email, type }) => {
-  const sql = "INSERT INTO user SET ?";
+export const addPermission = async ({ name, phone, password, email, type }) => {
+  const sql = "INSERT INTO role SET ?";
   return await exec(sql, {
     email,
     name,
     phone,
-    type,
-    password: hmac.sign(password, "")
+    type
+    // password: hmac.sign(password, "")
   });
 };
 
 //查询用户  可以单独查询 id name  phone password
-const queryUser = async (data) => {
-  const { password } = data;
-  delete data.password;
-
+export const queryPermission = async (data) => {
   const condition = sqlObjToAnd(data);
 
-  let frontHasCondition = false;
   // id 查询 名称查询，手机查询, 用户名+密码查询
   let sql = `
-    select * from user where
+    select 
+        id,   # 如果这里是查询所有则为*
+        name, 
+        description,
+        auth_key  authKey,
+        parent_id  parentId,
+        DATE_FORMAT(create_time, "%Y-%m-%d %H:%i:%S")  createTime,
+        DATE_FORMAT(update_time, "%Y-%m-%d %H:%i:%S")  updateTime
+    from permission where
   `;
-  if (password) {
-    sql += ` password=${connection.escape(hmac.sign(password, ""))}`;
-    frontHasCondition = true;
-  }
 
   if (condition) {
-    sql += `${frontHasCondition ? " AND " : " "}  ${condition}`;
-    frontHasCondition = true;
+    sql += `${condition}`;
   }
 
-  //   let nameField =
-  //     (id && "id") ||
-  //     (name && "name") ||
-  //     (phone && "phone") ||
-  //     (email && "email") ||
-  //     "";
-  //   // 登录情况
-  //   if (nameField && password) {
-  //     sql = `select * from user where ${nameField}=${connection.escape(
-  //       data[nameField]
-  //     )}  and  password=${connection.escape(hmac.sign(password, ""))}`;
   return await exec(sql);
 };
 
 //删除用户
-const removeUser = async (id) => {
+export const removePermission = async (id) => {
   const sql = `DELETE  FROM  user  WHERE ?;`;
   return await exec(sql, { id });
 };
 
 // 查询用户权限
-const queryUserRolePermission = async (id) => {
+export const queryUserRolePermission = async (id) => {
   const sql = `
     SELECT
       DISTINCT
@@ -95,18 +81,18 @@ const queryUserRolePermission = async (id) => {
 };
 
 // 查询用户列表
-const queryUserList = async (options = {}, page = {}) => {
+export const queryPermissionList = async (options = {}, page = {}) => {
   const { pageNum = 1, pageSize = 10 } = page;
 
   let sql = `SELECT  SQL_CALC_FOUND_ROWS
                 id,   # 如果这里是查询所有则为*
                 name, 
-                email,
-                phone,
-                type,
+                description,
+                auth_key   authKey,
+                parent_id   parentId ,
                 DATE_FORMAT(create_time, "%Y-%m-%d %H:%i:%S")  createTime,
                 DATE_FORMAT(update_time, "%Y-%m-%d %H:%i:%S")  updateTime
-            FROM user 
+            FROM permission 
            `;
 
   sql += mergeCondition(options);
@@ -121,25 +107,16 @@ const queryUserList = async (options = {}, page = {}) => {
   return await exec(sql);
 };
 // 编辑用户
-const editUser = async (parameter) => {
-  const { email, id, name, phone, type } = parameter;
+export const editPermission = async (parameter) => {
+  const { description, id, name, parent_id, auth_key } = parameter;
   let sql = `
-   UPDATE user 
+   UPDATE permission 
     SET 
-      email = ${connection.escape(email)}, 
-      name =  ${connection.escape(name)}, 
-      phone =  ${connection.escape(phone)}, 
-      type =  ${connection.escape(type)}
+      description = ${connection.escape(description)}, 
+      parent_id = ${connection.escape(parent_id)}, 
+      auth_key = ${connection.escape(auth_key)}, 
+      name =  ${connection.escape(name)}
    WHERE id = ${connection.escape(id)}
     `;
   return await exec(sql);
-};
-// 导出
-export {
-  addUser,
-  editUser,
-  queryUser,
-  queryUserList,
-  queryUserRolePermission,
-  removeUser
 };

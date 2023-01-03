@@ -302,7 +302,7 @@ r.`name` role_name,  #重命名
 p.`id` permission_id,  #重命名
 p.`name` permission_name , #重命名
 p.`auth_key` permission_auth_key,  #重命名
-p.`parent_auth_key` permission_parent_auth_key #重命名
+
 
 FROM
      t_user u, #缩写表

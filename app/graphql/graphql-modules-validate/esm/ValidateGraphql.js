@@ -186,7 +186,8 @@ class ValidateGraphql {
     //     ...options,
     // };
     let { modules = [], debug, lang } = this.options;
-
+    let cacheModuleID = [];
+    // 缓存
     let cacheRecord = [];
     let newModules = [];
 
@@ -218,10 +219,20 @@ class ValidateGraphql {
       //     Subscription: [],
       //     Query: [],
       // });
+      let prevData = cacheRecord.find((item) => {
+        return item.id === id;
+      });
 
+      if (prevData) {
+        throw new Error(
+          chalk.red(
+            `${language[lang].moduleID}:${id}, ${language[lang].moduleID}:${dirname}${language[lang].and}${language[lang].moduleID}:${prevData.id},${language[lang].path}:${prevData.dirname}。${language[lang].their}  moduleID  ${language[lang].name}  ${prevData.id}  ${language[lang].duplicationName}。`
+          )
+        );
+      }
       for (let key in Mutation) {
         if (Mutation.hasOwnProperty(key)) {
-          let prevData = cacheRecord.find((item) => {
+          prevData = cacheRecord.find((item) => {
             return item.Mutation.includes(key);
           });
           if (prevData) {
@@ -236,7 +247,7 @@ class ValidateGraphql {
       }
       for (let key in Query) {
         if (Query.hasOwnProperty(key)) {
-          let prevData = cacheRecord.find((item) => {
+          prevData = cacheRecord.find((item) => {
             return item.Query.includes(key);
           });
           if (prevData) {
@@ -251,7 +262,7 @@ class ValidateGraphql {
       }
       for (let key in Subscription) {
         if (Subscription.hasOwnProperty(key)) {
-          let prevData = cacheRecord.find((item) => {
+          prevData = cacheRecord.find((item) => {
             return item.Subscription.includes(key);
           });
           if (prevData) {

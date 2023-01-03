@@ -6,5 +6,6 @@
  * @Description: In User Settings Edit
  * @FilePath: /error-sytem/server/app/bizMod/set/graphql/schema/index.js
  */
-// export { schema as scriptSchema } from "../../bizMod/script"; //scriptSchema
-export { schema as userSchema } from "@/bizMod/set/bizMod/user"; //userSchema
+export { schema as permissionSchema } from "@/bizMod/set/bizMod/permission"; //
+export { schema as roleSchema } from "@/bizMod/set/bizMod/role"; //
+export { schema as userSchema } from "@/bizMod/set/bizMod/user"; //
