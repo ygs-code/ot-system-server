@@ -125,10 +125,13 @@ class Controller {
   }
   // 编辑
   static async edit(ctx, next, parameter) {
-    const {
-      roleInfo: { email, id, name, phone, type }
-    } = parameter;
-    const { data, status } = await Service.edit(ctx, next, parameter);
+    const { roleInfo: { description, id, name } = {} } = parameter;
+    console.log("parameter====", parameter);
+    const { data, status } = await Service.edit(ctx, next, {
+      description,
+      id,
+      name
+    });
     const getMessage = (status) => {
       const message = {
         1: () => ({

@@ -3,34 +3,38 @@ import { captureClassError, getPagParameters } from "utils";
 
 import {
   addUser,
-  editPermission,
   editRole,
-  queryPermission,
-  queryPermissionList,
   queryUser,
+  queryUserRole,
+  queryUserRoleList,
   queryUserRolePermission,
   removeUser
 } from "@/bizMod/set/db";
 import { getVerifyCode, setVerifyCode } from "@/bizMod/set/redis";
 import { tokenExpires } from "@/config";
 import { forbidden, success } from "@/constant/httpCode";
-import { createToken, destroyToken, verifyToken } from "@/redis";
+import {
+  createToken,
+  destroyToken,
+  getTokenroleInfo,
+  verifyToken
+} from "@/redis";
 
 @captureClassError()
 class Service {
   // 查询列表
   static async queryList(ctx, next, parameter) {
-    const { pageNum, pageSize, id, name, parent_id, auth_key } = parameter;
+    const { pageNum, pageSize, id, role_id, user_id } = parameter;
 
     // 查询出列表
-    let [list, total] = await queryPermissionList(
+    let [list, total] = await queryUserRoleList(
       {
         and: {
           id,
-          auth_key,
-          parent_id
-        },
-        andLike: { name }
+          role_id,
+          user_id
+        }
+        // andLike: { name }
       },
       {
         pageNum,
@@ -47,44 +51,44 @@ class Service {
       })
     };
   }
-  //创建权限
+  //创建角色
   static async create(ctx, next, parameter) {
     const { name, phone, password, email, type } = parameter;
     /*
-     1 查询权限名是否被注册过，
+     1 查询角色名是否被注册过，
      2 查询手机号码是否被注册过
      3 如果都没有被注册那么就可以注册
     */
-    let permissionInfo = await queryUser({
+    let roleInfo = await queryUser({
       name
     });
 
-    permissionInfo = permissionInfo.length >= 1 ? permissionInfo[0] : null;
-    if (permissionInfo && permissionInfo.id) {
+    roleInfo = roleInfo.length >= 1 ? roleInfo[0] : null;
+    if (roleInfo && roleInfo.id) {
       return {
         status: 1
       };
     }
 
-    permissionInfo = await queryUser({
+    roleInfo = await queryUser({
       phone
     });
 
-    permissionInfo = permissionInfo.length >= 1 ? permissionInfo[0] : null;
+    roleInfo = roleInfo.length >= 1 ? roleInfo[0] : null;
 
-    if (permissionInfo && permissionInfo.id) {
+    if (roleInfo && roleInfo.id) {
       return {
         status: 2
       };
     }
 
-    permissionInfo = await queryUser({
+    roleInfo = await queryUser({
       email
     });
 
-    permissionInfo = permissionInfo.length >= 1 ? permissionInfo[0] : null;
+    roleInfo = roleInfo.length >= 1 ? roleInfo[0] : null;
 
-    if (permissionInfo && permissionInfo.id) {
+    if (roleInfo && roleInfo.id) {
       return {
         status: 3
       };
@@ -104,21 +108,22 @@ class Service {
       };
     }
   }
-  // 编辑权限
+  // 编辑角色
   static async edit(ctx, next, parameter) {
-    const { description, id, name, parent_id, auth_key } = parameter;
+    const { id, user_id, role_id } = parameter;
+
     let isHasUser = [];
     /*
-     1 查询权限
+     1 查询角色
     */
-    let permissionInfo = await queryPermission({
+    let roleInfo = await queryUserRole({
       id
     });
-    permissionInfo = permissionInfo[0] || {};
+    roleInfo = roleInfo[0] || {};
 
     // 更新name
-    if (name !== permissionInfo.name) {
-      isHasUser = await queryPermission({
+    if (name !== roleInfo.name) {
+      isHasUser = await queryUserRole({
         name
       });
       if (isHasUser.length) {
@@ -128,33 +133,25 @@ class Service {
       }
     }
 
-    // email
-
-    await editPermission({
-      description,
-      id,
-      name,
-      parent_id,
-      auth_key
-    });
+    await editRole({ description, id, name });
 
     return {
       status: 2
     };
   }
-  // 数据库中查询权限
+  // 数据库中查询角色
   static async query(ctx, next, parameter) {
     const { id } = parameter || {};
 
-    return await queryPermission({
+    return await queryUserRole({
       id
     })
-      .then((permissionInfo) => {
-        permissionInfo = permissionInfo.length >= 1 ? permissionInfo[0] : null;
-        return permissionInfo
+      .then((roleInfo) => {
+        roleInfo = roleInfo.length >= 1 ? roleInfo[0] : null;
+        return roleInfo
           ? {
               status: 1,
-              data: permissionInfo
+              data: roleInfo
             }
           : {
               status: 2,

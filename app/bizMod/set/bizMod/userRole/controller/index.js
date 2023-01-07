@@ -10,21 +10,19 @@ class Controller {
   // 查询列表
   static async queryList(ctx, next, { parameter }) {
     const {
-      pageNum,
-      pageSize,
       id,
-      name,
-      parentId: parent_id,
-      authKey: auth_key
+      roleId: role_id,
+      userId: user_id,
+      pageNum,
+      pageSize
     } = parameter;
 
     const data = await Service.queryList(ctx, next, {
-      pageNum,
-      pageSize,
       id,
-      name,
-      parent_id,
-      auth_key
+      role_id,
+      user_id,
+      pageNum,
+      pageSize
     });
 
     return {
@@ -33,12 +31,18 @@ class Controller {
     };
   }
 
-  // 查询单个权限
+  // 查询单个用户&角色
   static async query(ctx, next, parameter) {
-    // ctx.set("Content-Type", "application/json")
-    // const parameter = ctx.request.body; // 获取请求参数
+    const {
+      userRoleInfo: { id, userId: user_id, roleId: role_id }
+    } = parameter;
+
     //添加service
-    const { data, status } = await Service.query(ctx, next, parameter);
+    const { data, status } = await Service.query(ctx, next, {
+      id,
+      user_id,
+      role_id
+    });
 
     const mapData = {
       1: () => {
@@ -50,7 +54,7 @@ class Controller {
       2: () => {
         return {
           ...forbidden,
-          message: "权限id不正确，查询不到对应权限信息",
+          message: "用户&角色id不正确，查询不到对应用户&角色信息",
           data
         };
       },
@@ -58,7 +62,7 @@ class Controller {
       3: () => {
         return {
           ...forbidden,
-          message: "权限id不正确，查询不到对应权限信息",
+          message: "用户&角色id不正确，查询不到对应用户&角色信息",
           data
         };
       },
@@ -76,21 +80,21 @@ class Controller {
   // 创建
   static async create(ctx, next, parameter) {
     const { response } = ctx;
-    const { permissionInfo = {} } = parameter;
+    const { roleInfo = {} } = parameter;
 
-    const { verificationCode } = permissionInfo;
+    const { verificationCode } = roleInfo;
 
     return getVerifyCode(verificationCode)
       .then(async () => {
         //添加service
-        const data = await Service.create(ctx, next, permissionInfo);
-        // const { status, token, permissionInfo } = data;
+        const data = await Service.create(ctx, next, roleInfo);
+        // const { status, token, roleInfo } = data;
         const getMessage = (data) => {
           const { status } = data;
           const message = {
             1: () => ({
               ...unsupported,
-              message: "该权限名已经被注册过,请重新输入权限名"
+              message: "该用户&角色名已经被注册过,请重新输入用户&角色名"
             }),
             2: () => ({
               ...unsupported,
@@ -142,28 +146,15 @@ class Controller {
   // 编辑
   static async edit(ctx, next, parameter) {
     const {
-      permissionInfo: {
-        description,
-        id,
-        name,
-        parentId: parent_id,
-        authKey: auth_key
-      }
+      roleInfo: { email, id, name, phone, type }
     } = parameter;
-
-    const { data, status } = await Service.edit(ctx, next, {
-      description,
-      id,
-      name,
-      parentId: parent_id,
-      authKey: auth_key
-    });
+    const { data, status } = await Service.edit(ctx, next, parameter);
     const getMessage = (status) => {
       const message = {
         1: () => ({
           ...unsupported,
-          // console.log(`该权限名${name}已存在，请重新修改权限名`);
-          message: `该权限名${name}已存在，请重新修改权限名`
+          // console.log(`该用户&角色名${name}已存在，请重新修改用户&角色名`);
+          message: `该用户&角色名${name}已存在，请重新修改用户&角色名`
         }),
         2: () => ({
           code: 200,

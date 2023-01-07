@@ -13,6 +13,7 @@ import initTableData from "@/bizMod/set/db/sql/initTableData.sql";
 export * from "./permission";
 export * from "./role";
 export * from "./user";
+export * from "./userRole";
 export { connection, exec } from "@/db";
 
 export { initTable, initTableData };
