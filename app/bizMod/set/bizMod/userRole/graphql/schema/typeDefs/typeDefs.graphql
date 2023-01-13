@@ -52,17 +52,13 @@ input CreateInfoInput {
   userId: ID!
 }
 
-
 # 定义输入类型
 input EditInfoInput {
-  id:ID!
+  id: ID!
   roleId: ID!
   userId: ID!
 }
 
-
- 
- 
 # """
 # 用户_角色列表数据
 # """

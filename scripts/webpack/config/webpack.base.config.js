@@ -642,7 +642,7 @@ export default {
     // new webpack.HotModuleReplacementPlugin(),
 
     //使用 NoEmitOnErrorsPlugin 来跳过输出阶段。这样可以确保输出资源不会包含错误
-    new webpack.NoEmitOnErrorsPlugin(),
+    // new webpack.NoEmitOnErrorsPlugin(),
     //DefinePlugin 允许创建一个在编译时可以配置的全局常量。这可能会对开发模式和发布模式的构建允许不同的行为非常有用
     // 如果是配置前端就很好注入插件
     new webpack.DefinePlugin({
