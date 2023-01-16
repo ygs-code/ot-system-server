@@ -1,43 +1,43 @@
 """
-角色信息数据
+用户_角色信息数据
 """
 type Data {
   """
-  角色昵称
+  用户ID
   """
-  name: String
-
-  """
-  角色描述
-  """
-  description: String
+  userId: ID
 
   """
   角色ID
   """
+  roleId: ID
+
+  """
+  用户_角色ID
+  """
   id: ID
 
   """
-  角色创建时间
+  用户_角色创建时间
   """
   createTime: String
 
   """
-  角色更新时间
+  用户_角色更新时间
   """
   updateTime: String
 }
 
 # """
-# 角色信息
+# 用户_角色信息
 # """
-type RoleInfo {
+type Info {
   """
   请求状态
   """
   code: Int
   """
-  角色信息数据
+  用户_角色信息数据
   """
   data: Data
   """
@@ -48,19 +48,19 @@ type RoleInfo {
 
 # 定义输入类型
 input CreateInfoInput {
-  name: String!
-  description: String!
+  roleId: ID!
+  userId: ID!
 }
 
 # 定义输入类型
-input EditRoleInfoInput {
+input EditInfoInput {
   id: ID!
-  name: String!
-  description: String!
+  roleId: ID!
+  userId: ID!
 }
 
 # """
-# 角色列表数据
+# 用户_角色列表数据
 # """
 type ListData {
   hasNextPage: Boolean
@@ -72,7 +72,7 @@ type ListData {
 }
 
 # """
-# 角色列表
+# 用户_角色列表
 # """
 type ListInfo {
   """
@@ -80,7 +80,7 @@ type ListInfo {
   """
   code: Int
   """
-  角色信息数据
+  用户_角色信息数据
   """
   data: ListData
   """
@@ -94,19 +94,20 @@ input ListInfoInput {
   pageSize: Int
   pageNum: Int
   id: ID
-  name: String
+  roleId: ID
+  userId: ID
 }
 
 extend type Query {
-  getRoleList(parameter: ListInfoInput): ListInfo
+  getUserRoleList(parameter: ListInfoInput): ListInfo
   # # ! 是必填参数
-  getRoleInfo(id: ID): RoleInfo
+  getUserRoleInfo(id: ID): Info
 }
 
 extend type Mutation {
-  # ! 是必填参数
-  createRole(roleInfo: CreateInfoInput!): RoleInfo
+  # # ! 是必填参数
+  editUserRole(roleInfo: EditInfoInput!): Info
 
-  # ! 编辑角色
-  editRole(roleInfo: EditRoleInfoInput!): RoleInfo
+  # # ! 编辑用户_角色
+  # editRole(roleInfo: EditInfoInput!): Info
 }

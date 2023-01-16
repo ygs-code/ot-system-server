@@ -7,6 +7,21 @@
  * @Description:
  */
 module.exports = {
+  overrides: [
+    {
+      files: ["*.js"],
+      processor: "@graphql-eslint/graphql",
+      extends: ["plugin:prettier/recommended"]
+    },
+    {
+      files: ["*.graphql"],
+      parser: "@graphql-eslint/eslint-plugin",
+      plugins: ["@graphql-eslint"],
+      rules: {
+        "prettier/prettier": "error"
+      }
+    }
+  ],
   jsxSingleQuote: false, // 在jsx中使用单引号代替双引号
   quoteProps: "as-needed", //仅在必需时为对象的key添加引号
   singleQuote: false, // 使用单引号代替双引号

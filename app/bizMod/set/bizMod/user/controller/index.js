@@ -129,7 +129,14 @@ class Controller {
     const {
       userInfo: { email, id, name, phone, type }
     } = parameter;
-    const { data, status } = await Service.edit(ctx, next, parameter);
+
+    const { data, status } = await Service.edit(ctx, next, {
+      email,
+      id,
+      name,
+      phone,
+      type
+    });
     const getMessage = (status) => {
       const message = {
         1: () => ({

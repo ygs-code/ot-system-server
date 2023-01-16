@@ -1,0 +1,18 @@
+{
+  "overrides": [
+    {
+     "files": ["*.js"],
+     "processor": "@graphql-eslint/graphql"
+   },
+    {
+      "files": ["*.graphql"],
+      "rules": {
+        "@graphql-eslint/known-type-names": "error"
+      },
+      "extends": "plugin:@graphql-eslint/schema-recommended",
+      "parserOptions": {
+       "operations": "./app/**/*.graphql"
+       }
+    }
+  ]
+}

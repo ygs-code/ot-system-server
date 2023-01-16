@@ -555,10 +555,10 @@ class ValidateGraphql {
         : data;
     } catch (errors) {
       // console.error(
-      //     chalk.red(
-      //         '客户端Schema和请求参数${language[lang].and}服务器的Schema校验失败errors:' +
-      //             errors
-      //     )
+      //   chalk.red(
+      //     "客户端Schema和请求参数${language[lang].and}服务器的Schema校验失败errors:" +
+      //       errors
+      //   )
       // );
       throw new Error(
         chalk.red(

@@ -20,6 +20,7 @@ export const editRole = async (root, parameter, source, fieldASTs) => {
   const { ctx, next } = root;
   const { request, response } = ctx;
   const { id } = parameter || {};
+  console.log("editRole==");
 
   // 新增角色
   const data = await Controller.edit(ctx, next, parameter);

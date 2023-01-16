@@ -111,9 +111,7 @@ class Service {
   }
   // 编辑用户
   static async edit(ctx, next, parameter) {
-    const {
-      userInfo: { email, id, name, phone, type }
-    } = parameter;
+    const { email, id, name, phone, type } = parameter;
     let isHasUser = [];
     /*
      1 查询用户
@@ -174,17 +172,8 @@ class Service {
   }
   // 数据库中查询用户
   static async query(ctx, next, parameter) {
-    let {
-      request,
-      query: { query: clientSchema = "", operationName: queryOperationName },
-      cookies,
-      response,
-      method
-    } = ctx;
-    const {
-      body: { query, mutation, operationName: bodyOperationName },
-      header
-    } = request;
+    let { request, cookies } = ctx;
+    const { header } = request;
 
     const { id } = parameter || {};
     if (id) {
