@@ -86,7 +86,7 @@ type VerifyCodeInfo {
 }
 
 # 定义输入类型
-input CreateUserInfoInput {
+input CreateUserInput {
   name: String!
   email: String!
   phone: String!
@@ -97,7 +97,7 @@ input CreateUserInfoInput {
 }
 
 # 定义输入类型
-input EditUserInfoInput {
+input EditUserInput {
   id: ID!
   name: String!
   email: String!
@@ -197,8 +197,8 @@ extend type Query {
 
 extend type Mutation {
   # ! 是必填参数
-  createUser(userInfo: CreateUserInfoInput!): UserInfo
+  createUser(parameter: CreateUserInput!): UserInfo
 
   # ! 编辑用户
-  editUser(userInfo: EditUserInfoInput!): UserInfo
+  editUser(parameter: EditUserInput!): UserInfo
 }

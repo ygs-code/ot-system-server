@@ -59,16 +59,15 @@ class Controller {
     return mapData[status]();
   }
   // 创建
-  static async create(ctx, next, parameter) {
+  static async create(ctx, next, { parameter }) {
     const { response } = ctx;
-    const { userInfo = {} } = parameter;
 
-    const { verificationCode } = userInfo;
+    const { verificationCode } = parameter;
 
     return getVerifyCode(verificationCode)
       .then(async () => {
         //添加service
-        const data = await Service.create(ctx, next, userInfo);
+        const data = await Service.create(ctx, next, parameter);
         // const { status, token, userInfo } = data;
         const getMessage = (data) => {
           const { status } = data;
@@ -127,7 +126,7 @@ class Controller {
   // 编辑
   static async edit(ctx, next, parameter) {
     const {
-      userInfo: { email, id, name, phone, type }
+      parameter: { email, id, name, phone, type }
     } = parameter;
 
     const { data, status } = await Service.edit(ctx, next, {

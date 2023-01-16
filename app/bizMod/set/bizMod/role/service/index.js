@@ -2,7 +2,7 @@ import svgCaptcha from "svg-captcha";
 import { captureClassError, getPagParameters } from "utils";
 
 import {
-  addUser,
+  addRole,
   editRole,
   queryRole,
   queryRoleList,
@@ -51,13 +51,13 @@ class Service {
   }
   //创建角色
   static async create(ctx, next, parameter) {
-    const { name, phone, password, email, type } = parameter;
+    const { description, id, name } = parameter;
     /*
      1 查询角色名是否被注册过，
      2 查询手机号码是否被注册过
      3 如果都没有被注册那么就可以注册
     */
-    let roleInfo = await queryUser({
+    let roleInfo = await queryRole({
       name
     });
 
@@ -68,41 +68,14 @@ class Service {
       };
     }
 
-    roleInfo = await queryUser({
-      phone
-    });
-
-    roleInfo = roleInfo.length >= 1 ? roleInfo[0] : null;
-
-    if (roleInfo && roleInfo.id) {
-      return {
-        status: 2
-      };
-    }
-
-    roleInfo = await queryUser({
-      email
-    });
-
-    roleInfo = roleInfo.length >= 1 ? roleInfo[0] : null;
-
-    if (roleInfo && roleInfo.id) {
-      return {
-        status: 3
-      };
-    }
-
-    const data = await addUser({
-      email,
-      name,
-      phone,
-      password,
-      type
+    const data = await addRole({
+      description,
+      name
     });
 
     if (data) {
       return {
-        status: 4
+        status: 2
       };
     }
   }

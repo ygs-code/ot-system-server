@@ -10,14 +10,11 @@
 import { connection, exec, mergeCondition, sqlObjToAnd } from "@/db";
 
 // 添加用户
-export const addRole = async ({ name, phone, password, email, type }) => {
+export const addRole = async ({ description, name }) => {
   const sql = "INSERT INTO role SET ?";
   return await exec(sql, {
-    email,
-    name,
-    phone,
-    type
-    // password: hmac.sign(password, "")
+    description,
+    name
   });
 };
 

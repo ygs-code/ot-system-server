@@ -47,13 +47,13 @@ type RoleInfo {
 }
 
 # 定义输入类型
-input CreateInfoInput {
+input RoleCreateInput {
   name: String!
   description: String!
 }
 
 # 定义输入类型
-input EditRoleInfoInput {
+input RoleEditInput {
   id: ID!
   name: String!
   description: String!
@@ -105,8 +105,8 @@ extend type Query {
 
 extend type Mutation {
   # ! 是必填参数
-  createRole(roleInfo: CreateInfoInput!): RoleInfo
+  createRole(parameter: RoleCreateInput!): RoleInfo
 
   # ! 编辑角色
-  editRole(roleInfo: EditRoleInfoInput!): RoleInfo
+  editRole(parameter: RoleEditInput!): RoleInfo
 }

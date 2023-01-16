@@ -142,7 +142,7 @@ class Controller {
   // 编辑
   static async edit(ctx, next, parameter) {
     const {
-      permissionInfo: {
+      parameter: {
         description,
         id,
         name,
@@ -155,8 +155,8 @@ class Controller {
       description,
       id,
       name,
-      parentId: parent_id,
-      authKey: auth_key
+      parent_id,
+      auth_key
     });
     const getMessage = (status) => {
       const message = {

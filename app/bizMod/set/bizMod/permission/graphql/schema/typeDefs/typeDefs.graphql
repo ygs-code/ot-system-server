@@ -57,18 +57,18 @@ type PermissionInfo {
 }
 
 # 定义输入类型
-input CreateInfoInput {
+input PermissionCreateInput {
   name: String!
   description: String!
 }
 
 # 定义输入类型
-input EditInfoInput {
+input PermissionEditInput {
   id: ID!
   name: String!
   description: String!
   authKey: String!
-  parentId: ID!
+  parentId: ID
 }
 
 # """
@@ -119,8 +119,8 @@ extend type Query {
 
 extend type Mutation {
   # ! 是必填参数
-  createPermission(permissionInfo: CreateInfoInput!): PermissionInfo
+  createPermission(parameter: PermissionCreateInput!): PermissionInfo
 
   # ! 编辑角色
-  editPermission(permissionInfo: EditInfoInput!): PermissionInfo
+  editPermission(parameter: PermissionEditInput!): PermissionInfo
 }
