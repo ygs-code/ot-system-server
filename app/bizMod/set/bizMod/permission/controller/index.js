@@ -74,70 +74,77 @@ class Controller {
     return mapData[status]();
   }
   // 创建
-  static async create(ctx, next, parameter) {
+  static async create(ctx, next, { parameter }) {
     const { response } = ctx;
-    const { permissionInfo = {} } = parameter;
 
-    const { verificationCode } = permissionInfo;
+    const {
+      id,
+      name,
+      description,
+      authKey: auth_key,
+      parentId: parent_id
+    } = parameter;
 
-    return getVerifyCode(verificationCode)
-      .then(async () => {
-        //添加service
-        const data = await Service.create(ctx, next, permissionInfo);
-        // const { status, token, permissionInfo } = data;
-        const getMessage = (data) => {
-          const { status } = data;
-          const message = {
-            1: () => ({
-              ...unsupported,
-              message: "该权限名已经被注册过,请重新输入权限名"
-            }),
-            2: () => ({
-              ...unsupported,
-              message: "该手机号码已经被注册过,请重新输入手机号码"
-            }),
-            3: () => ({
-              ...unsupported,
-              message: "该邮箱地址已被注册过,请重新输入邮箱地址"
-            }),
-            4: () => ({
-              code: 200,
-              message: "注册成功"
-            })
-          };
-          return message[status]();
-        };
+    // return getVerifyCode(verificationCode)
+    //   .then(async () => {
+    //添加service
+    const data = await Service.create(ctx, next, {
+      id,
+      name,
+      description,
+      auth_key,
+      parent_id
+    });
+    // const { status, token, permissionInfo } = data;
+    const getMessage = (data) => {
+      const { status } = data;
+      const message = {
+        1: () => ({
+          ...unsupported,
+          message: "该权限名已经被注册过,请重新输入权限名"
+        }),
+        2: () => ({
+          ...unsupported,
+          message: "该权限key已经被注册过,请重新输入权限key"
+        }),
+        3: () => ({
+          code: 200,
+          message: "注册成功"
+        })
+      };
+      return message[status]();
+    };
 
-        return getMessage(data);
-      })
-      .catch((error) => {
-        let message = "";
-        let code = null;
+    return getMessage(data);
+    // })
+    // .catch((error) => {
+    //   let message = "";
+    //   let code = null;
 
-        if (error) {
-          message = "系统错误";
-          code = 500;
-          response.console.error(
-            typeof error === "object" ? JSON.stringify(error) : error,
-            __filename
-          );
-        } else {
-          message = "验证码错误,或者已过期";
-          code = 400;
-        }
+    //   if (error) {
+    //     message = "系统错误";
+    //     code = 500;
+    //     response.console.error(
+    //       typeof error === "object" ? JSON.stringify(error) : error,
+    //       __filename
+    //     );
+    //   } else {
+    //     message = "验证码错误,或者已过期";
+    //     code = 400;
+    //   }
 
-        // response.body = {
-        //   message,
-        //   code,
-        //   data: {},
-        // };
+    //   // response.body = {
+    //   //   message,
+    //   //   code,
+    //   //   data: {},
+    //   // };
 
-        return {
-          message,
-          code,
-          data: {}
-        };
-      });
+    //   return {
+    //     message,
+    //     code,
+    //     data: {}
+    //   };
+    // });
   }
   // 编辑
   static async edit(ctx, next, parameter) {

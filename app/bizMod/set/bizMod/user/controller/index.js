@@ -196,7 +196,6 @@ class Controller {
           return message[status]();
         };
 
-        console.log("getMessage(data)==", getMessage(data));
         return getMessage(data);
       })
       .catch((error) => {

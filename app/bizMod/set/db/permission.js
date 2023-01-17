@@ -10,14 +10,18 @@
 import { connection, exec, mergeCondition, sqlObjToAnd } from "@/db";
 
 // 添加用户
-export const addPermission = async ({ name, phone, password, email, type }) => {
-  const sql = "INSERT INTO role SET ?";
+export const addPermission = async ({
+  name,
+  description,
+  auth_key,
+  parent_id
+}) => {
+  const sql = "INSERT INTO permission SET ?";
   return await exec(sql, {
-    email,
     name,
-    phone,
-    type
-    // password: hmac.sign(password, "")
+    description,
+    auth_key,
+    parent_id
   });
 };
 

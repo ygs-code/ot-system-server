@@ -60,6 +60,8 @@ type PermissionInfo {
 input PermissionCreateInput {
   name: String!
   description: String!
+  authKey: String!
+  parentId: ID
 }
 
 # 定义输入类型

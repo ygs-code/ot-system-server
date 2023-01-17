@@ -2,13 +2,13 @@ import svgCaptcha from "svg-captcha";
 import { captureClassError, getPagParameters } from "utils";
 
 import {
-  addUser,
+  addPermission,
   editPermission,
   editRole,
   queryPermission,
   queryPermissionList,
-  queryUser,
-  queryUserRolePermission,
+  // queryPermission,
+  queryPermissionRolePermission,
   removeUser
 } from "@/bizMod/set/db";
 import { getVerifyCode, setVerifyCode } from "@/bizMod/set/redis";
@@ -49,13 +49,13 @@ class Service {
   }
   //创建权限
   static async create(ctx, next, parameter) {
-    const { name, phone, password, email, type } = parameter;
+    const { id, name, description, auth_key, parent_id } = parameter;
     /*
      1 查询权限名是否被注册过，
      2 查询手机号码是否被注册过
      3 如果都没有被注册那么就可以注册
     */
-    let permissionInfo = await queryUser({
+    let permissionInfo = await queryPermission({
       name
     });
 
@@ -66,8 +66,8 @@ class Service {
       };
     }
 
-    permissionInfo = await queryUser({
-      phone
+    permissionInfo = await queryPermission({
+      auth_key
     });
 
     permissionInfo = permissionInfo.length >= 1 ? permissionInfo[0] : null;
@@ -78,29 +78,16 @@ class Service {
       };
     }
 
-    permissionInfo = await queryUser({
-      email
-    });
-
-    permissionInfo = permissionInfo.length >= 1 ? permissionInfo[0] : null;
-
-    if (permissionInfo && permissionInfo.id) {
-      return {
-        status: 3
-      };
-    }
-
-    const data = await addUser({
-      email,
+    const data = await addPermission({
       name,
-      phone,
-      password,
-      type
+      description,
+      auth_key,
+      parent_id
     });
 
     if (data) {
       return {
-        status: 4
+        status: 3
       };
     }
   }
