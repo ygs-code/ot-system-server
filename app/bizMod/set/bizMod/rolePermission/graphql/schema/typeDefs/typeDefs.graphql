@@ -1,0 +1,113 @@
+"""
+角色_权限信息数据
+"""
+type Data {
+  """
+  权限ID
+  """
+  permissionId: ID
+
+  """
+  角色ID
+  """
+  roleId: ID
+
+  """
+  角色_权限ID
+  """
+  id: ID
+
+  """
+  角色_权限创建时间
+  """
+  createTime: String
+
+  """
+  角色_权限更新时间
+  """
+  updateTime: String
+}
+
+# """
+# 角色_权限信息
+# """
+type Info {
+  """
+  请求状态
+  """
+  code: Int
+  """
+  角色_权限信息数据
+  """
+  data: Data
+  """
+  请求信息
+  """
+  message: String
+}
+
+# 定义输入类型
+input CreateRolePermissionInput {
+  roleId: ID!
+  userId: ID!
+}
+
+# 定义输入类型
+input EditRolePermissionInput {
+  id: ID!
+  roleId: ID!
+  userId: ID!
+}
+
+# """
+# 角色_权限列表数据
+# """
+type ListData {
+  hasNextPage: Boolean
+  pageNum: Int
+  pageSize: Int
+  pages: Int
+  total: Int
+  list: [Data]
+}
+
+# """
+# 角色_权限列表
+# """
+type ListInfo {
+  """
+  请求状态
+  """
+  code: Int
+  """
+  角色_权限信息数据
+  """
+  data: ListData
+  """
+  请求信息
+  """
+  message: String
+}
+
+# # 定义输入类型
+input ListInfoInput {
+  pageSize: Int
+  pageNum: Int
+  id: ID
+  roleId: ID
+  userId: ID
+}
+
+extend type Query {
+  getRolePermissionList(parameter: ListInfoInput): ListInfo
+  # # ! 是必填参数
+  getRolePermissionInfo(id: ID): Info
+}
+
+extend type Mutation {
+  # # ! 是必填参数
+  editRolePermissionInfo(parameter: EditRolePermissionInput!): Info
+
+  # # ! 编辑角色_权限
+  # editRole(parameter: EditRolePermissionInput!): Info
+}

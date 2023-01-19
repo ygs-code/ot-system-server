@@ -8,5 +8,6 @@
  */
 export { schema as permissionSchema } from "@/bizMod/set/bizMod/permission"; //
 export { schema as roleSchema } from "@/bizMod/set/bizMod/role"; //
+export { schema as rolePermissionSchema } from "@/bizMod/set/bizMod/rolePermission"; //
 export { schema as userSchema } from "@/bizMod/set/bizMod/user"; //
 export { schema as userRoleSchema } from "@/bizMod/set/bizMod/userRole"; //
