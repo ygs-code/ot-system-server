@@ -9,7 +9,7 @@ CREATE TABLE
         `type` varchar(11) NOT NULL COMMENT '用户类型1=管理员，2=普通用户',
         `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
         `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-        PRIMARY KEY (`id`)
+        PRIMARY KEY (`id`) 
     ) ENGINE = InnoDB AUTO_INCREMENT = 3 DEFAULT CHARSET = utf8 COLLATE = utf8_general_ci;
 
 # 角色表
