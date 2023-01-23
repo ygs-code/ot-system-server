@@ -66,8 +66,6 @@ import {
 //   };
 // })();
 
-// console.log('setSchema=======', setSchema)
-
 export const schema = (() => {
   // 动态添加模块
   let schemas = {
@@ -78,15 +76,13 @@ export const schema = (() => {
     // ...menuSchema,
   };
 
-  // console.log('schemas======', schemas)
-
   let newSchemas = [];
   for (let key in schemas) {
     if (schemas.hasOwnProperty(key)) {
       newSchemas.push(schemas[key]);
     }
   }
-  // console.log('newSchemas=', newSchemas)
+
   return newSchemas;
 })();
 

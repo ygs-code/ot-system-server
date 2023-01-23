@@ -6,14 +6,9 @@
  * @Description: In User Settings Edit
  * @FilePath: /Blogs/BlogsServer/app/bizMod/set/bizMod/user/router/index.js
  */
-import koaRoute from "koa-router"; // koa 路由中间件
+import KoaRoute from "koa-router"; // koa 路由中间件
 
-import {
-  createToken,
-  destroyToken,
-  getTokenUserInfo,
-  verifyToken
-} from "@/redis";
+import { verifyToken } from "@/redis";
 
 import controller from "../controller";
 
@@ -24,7 +19,7 @@ class router {
     this.init();
   }
   createRouter() {
-    this.threeLevelRoute = new koaRoute({
+    this.threeLevelRoute = new KoaRoute({
       prefix: "/user" // 给路由统一加个前缀：
     });
     return this.threeLevelRoute;
@@ -53,7 +48,6 @@ class router {
     this.verifyToken();
     this.verifyCode();
     this.router.use(this.threeLevelRoute.routes()); //挂载二级路由
-    // console.log('初始化user mysql 表')
   }
   init() {
     // 创建路由
@@ -82,9 +76,8 @@ class router {
   }
   verifyToken() {
     //检查token
-    this.threeLevelRoute.post("/verifyToken", async (ctx, next) => {
+    this.threeLevelRoute.post("/verifyToken", async (ctx) => {
       var parameter = ctx.request.body; // 获取请求参数
-      // console.log("parameter=", parameter);
 
       await verifyToken(parameter.token)
         .then((data) => {

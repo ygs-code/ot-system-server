@@ -31,8 +31,7 @@ export const MarketingModule = {
     resolvers: {
         Mutation: {
             updateDiscount(root, parameter, source, fieldASTs) {
-                console.log('root==', root);
-                console.log('parameter==', parameter);
+            
                 const { id } = parameter;
                 return {
                     name: '成功更新优惠券',
@@ -45,8 +44,7 @@ export const MarketingModule = {
             getDiscount: (root, parameter, source, fieldASTs) => {
                 console.log('root==', root);
                 console.log('parameter==', parameter);
-                // console.log('source==',source)
-                // console.log('fieldASTs==',fieldASTs)
+           
                 return {
                     id: '1',
                     name: '营销模块 恭喜你获得7折扣',

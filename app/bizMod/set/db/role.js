@@ -42,7 +42,7 @@ export const queryRole = async (data) => {
 
 //删除用户
 export const removeRole = async (id) => {
-  const sql = `DELETE  FROM  user  WHERE ?;`;
+  const sql = `DELETE  FROM  role  WHERE ?;`;
   return await exec(sql, { id });
 };
 

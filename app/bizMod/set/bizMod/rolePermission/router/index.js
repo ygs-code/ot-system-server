@@ -48,7 +48,6 @@ class router {
     this.verifyToken();
     this.verifyCode();
     this.router.use(this.threeLevelRoute.routes()); //挂载二级路由
-    // console.log('初始化user mysql 表')
   }
   init() {
     // 创建路由

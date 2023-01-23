@@ -24,3 +24,10 @@ export const editRole = async (root, parameter) => {
     ...data
   };
 };
+
+// 删除
+export const removeRole = async (root, parameter) => {
+  const { ctx, next } = root;
+
+  return await Controller.remove(ctx, next, parameter);
+};

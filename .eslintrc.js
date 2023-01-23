@@ -92,7 +92,7 @@ module.exports = {
     // 'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off', // 上线环境用打印就报警告, 开发环境关闭此规则
     // 'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off', // debugger可以终止代码执行
     // 'no-multiple-empty-lines': 'off', // 不允许有连续多行空行(关闭规则)
-    "no-undef": 1, // 不能有未定义的变量
+    "no-undef":"error", // 不能有未定义的变量
     eqeqeq: ["warn", "always"], //  == 判断
     // 'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     // 'no-void': 2, //禁用void操作符

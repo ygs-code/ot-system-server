@@ -9,11 +9,7 @@
 
 // export const UnionUserId = {
 //   __resolveType(obj, context, info){
-//     // console.log('__resolveType==')
-//     // console.log('obj==',obj)
-//     // console.log('context==',context)
-//     // console.log('info==',info)
-//     // console.log(obj, context, info)
+
 //     // 根据unionName参数返回不同的union 模式  Person或者Photo
 //     if(obj.unionName=='Photo'){
 //       return 'Photo'

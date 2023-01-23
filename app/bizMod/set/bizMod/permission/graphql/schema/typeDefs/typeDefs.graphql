@@ -1,29 +1,29 @@
 """
-角色信息数据
+权限信息数据
 """
 type Data {
   """
-  角色昵称
+  权限昵称
   """
   name: String
 
   """
-  角色描述
+  权限描述
   """
   description: String
 
   """
-  角色ID
+  权限ID
   """
   id: ID
 
   """
-  角色创建时间
+  权限创建时间
   """
   createTime: String
 
   """
-  角色更新时间
+  权限更新时间
   """
   updateTime: String
 
@@ -39,7 +39,7 @@ type Data {
 }
 
 # """
-# 角色信息
+# 权限信息
 # """
 type PermissionInfo {
   """
@@ -47,7 +47,7 @@ type PermissionInfo {
   """
   code: Int
   """
-  角色信息数据
+  权限信息数据
   """
   data: Data
   """
@@ -74,7 +74,7 @@ input PermissionEditInput {
 }
 
 # """
-# 角色列表数据
+# 权限列表数据
 # """
 type ListData {
   hasNextPage: Boolean
@@ -86,7 +86,7 @@ type ListData {
 }
 
 # """
-# 角色列表
+# 权限列表
 # """
 type ListInfo {
   """
@@ -94,7 +94,7 @@ type ListInfo {
   """
   code: Int
   """
-  角色信息数据
+  权限信息数据
   """
   data: ListData
   """
@@ -123,6 +123,9 @@ extend type Mutation {
   # ! 是必填参数
   createPermission(parameter: PermissionCreateInput!): PermissionInfo
 
-  # ! 编辑角色
+  # ! 编辑权限
   editPermission(parameter: PermissionEditInput!): PermissionInfo
+  # 删除权限
+  removePermission(id: ID!): PermissionInfo
+ 
 }

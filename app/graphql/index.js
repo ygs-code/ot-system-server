@@ -117,10 +117,7 @@ const $validateGraphql = validateGraphql({
     //     Subscription: {},
     //     Query: {
     //       getUserTow: (root, parameter, source, fieldASTs) => {
-    //         console.log('root==', root)
-    //         console.log('parameter==', parameter)
-    //         // console.log('source==',source)
-    //         // console.log('fieldASTs==',fieldASTs)
+
     //         return {
     //           id: '2',
     //           name: '用户2模块',

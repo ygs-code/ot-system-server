@@ -1,14 +1,18 @@
 import { captureClassError } from "utils";
 
 import { getVerifyCode } from "@/bizMod/set/redis";
-import { forbidden, success, unauthorized, unsupported } from "@/constant";
+import {
+  forbidden,
+  serverError,
+  success,
+  unauthorized,
+  unsupported
+} from "@/constant";
 
 import Service from "../service";
 
 @captureClassError()
 class Controller {
-  static a = 123;
-
   static async queryList(ctx, next, { parameter }) {
     const data = await Service.queryList(ctx, next, parameter);
 
@@ -121,6 +125,29 @@ class Controller {
         };
       });
   }
+
+  // 删除
+  static async remove(ctx, next, { id }) {
+    const { status } = await Service.remove(ctx, next, {
+      id
+    });
+
+    const getMessage = (status) => {
+      const message = {
+        1: () => ({
+          ...serverError
+        }),
+        2: () => ({
+          code: 200,
+          message: "操作成功"
+        })
+      };
+
+      return message[status]();
+    };
+
+    return getMessage(status);
+  }
   // 编辑
   static async edit(ctx, next, parameter) {
     const {
@@ -138,7 +165,7 @@ class Controller {
       const message = {
         1: () => ({
           ...unsupported,
-          // console.log(`该用户名${name}已存在，请重新修改用户名`);
+
           message: `该用户名${name}已存在，请重新修改用户名`
         }),
         2: () => ({
@@ -146,7 +173,7 @@ class Controller {
           message: `该用邮箱地址${email}已存在，请重新修改邮箱地址`
         }),
         3: () => ({
-          ...unsupported,
+          code: 400,
           message: `该用手机号码${phone}已存在，请重新修改手机号码`
         }),
         4: () => ({
@@ -216,7 +243,7 @@ class Controller {
         };
       });
     // } catch (e) {
-    //   console.log("e===============", e);
+
     // }
   }
   // 验证码

@@ -199,6 +199,10 @@ extend type Mutation {
   # ! 是必填参数
   createUser(parameter: CreateUserInput!): UserInfo
 
-  # ! 编辑用户
+  #   编辑用户
   editUser(parameter: EditUserInput!): UserInfo
+
+  #   删除用户
+  removeUser(id: ID): UserInfo
+   
 }

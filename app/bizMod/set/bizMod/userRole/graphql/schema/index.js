@@ -9,19 +9,6 @@
 import * as resolvers from "./resolvers";
 import typeDefs from "./typeDefs";
 
-//脚本模块
-// export default { resolvers, typeDefs };
-
-// typeDefs.map((item, key) => {
-//   console.log('item======', item)
-// })
-
-// let newTypeDefs = [];
-// for (let key in typeDefs) {
-//   if (typeDefs.hasOwnProperty(key)) {
-//     newTypeDefs.push(typeDefs[key]);
-//   }
-// }
 export default {
   id: "user-role-module", // id不能与其他模块重名
   dirname: __dirname,

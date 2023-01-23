@@ -71,11 +71,6 @@ class Service {
       })
       .map((item) => item.roleId);
 
-    console.log("list=", list);
-    console.log("roleIds=", roleIds);
-    console.log("addIds=", addIds);
-    console.log("deleteIds=", deleteIds);
-
     let p = [];
     for (let item of addIds) {
       p.push(
@@ -86,7 +81,6 @@ class Service {
       );
     }
     for (let item of deleteIds) {
-      console.log("user_id=", user_id, item);
       p.push(
         removeUserRole({
           user_id,

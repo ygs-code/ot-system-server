@@ -1,6 +1,12 @@
 import { captureClassError, getPagParameters } from "utils";
 
-import { addRole, editRole, queryRole, queryRoleList } from "@/bizMod/set/db";
+import {
+  addRole,
+  editRole,
+  queryRole,
+  queryRoleList,
+  removeRole
+} from "@/bizMod/set/db";
 
 @captureClassError()
 class Service {
@@ -88,6 +94,20 @@ class Service {
       status: 2
     };
   }
+
+  // 删除角色
+  static async remove(ctx, next, parameter) {
+    const { id } = parameter;
+
+    return await removeRole(id)
+      .catch(() => {
+        return { status: 1 };
+      })
+      .then(() => {
+        return { status: 2 };
+      });
+  }
+
   // 数据库中查询角色
   static async query(ctx, next, parameter) {
     const { id } = parameter || {};

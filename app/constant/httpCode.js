@@ -12,6 +12,11 @@ const graphqlError = {
   message: "请求参数有误，graphql语法错误"
 };
 
+const serverError = {
+  //语义有误，当前请求无法被服务器理解。除非进行修改，否则客户端不应该重复提交这个请求。
+  code: 500,
+  message: "系统错误请稍后再尝试"
+};
 const unsupported = {
   // (未满足前提条件) 服务器未满足请求者在请求中设置的其中一个前提条件。
   code: 412,
@@ -36,4 +41,11 @@ const success = {
   message: "操作成功"
 };
 
-export { forbidden, graphqlError, success, unauthorized, unsupported };
+export {
+  forbidden,
+  graphqlError,
+  serverError,
+  success,
+  unauthorized,
+  unsupported
+};

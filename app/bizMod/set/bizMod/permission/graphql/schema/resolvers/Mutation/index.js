@@ -24,3 +24,10 @@ export const editPermission = async (root, parameter) => {
     ...data
   };
 };
+
+//  编辑
+export const removePermission = async (root, parameter) => {
+  const { ctx, next } = root;
+
+  return await Controller.remove(ctx, next, parameter);
+};

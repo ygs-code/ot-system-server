@@ -1,6 +1,6 @@
 import { captureClassError } from "utils";
 
-import { forbidden, success, unsupported } from "@/constant";
+import { forbidden, serverError, success, unsupported } from "@/constant";
 
 import Service from "../service";
 
@@ -135,6 +135,26 @@ class Controller {
           ...unsupported,
 
           message: `该权限名${name}已存在，请重新修改权限名`
+        }),
+        2: () => ({
+          code: 200,
+          message: "操作成功"
+        })
+      };
+      return message[status]();
+    };
+
+    return getMessage(status);
+  }
+  // 删除
+  static async remove(ctx, next, { id }) {
+    const { status } = await Service.remove(ctx, next, {
+      id
+    });
+    const getMessage = (status) => {
+      const message = {
+        1: () => ({
+          ...serverError
         }),
         2: () => ({
           code: 200,

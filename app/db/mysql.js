@@ -17,8 +17,6 @@ const exec = async function () {
   const parameter = arguments;
   return await new Promise((resolve, reject) => {
     connection.query(...parameter, (err, result) => {
-      // console.log('err=',err)
-      // console.log('result=',result)
       if (err) {
         reject(err);
         return;

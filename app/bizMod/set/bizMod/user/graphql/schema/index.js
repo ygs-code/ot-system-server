@@ -13,7 +13,7 @@ import typeDefs from "./typeDefs";
 // export default { resolvers, typeDefs };
 
 // typeDefs.map((item, key) => {
-//   console.log('item======', item)
+
 // })
 
 // let newTypeDefs = [];

@@ -4,7 +4,8 @@ import {
   addPermission,
   editPermission,
   queryPermission,
-  queryPermissionList
+  queryPermissionList,
+  removePermission
 } from "@/bizMod/set/db";
 
 @captureClassError()
@@ -113,6 +114,20 @@ class Service {
     return {
       status: 2
     };
+  }
+  // 删除权限
+  static async remove(ctx, next, { id }) {
+    return await removePermission(id)
+      .catch(() => {
+        return {
+          status: 1
+        };
+      })
+      .then(() => {
+        return {
+          status: 2
+        };
+      });
   }
   // 数据库中查询权限
   static async query(ctx, next, parameter) {

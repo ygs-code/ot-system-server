@@ -6,7 +6,8 @@ import {
   editUser,
   queryUser,
   queryUserList,
-  queryUserRolePermission
+  queryUserRolePermission,
+  removeUser
 } from "@/bizMod/set/db";
 import { setVerifyCode } from "@/bizMod/set/redis";
 import { tokenExpires } from "@/config";
@@ -105,7 +106,7 @@ class Service {
   // 编辑用户
   static async edit(ctx, next, parameter) {
     const { email, id, name, phone, type } = parameter;
-    let isHasUser = [];
+    let isHas = [];
     /*
      1 查询用户
     */
@@ -116,53 +117,63 @@ class Service {
 
     // 更新name
     if (name !== userInfo.name) {
-      isHasUser = await queryUser({
+      isHas = await queryUser({
         name
       });
-      console.log("isHasUser==", isHasUser);
-      if (isHasUser.length) {
+
+      if (isHas.length) {
         return {
           status: 1
         };
-        // console.log(`该用户名${name}已存在，请重新修改用户名`);
       }
     }
 
     // 更新email
     if (email !== userInfo.email) {
-      isHasUser = await queryUser({
+      isHas = await queryUser({
         email
       });
-      console.log("isHasUser==", isHasUser);
-      if (isHasUser.length) {
+
+      if (isHas.length) {
         return {
           status: 2
         };
-        // console.log(`该用邮箱地址${email}已存在，请重新修改邮箱地址`);
       }
     }
 
     // 更新email
     if (phone !== userInfo.phone) {
-      isHasUser = await queryUser({
+      isHas = await queryUser({
         phone
       });
-      console.log("isHasUser==", isHasUser);
-      if (isHasUser.length) {
+
+      if (isHas.length) {
         return {
           status: 3
         };
-        // console.log(`该用手机号码${phone}已存在，请重新修改手机号码`);
       }
     }
 
-    console.log("editUser=", { email, id, name, phone, type });
     await editUser({ email, id, name, phone, type });
 
     return {
       status: 4
     };
   }
+
+  // 删除用户
+  static async remove(ctx, next, parameter) {
+    const { id } = parameter;
+
+    return await removeUser(id)
+      .catch(() => {
+        return { status: 1 };
+      })
+      .then(() => {
+        return { status: 2 };
+      });
+  }
+
   // 数据库中查询用户
   static async query(ctx, next, parameter) {
     let { request, cookies } = ctx;

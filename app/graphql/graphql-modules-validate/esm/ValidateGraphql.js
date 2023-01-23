@@ -2,11 +2,6 @@
 import chalk from "chalk";
 import {
   buildSchema,
-  defaultFieldResolver,
-  execute,
-  formatError,
-  getOperationAST,
-  graphql,
   parse,
   Source,
   specifiedRules,
@@ -118,7 +113,7 @@ $validateGraphql({
         operationName: 'getUser',
     },
 }).then((data) => {
-    console.log('getUser======', data);
+
 });
 
 $validateGraphql({
@@ -145,7 +140,7 @@ $validateGraphql({
         operationName: 'getUserTow',
     },
 }).then((data) => {
-    console.log('getUserTow======', data);
+
 });
 
 
@@ -175,7 +170,7 @@ class ValidateGraphql {
       clientSchema
     });
     // 验证客户端请求${language[lang].and}服务户端一起验证
-    const data = await this.ValidateGraphql(parameters);
+    const data = await this.validateGraphql(parameters);
     return data;
   }
 
@@ -185,13 +180,13 @@ class ValidateGraphql {
     //     ...this.options,
     //     ...options,
     // };
-    let { modules = [], debug, lang } = this.options;
-    let cacheModuleID = [];
+    let { modules = [], lang } = this.options;
+
     // 缓存
     let cacheRecord = [];
     let newModules = [];
 
-    for (let [index, item] of modules.entries()) {
+    for (let item of modules) {
       const {
         // config: {
         id, // 模块id
@@ -289,7 +284,7 @@ class ValidateGraphql {
 
   //验证单个SeverSchema
   validateSeverSchema = (config) => {
-    let { modules = [], lang, debug, serverRootSchema } = this.options;
+    let { lang, debug, serverRootSchema } = this.options;
     let {
       typeDefs = [],
       id, // id不能${language[lang].and}其他模块重名
@@ -352,7 +347,7 @@ class ValidateGraphql {
   };
 
   //验证  模块化 服务器SeverSchema
-  validateSeverSchemas = (options = {}) => {
+  validateSeverSchemas = () => {
     // this.options = {
     //     ...this.options,
     //     ...options,
@@ -363,7 +358,7 @@ class ValidateGraphql {
     let {
       lang,
       modules = [],
-      serverSchema: { schema: serverSchema = "", resolvers = {} } = {},
+      serverSchema: { schema: serverSchema = "" } = {},
       debug
     } = this.options;
 
@@ -415,7 +410,6 @@ class ValidateGraphql {
     //     ...options,
     // };
     let {
-      serverSchema: { schema: serverSchema = "", resolvers = {} } = {},
       // clientSchema: {
       //     schema: clientSchema = '',
       //     variables = {},
@@ -427,7 +421,7 @@ class ValidateGraphql {
 
     let {
       // serverSchema: { schema: serverSchema = '', resolvers = {} } = {},
-      clientSchema: { schema: clientSchema, variables = {}, operationName } = {}
+      clientSchema: { schema: clientSchema, operationName } = {}
     } = options;
 
     let documentAST = null;
@@ -465,7 +459,7 @@ class ValidateGraphql {
     //     ...options,
     // };
     let {
-      serverSchema: { schema: serverSchema = "", resolvers = {} } = {},
+      serverSchema: { schema: serverSchema = "" } = {},
       // clientSchema: { schema: clientSchema = '', variables = {} } = {},
       lang,
       debug
@@ -473,7 +467,7 @@ class ValidateGraphql {
 
     let {
       // serverSchema: { schema: serverSchema = '', resolvers = {} } = {},
-      clientSchema: { schema: clientSchema = "", variables = {} } = {},
+
       documentAST
     } = options;
 
@@ -512,12 +506,12 @@ class ValidateGraphql {
   // 客户端Schema和请求参数${language[lang].and}服务器的Schema校验
   validateGraphql = async (options = {}) => {
     let {
-      serverSchema: { schema: serverSchema = "", resolvers = {} } = {},
+      serverSchema: { schema: serverSchema = "" } = {},
       lang,
       debug
     } = this.options;
     let {
-      clientSchema: { schema: clientSchema = "", variables = {} } = {},
+      clientSchema: { variables = {} } = {},
       documentAST,
       returnFirst = false,
       context = {},
