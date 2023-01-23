@@ -7,7 +7,10 @@ const sqlObjToAnd = (obj) => {
   let keys = Object.keys(obj);
   let index = 0;
   for (let key of keys) {
-    if (obj[key] === undefined || (obj[key] || "").trim() === "") {
+    if (
+      obj[key] === undefined ||
+      ((obj[key] && obj[key].toString()) || "").trim() === ""
+    ) {
       continue;
     }
     if (CheckDataType.isString(obj[key])) {
@@ -26,7 +29,10 @@ const sqlObjToAndLike = (obj) => {
   let index = 0;
 
   for (let key of keys) {
-    if (obj[key] === undefined || (obj[key] || "").trim() === "") {
+    if (
+      obj[key] === undefined ||
+      ((obj[key] && obj[key].toString()) || "").trim() === ""
+    ) {
       continue;
     }
     if (CheckDataType.isString(obj[key])) {
@@ -46,7 +52,10 @@ const sqlObjToOr = (obj) => {
   let index = 0;
 
   for (let key of keys) {
-    if (obj[key] === undefined || (obj[key] || "").trim() === "") {
+    if (
+      obj[key] === undefined ||
+      ((obj[key] && obj[key].toString()) || "").trim() === ""
+    ) {
       continue;
     }
     if (CheckDataType.isString(obj[key])) {
@@ -66,7 +75,10 @@ const sqlObjToOrLike = (obj) => {
   let index = 0;
 
   for (let key of keys) {
-    if (obj[key] === undefined || (obj[key] || "").trim() === "") {
+    if (
+      obj[key] === undefined ||
+      ((obj[key] && obj[key].toString()) || "").trim() === ""
+    ) {
       continue;
     }
 

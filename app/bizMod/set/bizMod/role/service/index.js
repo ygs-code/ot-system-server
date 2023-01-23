@@ -1,24 +1,6 @@
-import svgCaptcha from "svg-captcha";
 import { captureClassError, getPagParameters } from "utils";
 
-import {
-  addRole,
-  editRole,
-  queryRole,
-  queryRoleList,
-  queryUser,
-  queryUserRolePermission,
-  removeUser
-} from "@/bizMod/set/db";
-import { getVerifyCode, setVerifyCode } from "@/bizMod/set/redis";
-import { tokenExpires } from "@/config";
-import { forbidden, success } from "@/constant/httpCode";
-import {
-  createToken,
-  destroyToken,
-  getTokenroleInfo,
-  verifyToken
-} from "@/redis";
+import { addRole, editRole, queryRole, queryRoleList } from "@/bizMod/set/db";
 
 @captureClassError()
 class Service {
@@ -51,12 +33,8 @@ class Service {
   }
   //创建角色
   static async create(ctx, next, parameter) {
-    const { description, id, name } = parameter;
-    /*
-     1 查询角色名是否被注册过，
-     2 查询手机号码是否被注册过
-     3 如果都没有被注册那么就可以注册
-    */
+    const { description, name } = parameter;
+
     let roleInfo = await queryRole({
       name
     });
@@ -82,8 +60,8 @@ class Service {
   // 编辑角色
   static async edit(ctx, next, parameter) {
     const { description, id, name } = parameter;
-    console.log("parameter===", parameter);
-    let isHasUser = [];
+
+    let isHas = [];
     /*
      1 查询角色
     */
@@ -94,10 +72,10 @@ class Service {
 
     // 更新name
     if (name !== roleInfo.name) {
-      isHasUser = await queryRole({
+      isHas = await queryRole({
         name
       });
-      if (isHasUser.length) {
+      if (isHas.length) {
         return {
           status: 1
         };
@@ -129,7 +107,7 @@ class Service {
               data: {}
             };
       })
-      .catch((error) => {
+      .catch(() => {
         return {
           status: 3,
           data: {}

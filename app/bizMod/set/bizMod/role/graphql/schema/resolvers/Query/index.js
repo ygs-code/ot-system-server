@@ -8,17 +8,16 @@
  */
 import Controller from "@/bizMod/set/bizMod/role/controller";
 
+// 获取列表
 export const getRoleList = async (root, parameter) => {
   const { ctx = {}, next } = root;
 
-  // 获取角色
   return await Controller.queryList(ctx, next, parameter);
 };
 
-// 获取角色信息
+// 获取 信息
 export const getRoleInfo = async (root, parameter) => {
   const { ctx = {}, next = {} } = root;
 
-  // 获取角色
   return await Controller.query(ctx, next, parameter);
 };

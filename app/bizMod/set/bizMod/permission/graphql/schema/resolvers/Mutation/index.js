@@ -1,11 +1,8 @@
 import Controller from "@/bizMod/set/bizMod/permission/controller";
-
-export const createPermission = async (root, parameter, source, fieldASTs) => {
+// 新增
+export const createPermission = async (root, parameter) => {
   const { ctx, next } = root;
-  const { request, response } = ctx;
-  const { id } = parameter || {};
 
-  // 新增角色
   const data = await Controller.create(ctx, next, parameter);
 
   return {
@@ -15,13 +12,10 @@ export const createPermission = async (root, parameter, source, fieldASTs) => {
   };
 };
 
-// // 编辑角色
-export const editPermission = async (root, parameter, source, fieldASTs) => {
+//  编辑
+export const editPermission = async (root, parameter) => {
   const { ctx, next } = root;
-  const { request, response } = ctx;
-  const { id } = parameter || {};
 
-  // 新增角色
   const data = await Controller.edit(ctx, next, parameter);
 
   return {

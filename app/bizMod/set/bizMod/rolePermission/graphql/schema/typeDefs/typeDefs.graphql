@@ -54,9 +54,8 @@ input CreateRolePermissionInput {
 
 # 定义输入类型
 input EditRolePermissionInput {
-  id: ID!
-  roleId: ID!
-  userId: ID!
+  permissionIds:[ID!]
+  roleId:ID!
 }
 
 # """
@@ -95,19 +94,14 @@ input ListInfoInput {
   pageNum: Int
   id: ID
   roleId: ID
-  userId: ID
+  permissionId: ID
 }
 
 extend type Query {
   getRolePermissionList(parameter: ListInfoInput): ListInfo
-  # # ! 是必填参数
-  getRolePermissionInfo(id: ID): Info
 }
 
 extend type Mutation {
   # # ! 是必填参数
-  editRolePermissionInfo(parameter: EditRolePermissionInput!): Info
-
-  # # ! 编辑角色_权限
-  # editRole(parameter: EditRolePermissionInput!): Info
+  editRolePermission(parameter: EditRolePermissionInput!): Info
 }

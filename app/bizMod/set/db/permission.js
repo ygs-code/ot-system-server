@@ -55,34 +55,34 @@ export const removePermission = async (id) => {
   return await exec(sql, { id });
 };
 
-// 查询用户权限
-export const queryUserRolePermission = async (id) => {
-  const sql = `
-    SELECT
-      DISTINCT
-              p.id permissionId,  #重命名
-              p.name permissionName , #重命名
-              p.description permissionDescription , #重命名
-              p.auth_key permissionAuthKey , #重命名
-              u.id  userId, #重命名
-              u.name userName , #重命名
-              r.id roleId,  #重命名
-              r.name roleName,  #重命名
-              r.description roleDescription   #重命名   
-    FROM
-      user u, #缩写表
-      role r,  #缩写表
-      user_role ur,  #缩写表
-      permission p, #缩写表
-      role_permission  rp #缩写表
-    WHERE
-      u.id = ${connection.escape(
-        id
-      )} AND u.id=ur.user_id AND r.id=ur.role_id AND r.id=rp.role_id  AND p.id=rp.permission_id;  #查询条件
-  `;
+// // 查询用户权限
+// export const queryUserRolePermission = async (id) => {
+//   const sql = `
+//     SELECT
+//       DISTINCT
+//               p.id permissionId,  #重命名
+//               p.name permissionName , #重命名
+//               p.description permissionDescription , #重命名
+//               p.auth_key permissionAuthKey , #重命名
+//               u.id  userId, #重命名
+//               u.name userName , #重命名
+//               r.id roleId,  #重命名
+//               r.name roleName,  #重命名
+//               r.description roleDescription   #重命名
+//     FROM
+//       user u, #缩写表
+//       role r,  #缩写表
+//       user_role ur,  #缩写表
+//       permission p, #缩写表
+//       role_permission  rp #缩写表
+//     WHERE
+//       u.id = ${connection.escape(
+//         id
+//       )} AND u.id=ur.user_id AND r.id=ur.role_id AND r.id=rp.role_id  AND p.id=rp.permission_id;  #查询条件
+//   `;
 
-  return await exec(sql);
-};
+//   return await exec(sql);
+// };
 
 // 查询用户列表
 export const queryPermissionList = async (options = {}, page = {}) => {

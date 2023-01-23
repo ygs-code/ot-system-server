@@ -1,7 +1,6 @@
 import { captureClassError } from "utils";
 
-import { getVerifyCode } from "@/bizMod/set/redis";
-import { forbidden, success, unauthorized, unsupported } from "@/constant";
+import { forbidden, success, unsupported } from "@/constant";
 
 import Service from "../service";
 
@@ -17,10 +16,8 @@ class Controller {
     };
   }
 
-  // 查询单个角色
+  // 查询单个信息
   static async query(ctx, next, parameter) {
-    // ctx.set("Content-Type", "application/json")
-    // const parameter = ctx.request.body; // 获取请求参数
     //添加service
     const { data, status } = await Service.query(ctx, next, parameter);
 
@@ -59,68 +56,31 @@ class Controller {
   }
   // 创建
   static async create(ctx, next, { parameter = {} } = {}) {
-    const { response } = ctx;
-
-    // const { verificationCode } = parameter;
-
-    // return
-    // return  getVerifyCode(verificationCode)
-    // .then(async () => {
-    //添加service
     const data = await Service.create(ctx, next, parameter);
-    // const { status, token, roleInfo } = data;
+
     const getMessage = (data) => {
       const { status } = data;
       const message = {
         1: () => ({
           ...unsupported,
-          message: "该角色名已经被注册过,请重新输入角色名"
+          message: "该角色名已经存在,请重新输入角色名"
         }),
 
         2: () => ({
           code: 200,
-          message: "注册成功"
+          message: "操作成功"
         })
       };
       return message[status]();
     };
 
     return getMessage(data);
-    // })
-    // .catch((error) => {
-    //   let message = "";
-    //   let code = null;
-
-    //   if (error) {
-    //     message = "系统错误";
-    //     code = 500;
-    //     response.console.error(
-    //       typeof error === "object" ? JSON.stringify(error) : error,
-    //       __filename
-    //     );
-    //   } else {
-    //     message = "验证码错误,或者已过期";
-    //     code = 400;
-    //   }
-
-    // response.body = {
-    //   message,
-    //   code,
-    //   data: {},
-    // };
-
-    // return {
-    //   message,
-    //   code,
-    //   data: {}
-    // };
-    // });
   }
   // 编辑
   static async edit(ctx, next, parameter) {
     const { parameter: { description, id, name } = {} } = parameter;
 
-    const { data, status } = await Service.edit(ctx, next, {
+    const { status } = await Service.edit(ctx, next, {
       description,
       id,
       name
@@ -129,7 +89,7 @@ class Controller {
       const message = {
         1: () => ({
           ...unsupported,
-          // console.log(`该角色名${name}已存在，请重新修改角色名`);
+
           message: `该角色名${name}已存在，请重新修改角色名`
         }),
         2: () => ({

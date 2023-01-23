@@ -1,7 +1,6 @@
 import { captureClassError } from "utils";
 
-import { getVerifyCode } from "@/bizMod/set/redis";
-import { forbidden, success, unauthorized, unsupported } from "@/constant";
+import { forbidden, success, unsupported } from "@/constant";
 
 import Service from "../service";
 
@@ -35,8 +34,6 @@ class Controller {
 
   // 查询单个权限
   static async query(ctx, next, parameter) {
-    // ctx.set("Content-Type", "application/json")
-    // const parameter = ctx.request.body; // 获取请求参数
     //添加service
     const { data, status } = await Service.query(ctx, next, parameter);
 
@@ -75,8 +72,6 @@ class Controller {
   }
   // 创建
   static async create(ctx, next, { parameter }) {
-    const { response } = ctx;
-
     const {
       id,
       name,
@@ -85,8 +80,6 @@ class Controller {
       parentId: parent_id
     } = parameter;
 
-    // return getVerifyCode(verificationCode)
-    //   .then(async () => {
     //添加service
     const data = await Service.create(ctx, next, {
       id,
@@ -95,56 +88,27 @@ class Controller {
       auth_key,
       parent_id
     });
-    // const { status, token, permissionInfo } = data;
+
     const getMessage = (data) => {
       const { status } = data;
       const message = {
         1: () => ({
           ...unsupported,
-          message: "该权限名已经被注册过,请重新输入权限名"
+          message: "该权限名已经存在,请重新输入权限名"
         }),
         2: () => ({
           ...unsupported,
-          message: "该权限key已经被注册过,请重新输入权限key"
+          message: "该权限key已经存在,请重新输入权限key"
         }),
         3: () => ({
           code: 200,
-          message: "注册成功"
+          message: "操作成功"
         })
       };
       return message[status]();
     };
 
     return getMessage(data);
-    // })
-    // .catch((error) => {
-    //   let message = "";
-    //   let code = null;
-
-    //   if (error) {
-    //     message = "系统错误";
-    //     code = 500;
-    //     response.console.error(
-    //       typeof error === "object" ? JSON.stringify(error) : error,
-    //       __filename
-    //     );
-    //   } else {
-    //     message = "验证码错误,或者已过期";
-    //     code = 400;
-    //   }
-
-    //   // response.body = {
-    //   //   message,
-    //   //   code,
-    //   //   data: {},
-    //   // };
-
-    //   return {
-    //     message,
-    //     code,
-    //     data: {}
-    //   };
-    // });
   }
   // 编辑
   static async edit(ctx, next, parameter) {
@@ -158,7 +122,7 @@ class Controller {
       }
     } = parameter;
 
-    const { data, status } = await Service.edit(ctx, next, {
+    const { status } = await Service.edit(ctx, next, {
       description,
       id,
       name,
@@ -169,7 +133,7 @@ class Controller {
       const message = {
         1: () => ({
           ...unsupported,
-          // console.log(`该权限名${name}已存在，请重新修改权限名`);
+
           message: `该权限名${name}已存在，请重新修改权限名`
         }),
         2: () => ({

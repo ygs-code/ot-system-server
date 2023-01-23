@@ -1,7 +1,7 @@
 import { captureClassError } from "utils";
 
 import { getVerifyCode } from "@/bizMod/set/redis";
-import { forbidden, success, unauthorized, unsupported } from "@/constant";
+import { forbidden, success, unsupported } from "@/constant";
 
 import Service from "../service";
 
@@ -32,16 +32,10 @@ class Controller {
   }
 
   // 查询单个用户&角色
-  static async query(ctx, next, parameter) {
-    const {
-      userRoleInfo: { id, userId: user_id, roleId: role_id }
-    } = parameter;
-
+  static async query(ctx, next, { id }) {
     //添加service
     const { data, status } = await Service.query(ctx, next, {
-      id,
-      user_id,
-      role_id
+      id
     });
 
     const mapData = {
@@ -94,15 +88,15 @@ class Controller {
           const message = {
             1: () => ({
               ...unsupported,
-              message: "该用户&角色名已经被注册过,请重新输入用户&角色名"
+              message: "该用户&角色名已经存在,请重新输入用户&角色名"
             }),
             2: () => ({
               ...unsupported,
-              message: "该手机号码已经被注册过,请重新输入手机号码"
+              message: "该手机号码已经存在,请重新输入手机号码"
             }),
             3: () => ({
               ...unsupported,
-              message: "该邮箱地址已被注册过,请重新输入邮箱地址"
+              message: "该邮箱地址已存在,请重新输入邮箱地址"
             }),
             4: () => ({
               code: 200,
@@ -144,19 +138,16 @@ class Controller {
       });
   }
   // 编辑
-  static async edit(ctx, next, parameter) {
-    const {
-      roleInfo: { email, id, name, phone, type }
-    } = parameter;
-    const { data, status } = await Service.edit(ctx, next, parameter);
+  static async edit(ctx, next, { parameter }) {
+    const { userId: user_id, roleIds } = parameter;
+
+    const { status } = await Service.edit(ctx, next, {
+      user_id,
+      roleIds
+    });
     const getMessage = (status) => {
       const message = {
         1: () => ({
-          ...unsupported,
-          // console.log(`该用户&角色名${name}已存在，请重新修改用户&角色名`);
-          message: `该用户&角色名${name}已存在，请重新修改用户&角色名`
-        }),
-        2: () => ({
           code: 200,
           message: "操作成功"
         })

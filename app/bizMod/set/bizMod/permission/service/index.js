@@ -1,20 +1,11 @@
-import svgCaptcha from "svg-captcha";
 import { captureClassError, getPagParameters } from "utils";
 
 import {
   addPermission,
   editPermission,
-  editRole,
   queryPermission,
-  queryPermissionList,
-  // queryPermission,
-  queryPermissionRolePermission,
-  removeUser
+  queryPermissionList
 } from "@/bizMod/set/db";
-import { getVerifyCode, setVerifyCode } from "@/bizMod/set/redis";
-import { tokenExpires } from "@/config";
-import { forbidden, success } from "@/constant/httpCode";
-import { createToken, destroyToken, verifyToken } from "@/redis";
 
 @captureClassError()
 class Service {
@@ -47,14 +38,10 @@ class Service {
       })
     };
   }
-  //创建权限
+  //创建
   static async create(ctx, next, parameter) {
-    const { id, name, description, auth_key, parent_id } = parameter;
-    /*
-     1 查询权限名是否被注册过，
-     2 查询手机号码是否被注册过
-     3 如果都没有被注册那么就可以注册
-    */
+    const { name, description, auth_key, parent_id } = parameter;
+
     let permissionInfo = await queryPermission({
       name
     });
@@ -94,7 +81,7 @@ class Service {
   // 编辑权限
   static async edit(ctx, next, parameter) {
     const { description, id, name, parent_id, auth_key } = parameter;
-    let isHasUser = [];
+    let isHas = [];
     /*
      1 查询权限
     */
@@ -105,17 +92,15 @@ class Service {
 
     // 更新name
     if (name !== permissionInfo.name) {
-      isHasUser = await queryPermission({
+      isHas = await queryPermission({
         name
       });
-      if (isHasUser.length) {
+      if (isHas.length) {
         return {
           status: 1
         };
       }
     }
-
-    // email
 
     await editPermission({
       description,
@@ -148,7 +133,7 @@ class Service {
               data: {}
             };
       })
-      .catch((error) => {
+      .catch(() => {
         return {
           status: 3,
           data: {}

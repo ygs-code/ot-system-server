@@ -45,17 +45,6 @@ const queryUser = async (data) => {
     frontHasCondition = true;
   }
 
-  //   let nameField =
-  //     (id && "id") ||
-  //     (name && "name") ||
-  //     (phone && "phone") ||
-  //     (email && "email") ||
-  //     "";
-  //   // 登录情况
-  //   if (nameField && password) {
-  //     sql = `select * from user where ${nameField}=${connection.escape(
-  //       data[nameField]
-  //     )}  and  password=${connection.escape(hmac.sign(password, ""))}`;
   return await exec(sql);
 };
 
@@ -65,7 +54,7 @@ const removeUser = async (id) => {
   return await exec(sql, { id });
 };
 
-// 查询用户权限
+// // 查询用户权限
 const queryUserRolePermission = async (id) => {
   const sql = `
     SELECT
@@ -78,7 +67,7 @@ const queryUserRolePermission = async (id) => {
               u.name userName , #重命名
               r.id roleId,  #重命名
               r.name roleName,  #重命名
-              r.description roleDescription   #重命名   
+              r.description roleDescription   #重命名
     FROM
       user u, #缩写表
       role r,  #缩写表

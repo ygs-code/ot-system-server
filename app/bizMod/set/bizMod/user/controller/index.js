@@ -20,8 +20,6 @@ class Controller {
 
   // 查询单个用户
   static async query(ctx, next, parameter) {
-    // ctx.set("Content-Type", "application/json")
-    // const parameter = ctx.request.body; // 获取请求参数
     //添加service
     const { data, status } = await Service.query(ctx, next, parameter);
 
@@ -129,7 +127,7 @@ class Controller {
       parameter: { email, id, name, phone, type }
     } = parameter;
 
-    const { data, status } = await Service.edit(ctx, next, {
+    const { status } = await Service.edit(ctx, next, {
       email,
       id,
       name,
@@ -165,7 +163,7 @@ class Controller {
   // 登录
   static async login(ctx, next, parameter) {
     const { response } = ctx;
-    // var parameter = request.body; // 获取请求参数
+
     const { verificationCode } = parameter;
 
     return await getVerifyCode(verificationCode)
@@ -223,7 +221,6 @@ class Controller {
   }
   // 验证码
   static async getVerifyCode(ctx, next) {
-    // ctx.set("Content-Type", "application/json")
     var parameter = ctx.request.body; // 获取请求参数
 
     //添加service

@@ -1,24 +1,10 @@
-import svgCaptcha from "svg-captcha";
 import { captureClassError, getPagParameters } from "utils";
 
 import {
-  addUser,
-  editRole,
+  addRolePermission,
   queryRolePermissionList,
-  queryUser,
-  queryUserRole,
-  queryUserRolePermission,
-  removeUser
+  removeRolePermission
 } from "@/bizMod/set/db";
-import { getVerifyCode, setVerifyCode } from "@/bizMod/set/redis";
-import { tokenExpires } from "@/config";
-import { forbidden, success } from "@/constant/httpCode";
-import {
-  createToken,
-  destroyToken,
-  getTokenroleInfo,
-  verifyToken
-} from "@/redis";
 
 @captureClassError()
 class Service {
@@ -51,119 +37,62 @@ class Service {
       })
     };
   }
-  //创建角色
-  static async create(ctx, next, parameter) {
-    const { name, phone, password, email, type } = parameter;
-    /*
-     1 查询角色名是否被注册过，
-     2 查询手机号码是否被注册过
-     3 如果都没有被注册那么就可以注册
-    */
-    let roleInfo = await queryUser({
-      name
-    });
 
-    roleInfo = roleInfo.length >= 1 ? roleInfo[0] : null;
-    if (roleInfo && roleInfo.id) {
-      return {
-        status: 1
-      };
-    }
-
-    roleInfo = await queryUser({
-      phone
-    });
-
-    roleInfo = roleInfo.length >= 1 ? roleInfo[0] : null;
-
-    if (roleInfo && roleInfo.id) {
-      return {
-        status: 2
-      };
-    }
-
-    roleInfo = await queryUser({
-      email
-    });
-
-    roleInfo = roleInfo.length >= 1 ? roleInfo[0] : null;
-
-    if (roleInfo && roleInfo.id) {
-      return {
-        status: 3
-      };
-    }
-
-    const data = await addUser({
-      email,
-      name,
-      phone,
-      password,
-      type
-    });
-
-    if (data) {
-      return {
-        status: 4
-      };
-    }
-  }
   // 编辑角色
   static async edit(ctx, next, parameter) {
-    const { id, user_id, role_id } = parameter;
-
-    let isHasUser = [];
-    /*
-     1 查询角色
-    */
-    let roleInfo = await queryUserRole({
-      id
-    });
-    roleInfo = roleInfo[0] || {};
-
-    // 更新name
-    if (name !== roleInfo.name) {
-      isHasUser = await queryUserRole({
-        name
-      });
-      if (isHasUser.length) {
-        return {
-          status: 1
-        };
+    let { role_id, permissionIds } = parameter;
+    // 查询出列表
+    let [list, total] = await queryRolePermissionList(
+      {
+        and: {
+          role_id
+        }
+        // andLike: { name }
+      },
+      {
+        pageNum: 1,
+        pageSize: 10000
       }
+    );
+
+    // 找出新增
+    const addIds = permissionIds.filter((item) => {
+      return !list.some(($item) => {
+        return `${$item.permissionId}` === `${item}`;
+      });
+    });
+
+    // 找出删除
+    const deleteIds = list
+      .filter((item) => {
+        return !permissionIds.some(($item) => {
+          return `${$item}` === `${item.permissionId}`;
+        });
+      })
+      .map((item) => item.permissionId);
+    let p = [];
+    for (let item of addIds) {
+      p.push(
+        addRolePermission({
+          role_id,
+          permission_id: item
+        })
+      );
+    }
+    for (let item of deleteIds) {
+      p.push(
+        removeRolePermission({
+          role_id,
+          permission_id: item
+        })
+      );
     }
 
-    await editRole({ description, id, name });
+    await Promise.all(p);
 
     return {
-      status: 2
+      status: 1
     };
-  }
-  // 数据库中查询角色
-  static async query(ctx, next, parameter) {
-    const { id } = parameter || {};
-
-    return await queryUserRole({
-      id
-    })
-      .then((roleInfo) => {
-        roleInfo = roleInfo.length >= 1 ? roleInfo[0] : null;
-        return roleInfo
-          ? {
-              status: 1,
-              data: roleInfo
-            }
-          : {
-              status: 2,
-              data: {}
-            };
-      })
-      .catch((error) => {
-        return {
-          status: 3,
-          data: {}
-        };
-      });
   }
 }
 

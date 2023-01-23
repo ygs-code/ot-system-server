@@ -11,14 +11,13 @@ import Controller from "@/bizMod/set/bizMod/permission/controller";
 export const getPermissionList = async (root, parameter) => {
   const { ctx = {}, next } = root;
 
-  // 获取角色
+  // 获取 列表
   return await Controller.queryList(ctx, next, parameter);
 };
 
-// 获取角色信息
+// 获取 信息
 export const getPermissionInfo = async (root, parameter) => {
   const { ctx = {}, next = {} } = root;
 
-  // 获取角色
   return await Controller.query(ctx, next, parameter);
 };

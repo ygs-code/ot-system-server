@@ -6,18 +6,11 @@ import {
   editUser,
   queryUser,
   queryUserList,
-  queryUserRolePermission,
-  removeUser
+  queryUserRolePermission
 } from "@/bizMod/set/db";
-import { getVerifyCode, setVerifyCode } from "@/bizMod/set/redis";
+import { setVerifyCode } from "@/bizMod/set/redis";
 import { tokenExpires } from "@/config";
-import { forbidden, success } from "@/constant/httpCode";
-import {
-  createToken,
-  destroyToken,
-  getTokenUserInfo,
-  verifyToken
-} from "@/redis";
+import { createToken, verifyToken } from "@/redis";
 
 @captureClassError()
 class Service {
@@ -194,7 +187,7 @@ class Service {
                 data: {}
               };
         })
-        .catch((error) => {
+        .catch(() => {
           return {
             status: 3,
             data: {}
@@ -207,7 +200,7 @@ class Service {
         return value;
         // await next();
       })
-      .catch((error) => {
+      .catch(() => {
         return {
           status: 4,
           data: {}
@@ -221,8 +214,8 @@ class Service {
   }
   // 登录
   static async login(ctx, next, parameter = {}) {
-    const { name, phone, password } = parameter;
-    const { request, response, cookies } = ctx;
+    const { name, password } = parameter;
+    const { cookies } = ctx;
     let nameField = "name";
 
     /*
@@ -281,44 +274,41 @@ class Service {
     let userRolePermissionData = await queryUserRolePermission(userInfo.id);
     if (userRolePermissionData.length) {
       userRolePermissionData = userRolePermissionData[0];
-      userRolePermissionData = userRolePermissionData.reduce(
-        (acc, item, index) => {
-          const { permission = [], authKeys = [], role = [] } = acc;
-          const {
-            permissionId,
-            permissionName,
-            permissionDescription,
-            permissionAuthKey,
-            roleId,
-            roleName,
-            roleDescription
-          } = item;
-          permission.push({
-            id: permissionId,
-            name: permissionName,
-            description: permissionDescription,
-            authKey: permissionAuthKey
+      userRolePermissionData = userRolePermissionData.reduce((acc, item) => {
+        const { permission = [], authKeys = [], role = [] } = acc;
+        const {
+          permissionId,
+          permissionName,
+          permissionDescription,
+          permissionAuthKey,
+          roleId,
+          roleName,
+          roleDescription
+        } = item;
+        permission.push({
+          id: permissionId,
+          name: permissionName,
+          description: permissionDescription,
+          authKey: permissionAuthKey
+        });
+        authKeys.push(permissionAuthKey);
+        let flag = role.some((item) => {
+          return item.id === roleId;
+        });
+        if (!flag) {
+          role.push({
+            id: roleId,
+            name: roleName,
+            description: roleDescription
           });
-          authKeys.push(permissionAuthKey);
-          let flag = role.some((item) => {
-            return item.id == roleId;
-          });
-          if (!flag) {
-            role.push({
-              id: roleId,
-              name: roleName,
-              description: roleDescription
-            });
-          }
-          return {
-            ...acc,
-            permission,
-            authKeys,
-            role
-          };
-        },
-        {}
-      );
+        }
+        return {
+          ...acc,
+          permission,
+          authKeys,
+          role
+        };
+      }, {});
     } else {
       userRolePermissionData = {};
     }
@@ -347,9 +337,7 @@ class Service {
     };
   }
   // 验证码
-  static async getVerifyCode(ctx, next, parameter = {}) {
-    const { name, phone, password } = parameter;
-    const { request, response, cookies } = ctx;
+  static async getVerifyCode() {
     var codeConfig = {
       size: 5, // 验证码长度
       ignoreChars: "0o1i", // 验证码字符中排除 0o1i

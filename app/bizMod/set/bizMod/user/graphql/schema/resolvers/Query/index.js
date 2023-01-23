@@ -7,19 +7,17 @@
  * @FilePath: /Blogs/BlogsServer/app/bizMod/set/bizMod/user/graphql/schema/resolvers/Query/index.js
  */
 import Controller from "@/bizMod/set/bizMod/user/controller";
-
+// 获取 列表
 export const getUserList = async (root, parameter) => {
   const { ctx = {}, next } = root;
 
-  // 获取用户
   return await Controller.queryList(ctx, next, parameter);
 };
 
-// 获取用户信息
+// 获取 信息
 export const getUserInfo = async (root, parameter) => {
   const { ctx = {}, next = {} } = root;
 
-  // 获取用户
   return await Controller.query(ctx, next, parameter);
 };
 
@@ -27,7 +25,6 @@ export const getUserInfo = async (root, parameter) => {
 export const getVerifyCode = async (root, parameter) => {
   const { ctx, next } = root;
 
-  //  //添加service
   const data = await Controller.getVerifyCode(ctx, next, parameter);
 
   return data;

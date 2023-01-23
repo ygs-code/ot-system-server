@@ -53,9 +53,8 @@ input CreateInfoInput {
 }
 
 # 定义输入类型
-input EditInfoInput {
-  id: ID!
-  roleId: ID!
+input EditUserRoleInput {
+  roleIds: [ID!]
   userId: ID!
 }
 
@@ -100,14 +99,9 @@ input ListInfoInput {
 
 extend type Query {
   getUserRoleList(parameter: ListInfoInput): ListInfo
-  # # ! 是必填参数
-  getUserRoleInfo(id: ID): Info
 }
 
 extend type Mutation {
   # # ! 是必填参数
-  editUserRole(roleInfo: EditInfoInput!): Info
-
-  # # ! 编辑用户_角色
-  # editRole(roleInfo: EditInfoInput!): Info
+  editUserRole(parameter: EditUserRoleInput!): Info
 }

@@ -14,11 +14,3 @@ export const getRolePermissionList = async (root, parameter) => {
   // 获取角色
   return await Controller.queryList(ctx, next, parameter);
 };
-
-// // 获取角色信息
-export const getRolePermissionInfo = async (root, parameter) => {
-  const { ctx = {}, next = {} } = root;
-
-  // 获取角色
-  return await Controller.query(ctx, next, parameter);
-};
