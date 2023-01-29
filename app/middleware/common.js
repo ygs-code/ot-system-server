@@ -47,7 +47,7 @@ const getColors = (keys) => {
   }
   return colors;
 };
-const LinkLog = (requestId, options = {}) => {
+const linkLog = (requestId) => {
   return {
     debug: (...ags) => {
       console.debug(
@@ -95,7 +95,7 @@ const LinkLog = (requestId, options = {}) => {
     }
   };
 };
-const common = (app, router) => {
+const common = (app) => {
   // 处理404
   // app.use(function* (next) {
   //     try {
@@ -157,14 +157,14 @@ const common = (app, router) => {
   app.use(async (ctx, next) => {
     const {
       request: { header },
-      cookies,
+
       response
     } = ctx;
     // 设置响应字段
     const requestId = header["request-id"] || uuidv4();
     // ctx.set('Content-Type', 'application/zip')  // 修改
     response.append("request-id", requestId); // 添加新字段
-    response.console = LinkLog(requestId);
+    response.console = linkLog(requestId);
     await next();
   });
 };

@@ -6,14 +6,14 @@
  * @Description: In User Settings Edit
  * @FilePath: /error-sytem/server/app/bizMod/abnormity/router/index.js
  */
-import koaRoute from "koa-router"; // koa 路由中间件
+import KoaRoute from "koa-router"; // koa 路由中间件
 
 import { initTable, initTableData } from "@/bizMod/set/db";
-import { addUser, connection, exec } from "@/db/index.js";
+import { exec } from "@/db/index.js";
 
 // import { async } from "regenerator-runtime";
 // import { router as scriptRouter } from "../bizMod/script"; //scriptRouter 路由
-import { router as userRouter } from "../bizMod/user"; //userRouter 路由
+import { router as UserRouter } from "../bizMod/user"; //UserRouter 路由
 // import { tables, CheckTable } from "../db"; //  db
 class router {
   constructor(app, parentRouter) {
@@ -22,7 +22,7 @@ class router {
     this.init();
   }
   createRouter() {
-    this.twoLevelRoute = new koaRoute({
+    this.twoLevelRoute = new KoaRoute({
       prefix: "/set" // 给路由统一加个前缀：
     });
     return this.twoLevelRoute;
@@ -50,7 +50,7 @@ class router {
   async addRouters() {
     // 为script模块添加路由
     // new scriptRouter(this.app, this.twoLevelRoute);
-    new userRouter(this.app, this.twoLevelRoute);
+    new UserRouter(this.app, this.twoLevelRoute);
     // 添加路由
     this.router.use(this.twoLevelRoute.routes()); //挂载二级路由
   }

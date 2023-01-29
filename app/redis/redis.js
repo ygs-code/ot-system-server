@@ -1,7 +1,7 @@
 import redis from "redis";
 
 import { REDIS_CONF } from "../config";
-import { merge, promise } from "../utils";
+import { promise } from "../utils";
 
 class RedisClass {
   constructor(port, url, options = {}) {
@@ -15,7 +15,7 @@ class RedisClass {
   }
   // 连接
   connect(callback = () => {}) {
-    return promise((resolve, reject) => {
+    return promise((resolve) => {
       this.redisClient.on("connect", () => {
         callback();
         resolve();
@@ -24,8 +24,8 @@ class RedisClass {
   }
   ready(callback = () => {}) {
     return promise((resolve, reject) => {
-      this.redisClient.on("ready", (err, res) => {
-        if (err) {
+      this.redisClient.on("ready", (error, res) => {
+        if (error) {
           callback(error);
           reject(error);
         } else {
@@ -43,13 +43,15 @@ class RedisClass {
     });
   }
   end(callback = () => {}) {
-    this.redisClient.on("end", (err, res) => {
-      if (err) {
-        callback(error);
-        reject(error);
-      } else {
-        resolve(res);
-      }
+    return promise((resolve, reject) => {
+      this.redisClient.on("end", (error, res) => {
+        if (error) {
+          callback(error);
+          reject(error);
+        } else {
+          resolve(res);
+        }
+      });
     });
   }
   set(key, value, callback = () => {}, options = () => {}) {

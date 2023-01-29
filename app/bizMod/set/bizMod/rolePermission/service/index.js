@@ -42,7 +42,7 @@ class Service {
   static async edit(ctx, next, parameter) {
     let { role_id, permissionIds } = parameter;
     // 查询出列表
-    let [list, total] = await queryRolePermissionList(
+    let [list] = await queryRolePermissionList(
       {
         and: {
           role_id

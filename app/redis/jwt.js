@@ -7,14 +7,14 @@
  * @FilePath: /error-sytem/server/app/redis/jwt.js
  */
 import { tokenExpires } from "@/config";
-import { merge, promise } from "@/utils";
+import { promise } from "@/utils";
 
 import jwt from "./jsonwebtoken";
 import { Redis, redisClient } from "./redis";
 
 // 创建Token
 const createToken = async (userInfo = {}, payload = {}) => {
-  const { id = "", username, password } = userInfo;
+  const { id = "" } = userInfo;
   //配置参数
   payload = {
     ...payload,
@@ -71,7 +71,7 @@ const getTokenUserInfo = (token) => {
 // 检验Token
 const verifyToken = async (token) => {
   const userInfo = (await getTokenUserInfo(token)) || {};
-  const { id: signingKey = "" } = userInfo;
+
   return promise((resolve, reject) => {
     if (userInfo) {
       updateRequestTime(token);

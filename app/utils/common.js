@@ -39,7 +39,7 @@ const checkSchema = () => {
       for (var key in source) {
         if (Object.prototype.hasOwnProperty.call(source, key)) {
           if (
-            Object.prototype.toString.call(source[key]) == "[object Module]" ||
+            Object.prototype.toString.call(source[key]) === "[object Module]" ||
             CheckDataType.isObject(source[key])
           ) {
             target[key] = {

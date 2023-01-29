@@ -6,7 +6,7 @@
  * @Description: In User Settings Edit
  * @FilePath: /error-sytem/server/app/bizMod/set/redis/user.js
  */
-import { Redis, RedisClass, redisClient } from "@/redis";
+import { Redis } from "@/redis";
 
 import { verifyCodeExpires } from "../config";
 // 设置验证码

@@ -8,7 +8,7 @@
  */
 import userService from "../service/user";
 import { unsupported, unauthorized } from "../constant";
-import { merge } from "../utils";
+ 
 class Controller {
   static async add(ctx, next) {
     // ctx.set("Content-Type", "application/json")
@@ -20,16 +20,16 @@ class Controller {
       const message = {
         1: () => ({
           ...unsupported,
-          message: "该用户名已经被注册过,请重新输入用户名",
+          message: "该用户名已经被注册过,请重新输入用户名"
         }),
         2: () => ({
           ...unsupported,
-          message: "该手机号码已经被注册过,请重新输入手机号码",
+          message: "该手机号码已经被注册过,请重新输入手机号码"
         }),
         3: () => ({
           code: 200,
-          message: "注册成功",
-        }),
+          message: "注册成功"
+        })
       };
       return message[status]();
     };
@@ -55,20 +55,20 @@ class Controller {
       const message = {
         1: () => ({
           ...unauthorized,
-          message: "用户名错误，请重新输入用户名",
+          message: "用户名错误，请重新输入用户名"
         }),
         2: () => ({
           ...unauthorized,
-          message: "密码错误请重新输入密码",
+          message: "密码错误请重新输入密码"
         }),
         3: () => ({
           code: 200,
           message: "登录成功",
           data: {
             token,
-            userInfo,
-          },
-        }),
+            userInfo
+          }
+        })
       };
       return message[status]();
     };

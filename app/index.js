@@ -8,7 +8,7 @@
  */
 import "@babel/polyfill";
 
-import koa from "koa";
+import Koa from "koa";
 
 import { port } from "./config";
 import { connection, exec } from "./db/index.js";
@@ -20,7 +20,7 @@ import { promise } from "./utils";
 class App {
   constructor() {
     //创建node实例
-    this.app = new koa();
+    this.app = new Koa();
     this.init();
   }
   async init() {

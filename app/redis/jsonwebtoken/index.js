@@ -115,11 +115,11 @@ class Jsonwebtoken {
         callback = body;
         body = {};
       }
-      let falg = false;
+
       if (this.tokensCache[token]) {
         const {
           body: payload = {},
-          hmac,
+
           iat, //创建token时间
           exp //过期时间
         } = this.tokensCache[token];

@@ -21,9 +21,7 @@ import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import WebpackBuildDllPlugin from "webpack-build-dll-plugin";
 import DllReferencePlugin from "webpack/lib/DllReferencePlugin";
 import HardSourceWebpackPlugin from "hard-source-webpack-plugin";
-import  ESLintPlugin from  "eslint-webpack-plugin"
- 
-
+import ESLintPlugin from "eslint-webpack-plugin";
 
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length - 1 });
 const webpackEnv = getArgv("webpackEnv"); // 环境参数
@@ -39,7 +37,7 @@ const cacheLoader = (happypackId) => {
     ? [
         `happypack/loader?id=${happypackId}&cacheDirectory=true`,
         "thread-loader",
-        "cache-loader",
+        "cache-loader"
       ]
     : [`happypack/loader?id=${happypackId}`];
 };
@@ -58,8 +56,8 @@ export default {
       "webpack/hot/poll?1000",
       //  path.join(process.cwd(), "/app/index.js")
       //入口主文件
-      path.join(process.cwd(), "/app/index.js"), // 如果没有配置 context 则需要这样引入  path.join(__dirname, "../../app/index.js")
-    ],
+      path.join(process.cwd(), "/app/index.js") // 如果没有配置 context 则需要这样引入  path.join(__dirname, "../../app/index.js")
+    ]
   },
   // 出口
   output: {
@@ -93,7 +91,7 @@ export default {
     },
     // 如果一个模块是在 require 时抛出异常，告诉 webpack 从模块实例缓存(require.cache)中删除这个模块。
     // 并且重启webpack的时候也会删除cache缓存
-    strictModuleExceptionHandling: true,
+    strictModuleExceptionHandling: true
   },
 
   // 是否监听文件
@@ -113,8 +111,8 @@ export default {
         // 排除
         exclude: /node_modules/,
         //入口文件
-        include: [path.join(process.cwd(), "/app")],
-      }),
+        include: [path.join(process.cwd(), "/app")]
+      })
     ],
     // //启用，会主动缓存模块，但并不安全。传递 true 将缓存一切
     // unsafeCache: true,
@@ -125,7 +123,7 @@ export default {
     // 详细教程: https://blog.csdn.net/u012987546/article/details/97389078
     modules: [
       path.join(process.cwd(), "/node_modules"),
-      path.join(process.cwd(), "/app"),
+      path.join(process.cwd(), "/app")
     ],
     // 可以省略引用后缀
     extensions: [".tsx", ".ts", ".js", ".graphql", ".json", ".node"],
@@ -137,7 +135,7 @@ export default {
       vm: "vm-browserify",
       crypto: false,
       stream: "stream-browserify",
-      "@": path.join(process.cwd(), "/app"),
+      "@": path.join(process.cwd(), "/app")
     },
     // 2.手动添加polyfills
     fallback: {
@@ -146,8 +144,8 @@ export default {
       stream: require.resolve("stream-browserify"),
       util: require.resolve("util/"),
       assert: require.resolve("assert/"),
-      http: require.resolve("stream-http"),
-    },
+      http: require.resolve("stream-http")
+    }
   },
   // 打包文件大小监听
   performance: {
@@ -159,7 +157,7 @@ export default {
       // console.log('assetFilename==========', assetFilename,assetFilename.endsWith('.js'))
       // 只要监听js文件，过滤其他文件判断
       return assetFilename.endsWith(".js");
-    },
+    }
   },
 
   //选项决定文件系统快照的创建和失效方式。
@@ -168,18 +166,18 @@ export default {
     immutablePaths: [],
     buildDependencies: {
       hash: true,
-      timestamp: true,
+      timestamp: true
     },
     module: {
-      timestamp: true,
+      timestamp: true
     },
     resolve: {
-      timestamp: true,
+      timestamp: true
     },
     resolveBuildDependencies: {
       hash: true,
-      timestamp: true,
-    },
+      timestamp: true
+    }
   },
   //在第一个错误出现时抛出失败结果，而不是容忍它
   bail: true,
@@ -244,15 +242,15 @@ export default {
         defaultVendors: {
           test: /[\\/]node_modules[\\/]/,
           priority: -10,
-          reuseExistingChunk: true,
+          reuseExistingChunk: true
         },
         default: {
           minChunks: 2,
           priority: -20,
-          reuseExistingChunk: true,
-        },
-      },
-    },
+          reuseExistingChunk: true
+        }
+      }
+    }
     // Chunk end
   },
   //配置node环境
@@ -260,7 +258,7 @@ export default {
   node: {
     __filename: true,
     __dirname: true,
-    global: false,
+    global: false
   },
   // 捕获时机信息
   profile: true,
@@ -347,7 +345,7 @@ export default {
     // 添加 webpack 版本信息
     version: true,
     // 添加警告
-    warnings: true,
+    warnings: true
     // 过滤警告显示（从 webpack 2.4.0 开始），
     // 可以是 String, Regexp, 一个获取 warning 的函数
     // 并返回一个布尔值或上述组合的数组。第一个匹配到的为胜(First match wins.)。
@@ -358,7 +356,7 @@ export default {
   externals: [
     //引入缓存
     nodeExternals({
-      allowlist: ["webpack/hot/poll?1000"],
+      allowlist: ["webpack/hot/poll?1000"]
     }),
     //将node_modules目录下的所有模块加入到externals中    告知 webpack  ，并忽略 externals 中的模块
     (() => {
@@ -373,7 +371,7 @@ export default {
         });
 
       return nodeModules;
-    })(),
+    })()
   ],
   module: {
     rules: [
@@ -381,11 +379,11 @@ export default {
         test: /(\.tsx?$)|(\.ts?$)/,
         use: ["awesome-typescript-loader"].concat(
           isEnvDevelopment ? ["thread-loader", "cache-loader"] : []
-        ),
+        )
       },
       {
         include: path.join(process.cwd(), "/app"),
-        sideEffects: true,
+        sideEffects: true
       },
       {
         test: /\.node$/,
@@ -421,7 +419,7 @@ export default {
           // },
         ].concat(cacheLoader("node")),
         // 排除文件,因为这些包已经编译过，无需再次编译
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules|bower_components)/
         // use: {
         //   loader:"node-loader",
         //   options: {
@@ -434,7 +432,7 @@ export default {
         enforce: "pre",
         // 排除文件,因为这些包已经编译过，无需再次编译
         exclude: /(node_modules|bower_components)/,
-        use: ["source-map-loader"].concat(cacheLoader("babel")),
+        use: ["source-map-loader"].concat(cacheLoader("babel"))
         // use: {
         //  loader: "babel-loader",
         //   options: {
@@ -457,7 +455,7 @@ export default {
           //     name: "graphql",
           //   },
           // },
-        ].concat(cacheLoader("graphql")),
+        ].concat(cacheLoader("graphql"))
         // use: {
         //   loader: "raw-loader",
         // },
@@ -466,21 +464,21 @@ export default {
         test: /\.(sql)$/,
         // 排除文件,因为这些包已经编译过，无需再次编译
         exclude: /(node_modules|bower_components)/,
-        use: ["raw-loader"],
-      },
-    ],
+        use: ["raw-loader"]
+      }
+    ]
   },
 
   plugins: [
-        // eslint 插件
-        new ESLintPlugin({
-          emitError: true, //发现的错误将始终被触发，将禁用设置为false。
-          emitWarning: true, //如果将disable设置为false，则发现的警告将始终被发出。
-          failOnError: true, //如果有任何错误，将导致模块构建失败，禁用设置为false。
-          failOnWarning: false, //如果有任何警告，如果设置为true，将导致模块构建失败。
-          quiet: false, //如果设置为true，将只处理和报告错误，而忽略警告。
-          fix: true //自动修复
-        }),
+    // eslint 插件
+    new ESLintPlugin({
+      emitError: true, //发现的错误将始终被触发，将禁用设置为false。
+      emitWarning: true, //如果将disable设置为false，则发现的警告将始终被发出。
+      failOnError: true, //如果有任何错误，将导致模块构建失败，禁用设置为false。
+      failOnWarning: false, //如果有任何警告，如果设置为true，将导致模块构建失败。
+      quiet: false, //如果设置为true，将只处理和报告错误，而忽略警告。
+      fix: true //自动修复
+    }),
     // 加载该插件报错 找不到原因
     // new HardSourceWebpackPlugin({
     // // cacheDirectory是在高速缓存写入。默认情况下，将缓存存储在node_modules下的目录中，因此如
@@ -567,7 +565,7 @@ export default {
       // 输出执行日志
       verbose: true,
       // 使用共享线程池
-      threadPool: happyThreadPool,
+      threadPool: happyThreadPool
     }),
     new HappyPack({
       id: "babel",
@@ -577,7 +575,7 @@ export default {
       // 输出执行日志
       verbose: true,
       // 使用共享线程池
-      threadPool: happyThreadPool,
+      threadPool: happyThreadPool
     }),
     new HappyPack({
       id: "graphql",
@@ -589,18 +587,18 @@ export default {
             "./defineLoader/MyExampleWebpackLoader.js"
           ),
           options: {
-            name: "graphql",
-          },
+            name: "graphql"
+          }
         },
         {
           loader: "raw-loader",
-          options: {},
-        },
+          options: {}
+        }
       ],
       // 输出执行日志
       verbose: true,
       // 使用共享线程池
-      threadPool: happyThreadPool,
+      threadPool: happyThreadPool
     }),
 
     // new HappyPack({
@@ -630,7 +628,7 @@ export default {
     new CleanWebpackPlugin({
       cleanStaleWebpackAssets: false,
       //配置清理文件 如果不清理则加 ！
-      cleanOnceBeforeBuildPatterns: ["*", "!dllFile*"],
+      cleanOnceBeforeBuildPatterns: ["*", "!dllFile*"]
       // cleanOnceBeforeBuildPatterns: [
       //   "index.html",
       //   "**/index*.js",
@@ -651,7 +649,7 @@ export default {
       //不能注入 Koa
       // Koa,
       //注入一个环境变量
-      "process.env": { BUILD_TARGET: "BUILD_TARGET" },
+      "process.env": { BUILD_TARGET: "BUILD_TARGET" }
     }),
 
     // webpack.BannerPlugin 为每一个头文件添加一个文件，这里可以加入公共文件
@@ -659,13 +657,13 @@ export default {
     new webpack.BannerPlugin({
       banner: 'require("source-map-support").install();',
       raw: true,
-      entryOnly: false,
+      entryOnly: false
     }),
 
     // 自定义插件
     new MyExampleWebpackPlugin({
       // 出口
-      outputPath: path.join(process.cwd(), "/app"),
+      outputPath: path.join(process.cwd(), "/app")
     }),
 
     // 这样利用原理可以动态加入公共库
@@ -675,8 +673,8 @@ export default {
           ? `const ${item.variable} = require("${item.packageName}");`
           : `require("${item.packageName}");`,
         raw: true,
-        entryOnly: false,
+        entryOnly: false
       });
-    }),
-  ],
+    })
+  ]
 };
