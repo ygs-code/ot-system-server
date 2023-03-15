@@ -20,6 +20,11 @@
 
 import {
   // 动态导入模块
+  router as setOtDocumentRouter,
+  schema as setOtDocumentSchema
+} from "./otDocument";
+import {
+  // 动态导入模块
   router as setRouter,
   schema as setSchema
 } from "./set";
@@ -72,8 +77,8 @@ export const schema = (() => {
     // ...abnormitySchema,
     // ...performanceSchema,
     // ...projectListSchema,
-    ...setSchema
-    // ...menuSchema,
+    ...setSchema,
+    ...setOtDocumentSchema
   };
 
   let newSchemas = [];
@@ -92,7 +97,8 @@ export const router = (app, router) => {
     // performanceRouter,
     // projectListRouter,
     // menuRouter,
-    setRouter
+    setRouter,
+    setOtDocumentRouter
   };
   // 动态添加模块
   for (let key in routers) {

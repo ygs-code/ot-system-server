@@ -1,0 +1,131 @@
+"""
+权限信息数据
+"""
+type Data {
+  """
+  权限昵称
+  """
+  name: String
+
+  """
+  权限描述
+  """
+  description: String
+
+  """
+  权限ID
+  """
+  id: ID
+
+  """
+  权限创建时间
+  """
+  createTime: String
+
+  """
+  权限更新时间
+  """
+  updateTime: String
+
+  """
+  权限key
+  """
+  authKey: String
+
+  """
+  parent ID
+  """
+  parentId: ID
+}
+
+# """
+# 权限信息
+# """
+type PermissionInfo {
+  """
+  请求状态
+  """
+  code: Int
+  """
+  权限信息数据
+  """
+  data: Data
+  """
+  请求信息
+  """
+  message: String
+}
+
+# 定义输入类型
+input PermissionCreateInput {
+  name: String!
+  description: String!
+  authKey: String!
+  parentId: ID
+}
+
+# 定义输入类型
+input PermissionEditInput {
+  id: ID!
+  name: String!
+  description: String!
+  authKey: String!
+  parentId: ID
+}
+
+# """
+# 权限列表数据
+# """
+type ListData {
+  hasNextPage: Boolean
+  pageNum: Int
+  pageSize: Int
+  pages: Int
+  total: Int
+  list: [Data]
+}
+
+# """
+# 权限列表
+# """
+type ListInfo {
+  """
+  请求状态
+  """
+  code: Int
+  """
+  权限信息数据
+  """
+  data: ListData
+  """
+  请求信息
+  """
+  message: String
+}
+
+# # 定义输入类型
+input ListInfoInput {
+  pageSize: Int
+  pageNum: Int
+  id: ID
+  name: String
+  parentId: ID
+  authKey: String
+}
+
+extend type Query {
+  getPermissionList(parameter: ListInfoInput): ListInfo
+  # # ! 是必填参数
+  getPermissionInfo(id: ID): PermissionInfo
+}
+
+extend type Mutation {
+  # ! 是必填参数
+  createPermission(parameter: PermissionCreateInput!): PermissionInfo
+
+  # ! 编辑权限
+  editPermission(parameter: PermissionEditInput!): PermissionInfo
+  # 删除权限
+  removePermission(id: ID!): PermissionInfo
+ 
+}

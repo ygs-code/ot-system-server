@@ -47,10 +47,7 @@ export const UserModule = {
         Subscription: {},
         Query: {
             getUser: (root, parameter, source, fieldASTs) => {
-                // console.log('root==', root);
-                // console.log('parameter==', parameter);
-                // console.log('source==',source)
-                // console.log('fieldASTs==',fieldASTs)
+       
                 return {
                     id: '1',
                     name: '用户1模块',

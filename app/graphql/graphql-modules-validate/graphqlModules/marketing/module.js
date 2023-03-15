@@ -42,8 +42,7 @@ export const MarketingModule = {
         Subscription: {},
         Query: {
             getDiscount: (root, parameter, source, fieldASTs) => {
-                console.log('root==', root);
-                console.log('parameter==', parameter);
+              
            
                 return {
                     id: '1',
