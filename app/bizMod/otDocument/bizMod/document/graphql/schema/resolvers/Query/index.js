@@ -8,7 +8,7 @@
  */
 import Controller from "@/bizMod/set/bizMod/permission/controller";
 
-export const getPermissionList = async (root, parameter) => {
+export const getDocumentList = async (root, parameter) => {
   const { ctx = {}, next } = root;
 
   // 获取 列表
@@ -16,7 +16,7 @@ export const getPermissionList = async (root, parameter) => {
 };
 
 // 获取 信息
-export const getPermissionInfo = async (root, parameter) => {
+export const getDocumentInfo = async (root, parameter) => {
   const { ctx = {}, next = {} } = root;
 
   return await Controller.query(ctx, next, parameter);

@@ -41,7 +41,7 @@ type Data {
 # """
 # 权限信息
 # """
-type PermissionInfo {
+type DocumentInfo {
   """
   请求状态
   """
@@ -57,7 +57,7 @@ type PermissionInfo {
 }
 
 # 定义输入类型
-input PermissionCreateInput {
+input DocumentCreateInput {
   name: String!
   description: String!
   authKey: String!
@@ -65,7 +65,7 @@ input PermissionCreateInput {
 }
 
 # 定义输入类型
-input PermissionEditInput {
+input DocumentEditInput {
   id: ID!
   name: String!
   description: String!
@@ -114,18 +114,18 @@ input ListInfoInput {
 }
 
 extend type Query {
-  getPermissionList(parameter: ListInfoInput): ListInfo
+  getDocumentList(parameter: ListInfoInput): ListInfo
   # # ! 是必填参数
-  getPermissionInfo(id: ID): PermissionInfo
+  getDocumentInfo(id: ID): DocumentInfo 
 }
 
 extend type Mutation {
   # ! 是必填参数
-  createPermission(parameter: PermissionCreateInput!): PermissionInfo
+  createDocument(parameter: DocumentCreateInput!): DocumentInfo
 
   # ! 编辑权限
-  editPermission(parameter: PermissionEditInput!): PermissionInfo
+  editDocument(parameter: DocumentEditInput!): DocumentInfo
   # 删除权限
-  removePermission(id: ID!): PermissionInfo
+  removeDocument(id: ID!): DocumentInfo
  
 }

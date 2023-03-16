@@ -8,12 +8,12 @@
  */
 import KoaRoute from "koa-router"; // koa 路由中间件
 
-import { initTable, initTableData } from "@/bizMod/set/db";
 import { exec } from "@/db/index.js";
 
 // import { async } from "regenerator-runtime";
 // import { router as scriptRouter } from "../bizMod/script"; //scriptRouter 路由
 import { router as DocumentRouter } from "../bizMod/document"; //DocumentRouter 路由
+import { initTable, initTableData } from "../db";
 // import { tables, CheckTable } from "../db"; //  db
 class router {
   constructor(app, parentRouter) {
@@ -23,14 +23,14 @@ class router {
   }
   createRouter() {
     this.twoLevelRoute = new KoaRoute({
-      prefix: "/set" // 给路由统一加个前缀：
+      prefix: "/ot-document" // 给路由统一加个前缀：
     });
     return this.twoLevelRoute;
   }
   async initTable() {
     await exec(initTable);
-    await exec(initTableData);
-    console.log("Set模块，mysql表初始化成功");
+    // await exec(initTableData);
+    console.log("OtDocument模块，mysql表初始化成功");
   }
   middleware() {
     // 处理404

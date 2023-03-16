@@ -1,6 +1,6 @@
 import Controller from "@/bizMod/set/bizMod/permission/controller";
 // 新增
-export const createPermission = async (root, parameter) => {
+export const createDocument = async (root, parameter) => {
   const { ctx, next } = root;
 
   const data = await Controller.create(ctx, next, parameter);
@@ -16,7 +16,7 @@ export const createPermission = async (root, parameter) => {
 // app\bizMod\set\bizMod\permission\graphql\schema
 
 //  编辑
-export const editPermission = async (root, parameter) => {
+export const editDocument = async (root, parameter) => {
   const { ctx, next } = root;
 
   const data = await Controller.edit(ctx, next, parameter);
@@ -29,7 +29,7 @@ export const editPermission = async (root, parameter) => {
 };
 
 //  编辑
-export const removePermission = async (root, parameter) => {
+export const removeDocument = async (root, parameter) => {
   const { ctx, next } = root;
 
   return await Controller.remove(ctx, next, parameter);
