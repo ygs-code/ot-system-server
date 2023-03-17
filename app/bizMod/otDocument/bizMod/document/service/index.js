@@ -2,11 +2,13 @@ import { captureClassError, getPagParameters } from "utils";
 
 import {
   addPermission,
+  createDocument,
+  createOpsDocument,
   editPermission,
   queryPermission,
   queryPermissionList,
   removePermission
-} from "@/bizMod/set/db";
+} from "@/bizMod/otDocument/db";
 
 @captureClassError()
 class Service {
@@ -41,43 +43,37 @@ class Service {
   }
   //创建
   static async create(ctx, next, parameter) {
-    const { name, description, auth_key, parent_id } = parameter;
+    const { title, create_by, update_by, v, type, content } = parameter;
 
-    let permissionInfo = await queryPermission({
-      name
-    });
-
-    permissionInfo = permissionInfo.length >= 1 ? permissionInfo[0] : null;
-    if (permissionInfo && permissionInfo.id) {
-      return {
-        status: 1
-      };
-    }
-
-    permissionInfo = await queryPermission({
-      auth_key
-    });
-
-    permissionInfo = permissionInfo.length >= 1 ? permissionInfo[0] : null;
-
-    if (permissionInfo && permissionInfo.id) {
-      return {
-        status: 2
-      };
-    }
-
-    const data = await addPermission({
-      name,
-      description,
-      auth_key,
-      parent_id
-    });
-
-    if (data) {
-      return {
-        status: 3
-      };
-    }
+    return await Promise.all([
+      createDocument("documents", {
+        title,
+        create_by,
+        update_by,
+        v,
+        type,
+        content
+      }),
+      createOpsDocument("o_documents", {
+        ops: "[]",
+        create_by,
+        update_by
+      })
+    ])
+      .then((data) => {
+        return {
+          data: {
+            id: data[0].insertId
+          },
+          status: 1
+        };
+      })
+      .catch(() => {
+        return {
+          data: {},
+          status: 2
+        };
+      });
   }
   // 编辑权限
   static async edit(ctx, next, parameter) {

@@ -59,16 +59,16 @@ class Route {
       }
 
       const token = cookies.get("token") || header.token;
-      await verifyToken(token)
-        .then(async () => {
-          await next();
-        })
-        .catch(() => {
-          ctx.response.body = {
-            ...unauthorized,
-            message: "登录回话已过期，请重新登录"
-          };
-        });
+      let data = await verifyToken(token).catch(() => {
+        ctx.response.body = {
+          ...unauthorized,
+          message: "登录回话已过期，请重新登录"
+        };
+      });
+
+      ctx.response.userInfo = data;
+
+      await next();
     });
   }
   // 添加路由

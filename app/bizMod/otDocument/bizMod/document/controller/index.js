@@ -1,3 +1,4 @@
+import { type } from "rich-text";
 import { captureClassError } from "utils";
 
 import { forbidden, serverError, success, unsupported } from "@/constant";
@@ -72,39 +73,34 @@ class Controller {
   }
   // 创建
   static async create(ctx, next, { parameter }) {
-    const {
-      id,
-      name,
-      description,
-      authKey: auth_key,
-      parentId: parent_id
-    } = parameter;
+    const { response: { userInfo: { user: { id: userId } = {} } } = {} } = ctx;
+
+    const { title } = parameter;
 
     //添加service
     const data = await Service.create(ctx, next, {
-      id,
-      name,
-      description,
-      auth_key,
-      parent_id
+      title,
+      create_by: userId,
+      update_by: userId,
+      v: 1,
+      type: type.uri,
+      content: ""
     });
 
     const getMessage = (data) => {
       const { status } = data;
       const message = {
         1: () => ({
-          ...unsupported,
-          message: "该权限名已经存在,请重新输入权限名"
+          code: 200,
+          data: data.data,
+          message: "操作成功"
         }),
         2: () => ({
           ...unsupported,
-          message: "该权限key已经存在,请重新输入权限key"
-        }),
-        3: () => ({
-          code: 200,
-          message: "操作成功"
+          message: "文档创建失败，稍后重试"
         })
       };
+      console.log("message[status]()==", message[status]());
       return message[status]();
     };
 

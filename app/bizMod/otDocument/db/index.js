@@ -10,11 +10,7 @@
 import initTable from "./sql/initTable.sql";
 import initTableData from "./sql/initTableData.sql";
 
-export * from "./permission";
-export * from "./role";
-export * from "./rolePermission";
-export * from "./user";
-export * from "./userRole";
+export * from "./document";
 export { connection, exec } from "@/db";
 
 export { initTable, initTableData };

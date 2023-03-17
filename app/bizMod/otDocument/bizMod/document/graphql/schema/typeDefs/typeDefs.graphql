@@ -3,39 +3,9 @@
 """
 type Data {
   """
-  权限昵称
-  """
-  name: String
-
-  """
-  权限描述
-  """
-  description: String
-
-  """
-  权限ID
+  文档ID
   """
   id: ID
-
-  """
-  权限创建时间
-  """
-  createTime: String
-
-  """
-  权限更新时间
-  """
-  updateTime: String
-
-  """
-  权限key
-  """
-  authKey: String
-
-  """
-  parent ID
-  """
-  parentId: ID
 }
 
 # """
@@ -57,15 +27,12 @@ type DocumentInfo {
 }
 
 # 定义输入类型
-input DocumentCreateInput {
-  name: String!
-  description: String!
-  authKey: String!
-  parentId: ID
+input CreateDocumentInput {
+  title: String!
 }
 
 # 定义输入类型
-input DocumentEditInput {
+input EditDocumentInput {
   id: ID!
   name: String!
   description: String!
@@ -116,16 +83,15 @@ input ListInfoInput {
 extend type Query {
   getDocumentList(parameter: ListInfoInput): ListInfo
   # # ! 是必填参数
-  getDocumentInfo(id: ID): DocumentInfo 
+  getDocumentInfo(id: ID): DocumentInfo
 }
 
 extend type Mutation {
   # ! 是必填参数
-  createDocument(parameter: DocumentCreateInput!): DocumentInfo
+  createDocument(parameter: CreateDocumentInput!): DocumentInfo
 
   # ! 编辑权限
-  editDocument(parameter: DocumentEditInput!): DocumentInfo
+  editDocument(parameter: EditDocumentInput!): DocumentInfo
   # 删除权限
   removeDocument(id: ID!): DocumentInfo
- 
 }

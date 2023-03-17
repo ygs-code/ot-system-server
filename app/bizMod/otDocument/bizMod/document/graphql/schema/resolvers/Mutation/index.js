@@ -1,4 +1,4 @@
-import Controller from "@/bizMod/set/bizMod/permission/controller";
+import Controller from "../../../../controller";
 // 新增
 export const createDocument = async (root, parameter) => {
   const { ctx, next } = root;
@@ -7,7 +7,7 @@ export const createDocument = async (root, parameter) => {
 
   return {
     code: 200,
-    message: "角色创建成功",
+    message: "文档创建成功",
     ...data
   };
 };
