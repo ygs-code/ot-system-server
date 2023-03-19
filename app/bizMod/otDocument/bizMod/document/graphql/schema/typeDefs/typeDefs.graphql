@@ -2,96 +2,102 @@
 权限信息数据
 """
 type Data {
-  """
-  文档ID
-  """
-  id: ID
+	"""
+	文档ID
+	"""
+	id: ID!
+	title: String
+	type: String
+	content: String
+	createTime: String
+	updateTime: String
+	updateBy: String
+	createBy: String
+	v: Int
 }
 
 # """
 # 权限信息
 # """
 type DocumentInfo {
-  """
-  请求状态
-  """
-  code: Int
-  """
-  权限信息数据
-  """
-  data: Data
-  """
-  请求信息
-  """
-  message: String
+	"""
+	请求状态
+	"""
+	code: Int
+	"""
+	权限信息数据
+	"""
+	data: Data
+	"""
+	请求信息
+	"""
+	message: String
 }
 
 # 定义输入类型
 input CreateDocumentInput {
-  title: String!
+	title: String!
 }
 
 # 定义输入类型
 input EditDocumentInput {
-  id: ID!
-  name: String!
-  description: String!
-  authKey: String!
-  parentId: ID
+	id: ID!
+	name: String!
+	description: String!
+	authKey: String!
+	parentId: ID
 }
 
 # """
 # 权限列表数据
 # """
 type ListData {
-  hasNextPage: Boolean
-  pageNum: Int
-  pageSize: Int
-  pages: Int
-  total: Int
-  list: [Data]
+	hasNextPage: Boolean
+	pageNum: Int
+	pageSize: Int
+	pages: Int
+	total: Int
+	list: [Data]
 }
 
 # """
 # 权限列表
 # """
 type ListInfo {
-  """
-  请求状态
-  """
-  code: Int
-  """
-  权限信息数据
-  """
-  data: ListData
-  """
-  请求信息
-  """
-  message: String
+	"""
+	请求状态
+	"""
+	code: Int
+	"""
+	权限信息数据
+	"""
+	data: ListData
+	"""
+	请求信息
+	"""
+	message: String
 }
 
 # # 定义输入类型
 input ListInfoInput {
-  pageSize: Int
-  pageNum: Int
-  id: ID
-  name: String
-  parentId: ID
-  authKey: String
+	pageSize: Int
+	pageNum: Int
+	title: String
+  createBy: String
 }
 
 extend type Query {
-  getDocumentList(parameter: ListInfoInput): ListInfo
-  # # ! 是必填参数
-  getDocumentInfo(id: ID): DocumentInfo
+	getDocumentList(parameter: ListInfoInput): ListInfo
+	# # ! 是必填参数 
+	getDocumentInfo(id: ID): DocumentInfo
 }
 
 extend type Mutation {
-  # ! 是必填参数
-  createDocument(parameter: CreateDocumentInput!): DocumentInfo
+	# ! 是必填参数
+	createDocument(parameter: CreateDocumentInput!): DocumentInfo
 
-  # ! 编辑权限
-  editDocument(parameter: EditDocumentInput!): DocumentInfo
-  # 删除权限
-  removeDocument(id: ID!): DocumentInfo
+	# ! 编辑权限
+	editDocument(parameter: EditDocumentInput!): DocumentInfo
+	# 删除权限
+	removeDocument(id: ID!): DocumentInfo
 }

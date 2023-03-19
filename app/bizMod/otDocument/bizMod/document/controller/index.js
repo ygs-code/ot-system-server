@@ -9,22 +9,15 @@ import Service from "../service";
 class Controller {
   // 查询列表
   static async queryList(ctx, next, { parameter }) {
-    const {
-      pageNum,
-      pageSize,
-      id,
-      name,
-      parentId: parent_id,
-      authKey: auth_key
-    } = parameter;
+    const { pageNum, pageSize, id, title, createBy } = parameter;
+    const { response: { userInfo: { user: { id: userId } = {} } } = {} } = ctx;
 
     const data = await Service.queryList(ctx, next, {
       pageNum,
       pageSize,
-      id,
-      name,
-      parent_id,
-      auth_key
+      createBy: createBy == "my" ? userId : undefined,
+      // id,
+      title
     });
 
     return {

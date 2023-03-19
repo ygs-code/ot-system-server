@@ -6,7 +6,8 @@
  * @Description: In User Settings Edit
  * @FilePath: /Blogs/BlogsServer/app/bizMod/set/bizMod/user/graphql/schema/resolvers/Query/index.js
  */
-import Controller from "@/bizMod/set/bizMod/permission/controller";
+// import Controller from "@/bizMod/set/bizMod/permission/controller";
+import Controller from "../../../../controller";
 
 export const getDocumentList = async (root, parameter) => {
   const { ctx = {}, next } = root;

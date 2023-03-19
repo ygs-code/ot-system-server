@@ -9,7 +9,37 @@
 
 import { connection, exec, mergeCondition, sqlObjToAnd } from "@/db";
 
-//删除权限
+// 查询权限列表
+export const queryDocumentList = async (options = {}, page = {}) => {
+  console.log(1111111);
+  const { pageNum = 1, pageSize = 10 } = page;
+
+  let sql = `SELECT  SQL_CALC_FOUND_ROWS
+                id,   # 如果这里是查询所有则为*
+                title, 
+                v,
+                update_by   updateBy,
+                create_by   createBy,
+                content,
+                type,
+                DATE_FORMAT(create_time, "%Y-%m-%d %H:%i:%S")  createTime,
+                DATE_FORMAT(update_time, "%Y-%m-%d %H:%i:%S")  updateTime
+            FROM documents 
+           `;
+
+  sql += mergeCondition(options);
+
+  sql += `  ORDER BY update_time DESC  limit ${connection.escape(
+    (pageNum - 1) * pageSize
+  )}, ${connection.escape(pageSize)};`;
+
+  // total 查询
+  sql += ` SELECT FOUND_ROWS() as total;`;
+  console.log("sql==", sql);
+  return await exec(sql);
+};
+
+//删除文档
 const removeDocument = async (table, id) => {
   const sql = `DELETE  FROM  ${table}  WHERE ?;`;
   return await exec(sql, { id });

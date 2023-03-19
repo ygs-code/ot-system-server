@@ -1,7 +1,7 @@
 # 文档表
 CREATE TABLE
     IF NOT EXISTS `documents`  (
-  `update_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci     NULL COMMENT '更新文档人',
+  `update_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT  NULL COMMENT '更新文档人',
   `create_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建文档人',
   `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文档标题',
@@ -18,7 +18,7 @@ CREATE TABLE
 # ot 步骤文档表
 CREATE TABLE
   IF NOT EXISTS `o_documents`  (
-  `update_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新文档人',
+  `update_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '更新文档人',
   `create_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建文档人',
   `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `ops` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '文档内容',

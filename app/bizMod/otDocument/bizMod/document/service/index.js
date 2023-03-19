@@ -1,30 +1,29 @@
 import { captureClassError, getPagParameters } from "utils";
 
 import {
-  addPermission,
+  addDocument,
   createDocument,
   createOpsDocument,
-  editPermission,
-  queryPermission,
-  queryPermissionList,
-  removePermission
+  editDocument,
+  queryDocument,
+  queryDocumentList,
+  removeDocument
 } from "@/bizMod/otDocument/db";
 
 @captureClassError()
 class Service {
   // 查询列表
   static async queryList(ctx, next, parameter) {
-    const { pageNum, pageSize, id, name, parent_id, auth_key } = parameter;
+    const { pageNum, pageSize, id, title } = parameter;
 
     // 查询出列表
-    let [list, total] = await queryPermissionList(
+    let [list, total] = await queryDocumentList(
       {
         and: {
           id,
-          auth_key,
-          parent_id
+          title
         },
-        andLike: { name }
+        andLike: { title }
       },
       {
         pageNum,
@@ -32,6 +31,15 @@ class Service {
       }
     );
 
+    console.log("queryDocumentList1");
+    console.log({
+      list,
+      ...getPagParameters({
+        total: total[0].total,
+        pageNum,
+        pageSize
+      })
+    });
     return {
       list,
       ...getPagParameters({
@@ -82,14 +90,14 @@ class Service {
     /*
      1 查询权限
     */
-    let permissionInfo = await queryPermission({
+    let DocumentInfo = await queryDocument({
       id
     });
-    permissionInfo = permissionInfo[0] || {};
+    DocumentInfo = DocumentInfo[0] || {};
 
     // 更新name
-    if (name !== permissionInfo.name) {
-      isHas = await queryPermission({
+    if (name !== DocumentInfo.name) {
+      isHas = await queryDocument({
         name
       });
       if (isHas.length) {
@@ -99,7 +107,7 @@ class Service {
       }
     }
 
-    await editPermission({
+    await editDocument({
       description,
       id,
       name,
@@ -113,7 +121,7 @@ class Service {
   }
   // 删除权限
   static async remove(ctx, next, { id }) {
-    return await removePermission(id)
+    return await removeDocument(id)
       .catch(() => {
         return {
           status: 1
@@ -129,15 +137,15 @@ class Service {
   static async query(ctx, next, parameter) {
     const { id } = parameter || {};
 
-    return await queryPermission({
+    return await queryDocument({
       id
     })
-      .then((permissionInfo) => {
-        permissionInfo = permissionInfo.length >= 1 ? permissionInfo[0] : null;
-        return permissionInfo
+      .then((DocumentInfo) => {
+        DocumentInfo = DocumentInfo.length >= 1 ? DocumentInfo[0] : null;
+        return DocumentInfo
           ? {
               status: 1,
-              data: permissionInfo
+              data: DocumentInfo
             }
           : {
               status: 2,

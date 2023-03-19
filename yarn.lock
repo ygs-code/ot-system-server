@@ -11104,7 +11104,7 @@ rfdc@^1.3.0:
 
 rich-text@^4.1.0:
   version "4.1.0"
-  resolved "http://npm.lingzhi.com:80/rich-text/-/rich-text-4.1.0.tgz#8b4c0e48a84fbb535dd692998f1e39eaaf0451a8"
+  resolved "https://registry.yarnpkg.com/rich-text/-/rich-text-4.1.0.tgz#8b4c0e48a84fbb535dd692998f1e39eaaf0451a8"
   integrity sha512-zQg80us6AfopS7s2YPsU+jfLX1RJaOdd6w26Jz4Al1G73AMzqDLTIZSnr0I7HTdCIU1gcGSMDlhq2v4IfoKfbg==
   dependencies:
     quill-delta "^4.2.1"
