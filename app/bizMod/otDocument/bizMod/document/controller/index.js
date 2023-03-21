@@ -93,7 +93,7 @@ class Controller {
           message: "文档创建失败，稍后重试"
         })
       };
-      console.log("message[status]()==", message[status]());
+
       return message[status]();
     };
 

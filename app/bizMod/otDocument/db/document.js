@@ -11,7 +11,6 @@ import { connection, exec, mergeCondition, sqlObjToAnd } from "@/db";
 
 // 查询权限列表
 export const queryDocumentList = async (options = {}, page = {}) => {
-  console.log(1111111);
   const { pageNum = 1, pageSize = 10 } = page;
 
   let sql = `SELECT  SQL_CALC_FOUND_ROWS
@@ -35,7 +34,7 @@ export const queryDocumentList = async (options = {}, page = {}) => {
 
   // total 查询
   sql += ` SELECT FOUND_ROWS() as total;`;
-  console.log("sql==", sql);
+
   return await exec(sql);
 };
 

@@ -31,15 +31,6 @@ class Service {
       }
     );
 
-    console.log("queryDocumentList1");
-    console.log({
-      list,
-      ...getPagParameters({
-        total: total[0].total,
-        pageNum,
-        pageSize
-      })
-    });
     return {
       list,
       ...getPagParameters({

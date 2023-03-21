@@ -91,7 +91,7 @@ export const schema = (() => {
   return newSchemas;
 })();
 
-export const router = (app, router) => {
+export const router = (...ags) => {
   let routers = {
     // abnormityRouter,
     // performanceRouter,
@@ -103,7 +103,7 @@ export const router = (app, router) => {
   // 动态添加模块
   for (let key in routers) {
     if (routers.hasOwnProperty(key)) {
-      new routers[key](app, router);
+      new routers[key](...ags);
     }
   }
 

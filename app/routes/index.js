@@ -10,8 +10,10 @@ import { verifyToken } from "@/redis/index";
 import noVerifyToken from "./noVerifyToken";
 
 class Route {
-  constructor(app) {
+  constructor(app, socketCallback) {
+    console.log("socketCallback1===", socketCallback);
     this.app = app;
+    this.socketCallback = socketCallback;
     // this.router = router;
     this.init();
   }
@@ -73,7 +75,8 @@ class Route {
   }
   // 添加路由
   async addRouters() {
-    bizModRouter(this.app, this.router);
+    console.log(" this.socketCallback2===", this.socketCallback);
+    bizModRouter(this.app, this.router, this.socketCallback);
 
     //验证Token
     this.verifyToken();
@@ -108,8 +111,6 @@ class Route {
           variables
         )}]\n`
       );
-
-      console.log("variables==", variables);
 
       await validateGraphql({
         rootValue: {

@@ -16,9 +16,11 @@ import { router as DocumentRouter } from "../bizMod/document"; //DocumentRouter 
 import { initTable, initTableData } from "../db";
 // import { tables, CheckTable } from "../db"; //  db
 class router {
-  constructor(app, parentRouter) {
+  constructor(app, parentRouter, socketCallback) {
+    console.log("socketCallback=====", socketCallback);
     this.app = app;
     this.router = parentRouter;
+    this.socketCallback = socketCallback;
     this.init();
   }
   createRouter() {
@@ -46,6 +48,14 @@ class router {
     //     }
     // });
   }
+
+  async addSocket() {
+    this.socketCallback({
+      path: "/a/b",
+      callback: () => {}
+    });
+  }
+
   // 添加路由
   async addRouters() {
     // 为script模块添加路由
@@ -64,6 +74,7 @@ class router {
     this.middleware();
     // 添加路由
     this.addRouters();
+    this.addSocket();
   }
 }
 

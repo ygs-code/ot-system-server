@@ -8,6 +8,7 @@
  */
 import "@babel/polyfill";
 
+import { Server } from "http";
 import Koa from "koa";
 
 import { port } from "./config";
@@ -21,6 +22,7 @@ class App {
   constructor() {
     //创建node实例
     this.app = new Koa();
+    this.server = new Server(this.app);
     this.init();
   }
   async init() {
@@ -73,9 +75,45 @@ class App {
     console.log("Mysql表初始化成功");
   }
   addRoute() {
+    const socketCallback = (data) => {
+      console.log("data==", data);
+    };
     // 导入路由
-    new Route(this.app);
+    new Route(this.app, socketCallback);
   }
+
+  addSocket() {
+    // https://www.cnblogs.com/huenchao/p/6234550.html  文档
+    this.server.on("upgrade", (request, socket, head) => {
+      // const pathname = url.parse(request.url).pathname;
+      // // console.log('request.url==', request.url);
+      // const params = getUrlParams(request.url) || {}; // 如果没有id则不给连接
+      // const { documentId, documentType } = params; // 如果没有id则不给连接
+
+      // console.log('params=========', params);
+
+      socket.on("end", () => {
+        if (!socket.destroyed) {
+          if (socket.destroy) {
+            socket.destroy();
+          }
+        }
+      });
+
+      // if (!documentId || !documentType) {
+      //   return socket.end();
+      // }
+      // if (pathname === "/sharedb") {
+      //   wssShareDB.handleUpgrade(request, socket, head, (ws) => {
+      //     // 拿到参数 做拦截
+      //     wssShareDB.emit("connection", ws, request, params);
+      //   });
+      // } else {
+      //   socket.end();
+      // }
+    });
+  }
+
   listen() {
     // try {
     //    kill(port, "tcp");
