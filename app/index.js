@@ -10,6 +10,7 @@ import "@babel/polyfill";
 
 import { Server } from "http";
 import Koa from "koa";
+import url from "url";
 
 import { port } from "./config";
 import { connection, exec } from "./db/index.js";
@@ -23,6 +24,7 @@ class App {
     //创建node实例
     this.app = new Koa();
     this.server = new Server(this.app);
+    this.sockets = [];
     this.init();
   }
   async init() {
@@ -74,20 +76,39 @@ class App {
     await exec(initTable);
     console.log("Mysql表初始化成功");
   }
+  socketRoute(path, callback) {
+    this.sockets[path] = callback;
+    console.log("this.sockets===", this.sockets);
+  }
   addRoute() {
-    const socketCallback = (data) => {
-      console.log("data==", data);
-    };
     // 导入路由
-    new Route(this.app, socketCallback);
+    new Route(this.app, (...ags) => {
+      this.socketRoute(...ags);
+    });
+  }
+  // 获取回调地址参数
+  getUrlParams(url) {
+    // 通过 ? 分割获取后面的参数字符串
+    let urlStr = url.split("?")[1] || "";
+
+    // 创建空对象存储参数
+    let obj = {};
+    // 再通过 & 将每一个参数单独分割出来
+    let paramsArr = urlStr.split("&");
+    for (let i = 0, len = paramsArr.length; i < len; i++) {
+      // 再通过 = 将每一个参数分割为 key:value 的形式
+      let arr = paramsArr[i].split("=");
+      obj[arr[0]] = arr[1];
+    }
+    return obj;
   }
 
   addSocket() {
     // https://www.cnblogs.com/huenchao/p/6234550.html  文档
     this.server.on("upgrade", (request, socket, head) => {
-      // const pathname = url.parse(request.url).pathname;
+      const pathname = url.parse(request.url).pathname;
       // // console.log('request.url==', request.url);
-      // const params = getUrlParams(request.url) || {}; // 如果没有id则不给连接
+      const params = this.getUrlParams(request.url) || {}; // 如果没有id则不给连接
       // const { documentId, documentType } = params; // 如果没有id则不给连接
 
       // console.log('params=========', params);
@@ -99,6 +120,12 @@ class App {
           }
         }
       });
+
+      if (pathname in this.sockets) {
+        this.sockets[pathname]({ request, socket, head, params });
+      } else {
+        socket.end();
+      }
 
       // if (!documentId || !documentType) {
       //   return socket.end();
