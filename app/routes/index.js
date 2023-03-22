@@ -10,10 +10,10 @@ import { verifyToken } from "@/redis/index";
 import noVerifyToken from "./noVerifyToken";
 
 class Route {
-  constructor(app, socketCallback) {
-    console.log("socketCallback1===", socketCallback);
+  constructor(app, socketRoute) {
+    console.log("socketCallback1===", socketRoute);
     this.app = app;
-    this.socketCallback = socketCallback;
+    this.socketRoute = socketRoute;
     // this.router = router;
     this.init();
   }
@@ -75,8 +75,7 @@ class Route {
   }
   // 添加路由
   async addRouters() {
-    console.log(" this.socketCallback2===", this.socketCallback);
-    bizModRouter(this.app, this.router, this.socketCallback);
+    bizModRouter(this.app, this.router, this.socketRoute);
 
     //验证Token
     this.verifyToken();

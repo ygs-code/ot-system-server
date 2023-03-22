@@ -13,14 +13,15 @@ import { verifyToken } from "@/redis";
 import controller from "../controller";
 
 class router {
-  constructor(app, parentRouter) {
+  constructor(app, parentRouter, socketRoute) {
     this.app = app;
     this.router = parentRouter;
+    this.socketRoute = socketRoute;
     this.init();
   }
   createRouter() {
     this.threeLevelRoute = new KoaRoute({
-      prefix: "/user" // 给路由统一加个前缀：
+      prefix: "/document" // 给路由统一加个前缀：
     });
     return this.threeLevelRoute;
   }
@@ -38,16 +39,23 @@ class router {
     //     }
     // });
   }
+  addSocket() {
+    console.log("this.socketRoute=", this.socketRoute);
+    this.socketRoute("/socket/document", (...ags) => {
+      console.log("ags==", ags);
+    });
+  }
   // 添加路由
   addRouters() {
     // // 注册路由
-    this.login();
-    this.query();
-    this.create();
-    this.edit();
-    this.verifyToken();
-    this.verifyCode();
-    this.router.use(this.threeLevelRoute.routes()); //挂载二级路由
+    // this.login();
+    // this.query();
+    // this.create();
+    // this.edit();
+    // this.verifyToken();
+    // this.verifyCode();
+    // this.router.use(this.threeLevelRoute.routes()); //挂载二级路由
+    // new DocumentRouter(this.app, this.twoLevelRoute, this.socketRoute);
   }
   init() {
     // 创建路由
@@ -56,6 +64,8 @@ class router {
     this.middleware();
     // 添加路由
     // this.addRouters();
+    // 天假 socket
+    this.addSocket();
   }
   query() {
     // 添加 接口
