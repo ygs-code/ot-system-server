@@ -11,7 +11,6 @@ import noVerifyToken from "./noVerifyToken";
 
 class Route {
   constructor(app, socketRoute) {
-    console.log("socketCallback1===", socketRoute);
     this.app = app;
     this.socketRoute = socketRoute;
     // this.router = router;

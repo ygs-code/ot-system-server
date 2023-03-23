@@ -24,7 +24,7 @@ class App {
     //创建node实例
     this.app = new Koa();
     this.server = new Server(this.app);
-    this.sockets = {};
+    this.sockets = [];
     this.init();
   }
   async init() {
@@ -78,13 +78,29 @@ class App {
   }
   socketRoute(path, callback) {
     this.sockets[path] = callback;
-    console.log("this.sockets=", this.sockets);
+    console.log("this.sockets===", this.sockets);
   }
   addRoute() {
     // 导入路由
     new Route(this.app, (...ags) => {
       this.socketRoute(...ags);
     });
+  }
+  // 获取回调地址参数
+  getUrlParams(url) {
+    // 通过 ? 分割获取后面的参数字符串
+    let urlStr = url.split("?")[1] || "";
+
+    // 创建空对象存储参数
+    let obj = {};
+    // 再通过 & 将每一个参数单独分割出来
+    let paramsArr = urlStr.split("&");
+    for (let i = 0, len = paramsArr.length; i < len; i++) {
+      // 再通过 = 将每一个参数分割为 key:value 的形式
+      let arr = paramsArr[i].split("=");
+      obj[arr[0]] = arr[1];
+    }
+    return obj;
   }
 
   // 获取回调地址参数
@@ -121,13 +137,11 @@ class App {
         }
       });
 
-      // if(pathname){
-
-      // }
-
-      // const socketCallback = this.socketCallbacks.find((item) => {
-      //   const { path } = item;
-      // });
+      if (pathname in this.sockets) {
+        this.sockets[pathname]({ request, socket, head, params });
+      } else {
+        socket.end();
+      }
 
       // if (!documentId || !documentType) {
       //   return socket.end();

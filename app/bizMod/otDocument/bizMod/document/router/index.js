@@ -39,12 +39,14 @@ class router {
     //     }
     // });
   }
-  addSocket() {
-    console.log("this.socketRoute=", this.socketRoute);
-    this.socketRoute("/socket/document", (...ags) => {
-      console.log("ags==", ags);
-    });
+
+  addSockets() {
+    this.socketRoute(
+      "/socket/document",
+      ({ request, socket, head, params }) => {}
+    );
   }
+
   // 添加路由
   addRouters() {
     // // 注册路由
@@ -64,8 +66,9 @@ class router {
     this.middleware();
     // 添加路由
     // this.addRouters();
-    // 天假 socket
-    this.addSocket();
+
+    // 添加 socket
+    this.addSockets();
   }
   query() {
     // 添加 接口

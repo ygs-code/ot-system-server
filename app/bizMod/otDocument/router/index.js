@@ -48,16 +48,10 @@ class router {
     // });
   }
 
-  // async addSocket() {
-  //   this.socketCallback({
-  //     path: "/a/b",
-  //     callback: () => {}
-  //   });
-  // }
-
   // 添加路由
   async addRouters() {
-    // 为DocumentRouter模块添加路由
+    // 为script模块添加路由
+    // new scriptRouter(this.app, this.twoLevelRoute);
     new DocumentRouter(this.app, this.twoLevelRoute, this.socketRoute);
     // 添加路由
     this.router.use(this.twoLevelRoute.routes()); //挂载二级路由
@@ -72,7 +66,6 @@ class router {
     this.middleware();
     // 添加路由
     this.addRouters();
-    // this.addSocket();
   }
 }
 
