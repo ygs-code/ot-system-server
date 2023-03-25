@@ -39,7 +39,7 @@ const cacheLoader = (happypackId) => {
         "thread-loader",
         "cache-loader"
       ]
-    : [`happypack/loader?id=${happypackId}`];
+    : [`happypack/loader?id=${happypackId}`]; 
 };
 // console.log("__dirname : " + __dirname);
 // console.log("resolve   : " + resolve("./"));

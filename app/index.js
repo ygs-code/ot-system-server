@@ -37,6 +37,10 @@ class App {
     // await this.initTable();
     //加载路由
     this.addRoute();
+
+    // 加载Socket
+    this.addSocket();
+
     // 设置监听端口
     this.listen();
   }
@@ -103,31 +107,16 @@ class App {
     return obj;
   }
 
-  // 获取回调地址参数
-  getUrlParams(url) {
-    // 通过 ? 分割获取后面的参数字符串
-    let urlStr = url.split("?")[1] || "";
-
-    // 创建空对象存储参数
-    let obj = {};
-    // 再通过 & 将每一个参数单独分割出来
-    let paramsArr = urlStr.split("&");
-    for (let i = 0, len = paramsArr.length; i < len; i++) {
-      // 再通过 = 将每一个参数分割为 key:value 的形式
-      let arr = paramsArr[i].split("=");
-      obj[arr[0]] = arr[1];
-    }
-    return obj;
-  }
   addSocket() {
+    console.log("addSocket======");
+    console.log("this.server======", this.server);
     // https://www.cnblogs.com/huenchao/p/6234550.html  文档
     this.server.on("upgrade", (request, socket, head) => {
+      console.log("upgrade=========");
       const pathname = url.parse(request.url).pathname;
       // // console.log('request.url==', request.url);
       const params = this.getUrlParams(request.url) || {}; // 如果没有id则不给连接
       // const { documentId, documentType } = params; // 如果没有id则不给连接
-
-      // console.log('params=========', params);
 
       socket.on("end", () => {
         if (!socket.destroyed) {
