@@ -8,16 +8,21 @@
  */
 import "@babel/polyfill";
 
+import { config } from "dotenv";
 import { Server } from "http";
 import Koa from "koa";
 import url from "url";
 
-import { port } from "./config";
+// import { port } from "./config";
 import { connection, exec } from "./db/index.js";
 import initTable from "./db/sql/initTable.sql";
 import { Redis } from "./redis";
 import Route from "./routes/index";
 import { promise } from "./utils";
+
+const {
+  parsed: { port }
+} = config();
 
 class App {
   constructor() {
@@ -108,9 +113,10 @@ class App {
   }
 
   addSocket() {
-    console.log("addSocket======");
-    console.log("this.server======", this.server);
+    // console.log("addSocket======");
+    // console.log("this.server======", this.server);
     // https://www.cnblogs.com/huenchao/p/6234550.html  文档
+
     this.server.on("upgrade", (request, socket, head) => {
       console.log("upgrade=========");
       const pathname = url.parse(request.url).pathname;
@@ -129,7 +135,7 @@ class App {
       if (pathname in this.sockets) {
         this.sockets[pathname]({ request, socket, head, params });
       } else {
-        socket.end();
+        // socket.end();
       }
 
       // if (!documentId || !documentType) {
@@ -143,6 +149,27 @@ class App {
       // } else {
       //   socket.end();
       // }
+    });
+
+    this.server.on("clientError", (err, socket) => {
+      socket.end("HTTP/1.1 400 Bad Request\r\n\r\n");
+    });
+
+    this.server.on("request", function (req, res) {
+      // 3.为服务器实例绑定 request 事件，监听客户端请求。
+      console.log("request======");
+    });
+
+    //监听服务器连接
+    this.server.on("connect", function (socket) {
+      console.log("connect=======");
+      //客户端与服务器创立链接时触发connection事件
+    });
+
+    //监听服务器连接
+    this.server.on("connection", function (socket) {
+      console.log("connection=======");
+      //客户端与服务器创立链接时触发connection事件
     });
   }
 

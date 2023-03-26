@@ -8,10 +8,99 @@
  */
 import bodyParser from "koa-bodyparser";
 import cookie from "koa-cookie";
-import cors from "koa2-cors";
+// import cors from "koa2-cors";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 
+const cors = function (options = {}) {
+  const defaultOptions = {
+    allowMethods: ["GET", "PUT", "POST", "PATCH", "DELETE", "HEAD", "OPTIONS"]
+  };
+
+  // set defaultOptions to options
+  options = Object.assign({}, defaultOptions, options); // eslint-disable-line no-param-reassign
+
+  // eslint-disable-next-line consistent-return
+  return async function cors(ctx, next) {
+    // always set vary Origin Header
+    // https://github.com/rs/cors/issues/10
+    ctx.vary("Origin");
+
+    let origin;
+    if (typeof options.origin === "function") {
+      origin = options.origin(ctx);
+    } else {
+      origin = options.origin || ctx.get("Origin") || "*";
+    }
+    if (!origin) {
+      return await next();
+    }
+
+    // Access-Control-Allow-Origin
+    ctx.set("Access-Control-Allow-Origin", origin);
+
+    if (ctx.method === "OPTIONS") {
+      // Preflight Request
+      if (!ctx.get("Access-Control-Request-Method")) {
+        return await next();
+      }
+
+      // Access-Control-Max-Age
+      if (options.maxAge) {
+        ctx.set("Access-Control-Max-Age", String(options.maxAge));
+      }
+
+      // Access-Control-Allow-Credentials
+      if (options.credentials === true) {
+        // When used as part of a response to a preflight request,
+        // this indicates whether or not the actual request can be made using credentials.
+        ctx.set("Access-Control-Allow-Credentials", "true");
+      }
+
+      // Access-Control-Allow-Methods
+      if (options.allowMethods) {
+        ctx.set("Access-Control-Allow-Methods", options.allowMethods.join(","));
+      }
+
+      // Access-Control-Allow-Headers
+      if (options.allowHeaders) {
+        ctx.set("Access-Control-Allow-Headers", options.allowHeaders.join(","));
+      } else {
+        ctx.set(
+          "Access-Control-Allow-Headers",
+          ctx.get("Access-Control-Request-Headers")
+        );
+      }
+
+      ctx.status = 204; // No Content
+    } else {
+      // Request
+      // Access-Control-Allow-Credentials
+      if (options.credentials === true) {
+        if (origin === "*") {
+          // `credentials` can't be true when the `origin` is set to `*`
+          ctx.remove("Access-Control-Allow-Credentials");
+        } else {
+          ctx.set("Access-Control-Allow-Credentials", "true");
+        }
+      }
+
+      // Access-Control-Expose-Headers
+      if (options.exposeHeaders) {
+        ctx.set(
+          "Access-Control-Expose-Headers",
+          options.exposeHeaders.join(",")
+        );
+      }
+
+      try {
+        await next();
+      } catch (err) {
+        // throw err;
+      }
+    }
+  };
+};
 const getColors = (keys) => {
   const styles = {
     bright: "\x1B[1m", // 亮色
@@ -118,33 +207,37 @@ const common = (app) => {
   app.use(bodyParser());
   // 添加 cookie
   app.use(cookie());
-  // 添加跨域
+  // // 添加跨域
   // app.use(async (ctx, next) => {
-  //     console.log(ctx.request.headers);
-  //     // if( req.headers.origin.toLowerCase() == "http://www.zhangpeiyue.com"
-  //     //     || req.headers.origin.toLowerCase() =="http://127.0.0.1" ) {
-  //     //     //设置允许跨域的域名，*代表允许任意域名跨域
-  //     //     res.header("Access-Control-Allow-Origin", req.headers.origin);
-  //     // }
-  //     ctx.set('Cache-Control','no-cache')
-  //     //设置允许跨域的域名，*代表允许任意域名跨域
-  //     ctx.set('Access-Control-Allow-Origin', '*');
-  //     //允许的header类型
-  //     ctx.set('Access-Control-Allow-Headers', 'content-type');
+  //   console.log(ctx.request.headers);
+  //   // if( req.headers.origin.toLowerCase() == "http://www.zhangpeiyue.com"
+  //   //     || req.headers.origin.toLowerCase() =="http://127.0.0.1" ) {
+  //   //     //设置允许跨域的域名，*代表允许任意域名跨域
+  //   //     res.header("Access-Control-Allow-Origin", req.headers.origin);
+  //   // }
+  //   // ctx.set("Cache-Control", "no-cache");
+  //   //设置允许跨域的域名，*代表允许任意域名跨域
+  //   ctx.set("Access-Control-Allow-Origin", "*");
+  //   //允许的header类型
+  //   // ctx.set("Access-Control-Allow-Headers", "content-type");
 
-  //     // 设置 跨域 cookie
-  //  ctx.set('Access-Control-Allow-Credentials', true);
+  //   // 设置 跨域 cookie
+  //   ctx.set("Access-Control-Allow-Credentials", "true");
 
-  //     //跨域允许的请求方式
-  //     ctx.set('Access-Control-Allow-Methods', 'DELETE,PUT,POST,GET,OPTIONS');
-  //     //     ctx.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
-  //     //     ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-  //     // await next();
-  //     if (ctx.method == 'OPTIONS') {
-  //         ctx.body = 200;
-  //     } else {
-  //         await next();
-  //     }
+  //   //跨域允许的请求方式
+  //   // ctx.set("Access-Control-Allow-Methods", "DELETE,PUT,POST,GET,OPTIONS");
+  //   // ctx.set(
+  //   //   "Access-Control-Allow-Headers",
+  //   //   "Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild"
+  //   // );
+  //   //     ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+  //   // await next();
+  //   // if (ctx.method == "OPTIONS") {
+  //   //   ctx.body = 200;
+  //   // } else {
+  //   //   await next();
+  //   // }
+  //   await next();
   // });
   // 跨域
   app.use(
