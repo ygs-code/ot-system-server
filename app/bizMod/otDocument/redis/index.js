@@ -6,4 +6,4 @@
  * @Description: In User Settings Edit
  * @FilePath: /error-sytem/server/app/bizMod/abnormity/redis/index.js
  */
-export * from "./user";
+export * from "./document";

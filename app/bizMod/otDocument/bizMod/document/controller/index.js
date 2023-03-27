@@ -7,8 +7,11 @@ import Service from "../service";
 
 @captureClassError()
 class Controller {
+  constructor() {}
   static async initSocket(server) {}
-  static async socket() {}
+  static async socket() {
+    
+  }
 
   // 查询列表
   static async queryList(ctx, next, { parameter }) {

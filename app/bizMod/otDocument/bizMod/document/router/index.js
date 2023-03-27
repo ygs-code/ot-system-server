@@ -11,6 +11,7 @@ import KoaRoute from "koa-router"; // koa 路由中间件
 import { verifyToken } from "@/redis";
 
 import controller from "../controller";
+import Sockets from "../sockets";
 
 class router {
   constructor(app, server, parentRouter, socketRoute) {
@@ -18,6 +19,7 @@ class router {
     this.server = server;
     this.router = parentRouter;
     this.socketRoute = socketRoute;
+    this.sockets = new Sockets(server);
     this.init();
   }
   createRouter() {
@@ -45,7 +47,9 @@ class router {
   addSockets() {
     this.socketRoute(
       "/socket/document",
-      ({ request, socket, head, params }) => {}
+      ({ request, socket, head, params }) => {
+        this.sockets.document({ request, socket, head, params });
+      }
     );
   }
 
@@ -70,7 +74,7 @@ class router {
     // this.addRouters();
 
     // 初始化Socket
-    this.initSocket(this.server);
+    // this.initSocket(this.server);
     // 添加 socket
     this.addSockets();
   }

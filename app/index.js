@@ -18,7 +18,8 @@ import { connection, exec } from "./db/index.js";
 import initTable from "./db/sql/initTable.sql";
 import { Redis } from "./redis";
 import Route from "./routes/index";
-import { promise } from "./utils";
+import { promise, stabilization } from "./utils";
+import debug from "debug";
 
 const {
   parsed: { port }
@@ -28,7 +29,7 @@ class App {
   constructor() {
     //创建node实例
     this.app = new Koa();
-    this.server = new Server(this.app);
+    this.server = Server(this.app);
     this.sockets = [];
     this.init();
   }
@@ -41,13 +42,13 @@ class App {
     // // 初始化表
     // await this.initTable();
     //加载路由
-    this.addRoute();
+    await this.addRoute();
 
     // 加载Socket
-    this.addSocket();
+    await this.addSocket();
 
     // 设置监听端口
-    this.listen();
+    await this.listen();
   }
   async connectRedis() {
     await promise((reslove, reject) => {
@@ -89,9 +90,9 @@ class App {
     this.sockets[path] = callback;
     console.log("this.sockets===", this.sockets);
   }
-  addRoute() {
+  async addRoute() {
     // 导入路由
-    new Route(this.app, this.server, (...ags) => {
+    await new Route(this.app, this.server, (...ags) => {
       this.socketRoute(...ags);
     });
   }
@@ -117,72 +118,119 @@ class App {
     // console.log("this.server======", this.server);
     // https://www.cnblogs.com/huenchao/p/6234550.html  文档
 
-    this.server.on("upgrade", (request, socket, head) => {
-      console.log("upgrade=========");
-      const pathname = url.parse(request.url).pathname;
-      // // console.log('request.url==', request.url);
-      const params = this.getUrlParams(request.url) || {}; // 如果没有id则不给连接
-      // const { documentId, documentType } = params; // 如果没有id则不给连接
+    // this.server.on("upgrade", (request, socket, head) => {
+    //   console.log("upgrade=========");
+    //   const pathname = url.parse(request.url).pathname;
+    //   // // console.log('request.url==', request.url);
+    //   const params = this.getUrlParams(request.url) || {}; // 如果没有id则不给连接
+    //   // const { documentId, documentType } = params; // 如果没有id则不给连接
 
-      socket.on("end", () => {
-        if (!socket.destroyed) {
-          if (socket.destroy) {
-            socket.destroy();
-          }
-        }
-      });
+    //   socket.on("end", () => {
+    //     if (!socket.destroyed) {
+    //       if (socket.destroy) {
+    //         socket.destroy();
+    //       }
+    //     }
+    //   });
 
-      if (pathname in this.sockets) {
-        this.sockets[pathname]({ request, socket, head, params });
-      } else {
-        socket.end();
-      }
+    //   if (pathname in this.sockets) {
+    //     this.sockets[pathname]({ request, socket, head, params });
+    //   } else {
+    //     socket.end();
+    //   }
 
-      // if (!documentId || !documentType) {
-      //   return socket.end();
-      // }
-      // if (pathname === "/sharedb") {
-      //   wssShareDB.handleUpgrade(request, socket, head, (ws) => {
-      //     // 拿到参数 做拦截
-      //     wssShareDB.emit("connection", ws, request, params);
-      //   });
-      // } else {
-      //   socket.end();
-      // }
-    });
+    //   // if (!documentId || !documentType) {
+    //   //   return socket.end();
+    //   // }
+    //   // if (pathname === "/sharedb") {
+    //   //   wssShareDB.handleUpgrade(request, socket, head, (ws) => {
+    //   //     // 拿到参数 做拦截
+    //   //     wssShareDB.emit("connection", ws, request, params);
+    //   //   });
+    //   // } else {
+    //   //   socket.end();
+    //   // }
+    // });
 
-    this.server.on("clientError", (err, socket) => {
-      socket.end("HTTP/1.1 400 Bad Request\r\n\r\n");
+    // this.server.on("clientError", (err, socket) => {
+    //   socket.end("HTTP/1.1 400 Bad Request\r\n\r\n");
+    // });
+
+    this.server.on("request", function (req, res) {
+      // 3.为服务器实例绑定 request 事件，监听客户端请求。
+      console.log("request1======");
     });
 
     this.server.on("request", function (req, res) {
       // 3.为服务器实例绑定 request 事件，监听客户端请求。
-      console.log("request======");
+      console.log("request2======");
     });
 
-    //监听服务器连接
-    this.server.on("connect", function (socket) {
-      console.log("connect=======");
-      //客户端与服务器创立链接时触发connection事件
-    });
 
-    //监听服务器连接
-    this.server.on("connection", function (socket) {
-      console.log("connection=======");
-      //客户端与服务器创立链接时触发connection事件
-    });
+    // //监听服务器连接
+    // this.server.on("connect", function (socket) {
+    //   console.log("connect=======");
+    //   //客户端与服务器创立链接时触发connection事件
+    // });
+
+    // //监听服务器连接
+    // this.server.on("connection", function (socket) {
+    //   console.log("connection=======");
+    //   //客户端与服务器创立链接时触发connection事件
+    // });
   }
+  onListening = () => {
+    var addr = this.server.address();
+    var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+    console.log("Listening on " + bind);
+  };
+  onError = (error) => {
+    if (error.syscall !== "listen") {
+      throw error;
+    }
 
-  listen() {
+    var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+      case "EACCES":
+        console.error(bind + " requires elevated privileges");
+        process.exit(1);
+        break;
+      case "EADDRINUSE":
+        console.error(bind + " is already in use");
+        process.exit(1);
+        break;
+      default:
+        throw error;
+    }
+  };
+  async listen() {
     // try {
     //    kill(port, "tcp");
     // } catch (e) {}
 
-    this.server = this.app.listen(port, () => {
+    await stabilization()(1000);
+
+    // 原来是这个啊
+    // 还是要用
+    this.$server = this.app.listen(port, () => {
       console.log(`服务器启动成功:http://localhost:${port}/`);
     });
 
-    this.server.setTimeout(5 * 60 * 1000);
+    this.$server.on("request", function (req, res) {
+      // 3.为服务器实例绑定 request 事件，监听客户端请求。
+      console.log("request1======");
+    });
+
+    this.$server.on("request", function (req, res) {
+      // 3.为服务器实例绑定 request 事件，监听客户端请求。
+      console.log("request2======");
+    });
+
+    // this.$server.setTimeout(5 * 60 * 1000);
+    // this.server.on("error", this.onError);
+    // this.server.on("listening", this.onListening);
   }
 }
 

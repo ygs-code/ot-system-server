@@ -1,10 +1,12 @@
-var WebSocket = require("ws");
-var WebSocketJSONStream = require("websocket-json-stream");
-var ShareDBLogger = require("sharedb-logger");
-var db = require("./sharedb-server");
-var debug = require("debug")("quill-sharedb-cursors:sharedb");
-let type = require("rich-text").type;
-var {
+import moment from "moment";
+import { type } from "rich-text";
+
+import WebSocket from "ws";
+import WebSocketJSONStream from "websocket-json-stream";
+import ShareDBLogger from "sharedb-logger";
+import db from "./sharedb-server";
+
+import {
   createOpsDocument,
   editOpsDocument,
   getOpsDocument,
@@ -12,16 +14,17 @@ var {
   editDocument,
   getDocument,
   removeDocument
-} = require("../db/mysql/index.js");
-var { RedisClass, Redis, redisClient, expires } = require("../redis");
-// var {
-//     createDocument,
-//     editDocument,
-//     getDocument,
-//     removeDocument,
-// } = require('../db/mysql/index.js');
-const { parseInt } = require("lodash");
+} from "../../../db";
+import {
+  setDocument as setRedisDocument,
+  getDocument as getRedisDocument
+} from "@/bizMod/otDocument/redis/index.js";
+import { Redis } from "@/redis";
+import debug from "debug";
+import { parseInt } from "lodash";
 const backend = db.backend;
+
+const $debug = debug("quill-sharedb-cursors:sharedb");
 
 class WssSharedb {
   constructor(server) {
@@ -53,7 +56,7 @@ class WssSharedb {
       });
 
       ws.on("error", function (error) {
-        debug("Client connection errored (%s). (Error: %s)", ws.id, error);
+        $debug("Client connection errored (%s). (Error: %s)", ws.id, error);
       });
       // 创建链接流
       var stream = new WebSocketJSONStream(ws);
@@ -113,7 +116,9 @@ class WssSharedb {
     var doc = connection.get(documentType, documentId);
     //  更新文档
     doc.fetch(async (err) => {
-      if (err) throw err;
+      if (err) {
+        throw err;
+      }
       if (doc.type === null) {
         let document = await Redis.get(`${documentType}.${documentId}`)
           .then((data) => {
@@ -121,8 +126,10 @@ class WssSharedb {
           })
           .catch(async (error) => {
             let data = await getDocument(documentType, documentId);
-            return data;
+
+            return data.length || null;
           });
+
         if (document === null || document === undefined) {
           // 创建一个空的文档
           doc.create(
@@ -162,4 +169,4 @@ class WssSharedb {
     }, 30000);
   }
 }
-module.exports = WssSharedb;
+export default  WssSharedb;

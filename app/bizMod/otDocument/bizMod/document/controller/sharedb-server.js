@@ -13,9 +13,13 @@ import {
 } from "@/bizMod/otDocument/db/index.js";
 import { type } from "rich-text";
 
-// ShareDB.types.register(type);
+import {
+  setDocument as setRedisDocument,
+  getDocument as getRedisDocument
+} from "@/bizMod/otDocument/redis/index.js";
+import { Redis } from "@/redis";
 
-var { RedisClass, Redis, redisClient, expires } = require("../redis");
+// var { RedisClass, Redis, redisClient, expires } = require("../redis");
 
 // 设置10秒钟把redis数据更新到mysql中
 const updateSqlFrequency = 1000;
@@ -39,7 +43,7 @@ class DB {
   async updateSqlDocument(table, flag) {
     let keys = await Redis.getKeys(`${table}.*`);
     for (let key of keys) {
-      let data = await Redis.get(key);
+      let data = await getRedisDocument(key);
       await editDocument(table, JSON.parse(data));
     }
     // console.log("updateSqlDocument==", keys);
@@ -55,7 +59,7 @@ class DB {
     let keys = await Redis.getKeys(`${table}.*`);
 
     for (let key of keys) {
-      let data = await Redis.get(key);
+      let data = await getRedisDocument(key);
       //   console.log("updateSqlODocument=========");
       await editOpsDocument(table, JSON.parse(data));
     }
@@ -111,12 +115,9 @@ class DB {
           }
           ops = JSON.stringify(ops);
 
-          let data = await Redis.set(
+          let data = await setRedisDocument(
             `${table}.${id}`,
-            JSON.stringify({ id, ops, update_by: userId }),
-            {
-              pexpire: expires
-            }
+            JSON.stringify({ id, ops, update_by: userId })
           )
             .then(() => {
               console.log("ops写入成功");
@@ -181,7 +182,7 @@ class DB {
           const update_time = moment(mtime).format("YYYY-MM-DD HH:mm:ss");
 
           if (id && user_id && type) {
-            let data = await Redis.set(
+            let data = await setRedisDocument(
               `${table}.${id}`,
               JSON.stringify({
                 id,
@@ -193,10 +194,7 @@ class DB {
                 content,
                 create_time,
                 update_time
-              }),
-              {
-                pexpire: expires
-              }
+              })
             )
               .then(() => {
                 console.log("文档写入成功");
@@ -239,7 +237,7 @@ class DB {
           console.log("type=====", type);
           if (id && user_id && type) {
             await Promise.all([
-              await Redis.set(
+              await setRedisDocument(
                 `${table}.${id}`,
                 JSON.stringify({
                   id,
@@ -251,10 +249,7 @@ class DB {
                   content,
                   create_time,
                   update_time
-                }),
-                {
-                  pexpire: expires
-                }
+                })
               ),
               await createDocument(table, {
                 id,
@@ -268,17 +263,14 @@ class DB {
                 update_time
               }),
               // 创建op
-              await Redis.set(
+              await setRedisDocument(
                 `o_${table}.${id}`,
                 JSON.stringify({
                   id,
                   create_by: user_id,
                   update_by: user_id,
                   ops: JSON.stringify([])
-                }),
-                {
-                  pexpire: expires
-                }
+                })
               ),
               await createOpsDocument(`o_${table}`, {
                 id,

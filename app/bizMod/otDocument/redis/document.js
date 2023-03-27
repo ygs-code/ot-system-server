@@ -8,14 +8,14 @@
  */
 import { Redis } from "@/redis";
 
-import { verifyCodeExpires } from "../config";
+import { expires } from "../config";
 // 设置验证码
-export const setVerifyCode = (key, value, time) => {
+export const setDocument = (key, value, time) => {
   Redis.set(key, value);
-  Redis.pexpire(key, time || verifyCodeExpires);
+  Redis.pexpire(key, time || expires);
 };
 // 获取验证码
-export const getVerifyCode = (key) => {
+export const getDocument = (key) => {
   if (key === undefined) {
     return Promise.reject();
   }

@@ -22,6 +22,16 @@ const cors = function (options = {}) {
 
   // eslint-disable-next-line consistent-return
   return async function cors(ctx, next) {
+    const { request, response, socket } = ctx;
+
+    const { socket: resSocket ,status} = response;
+    const { socket: reqSocket } = request;
+
+     // 做一个 Socket 中间件
+    // console.log('status==',status);
+    // console.log('reqSocket==',reqSocket);
+    // // console.log('resSocket==',resSocket);
+
     // always set vary Origin Header
     // https://github.com/rs/cors/issues/10
     ctx.vary("Origin");

@@ -1,8 +1,8 @@
-var ShareDB = require("../modules/sharedb");
-var MemoryDB = require("../db/memory");
-var moment = require("moment");
-var { throttle, stabilization } = require("utils");
-var {
+import ShareDB from "@/modules/otServe/lib/server/index.js";
+import MemoryDB from "@/modules/otServe/lib/memory.js";
+import moment from "moment";
+import { throttle, stabilization } from "@/utils";
+import {
   createOpsDocument,
   editOpsDocument,
   getOpsDocument,
@@ -10,13 +10,19 @@ var {
   editDocument,
   getDocument,
   removeDocument
-} = require("../db/mysql/index.js");
-let type = require("rich-text").type;
-ShareDB.types.register(type);
+} from "@/bizMod/otDocument/db/index.js";
+import { type } from "rich-text";
 
-var { RedisClass, Redis, redisClient, expires } = require("../redis");
+import {
+  setDocument as setRedisDocument,
+  getDocument as getRedisDocument
+} from "@/bizMod/otDocument/redis/index.js";
+import { Redis } from "@/redis";
+
+// var { RedisClass, Redis, redisClient, expires } = require("../redis");
+
 // 设置10秒钟把redis数据更新到mysql中
-const updateSqlFrequency = 10000;
+const updateSqlFrequency = 1000;
 let documentThrottle = throttle();
 let oDocumentThrottle = throttle();
 
@@ -27,13 +33,17 @@ class DB {
     this.oTimer = null;
   }
   init() {
+    const {
+      types: { register }
+    } = ShareDB;
+    register(type);
     this.createShareDB();
   }
 
   async updateSqlDocument(table, flag) {
     let keys = await Redis.getKeys(`${table}.*`);
     for (let key of keys) {
-      let data = await Redis.get(key);
+      let data = await getRedisDocument(key);
       await editDocument(table, JSON.parse(data));
     }
     // console.log("updateSqlDocument==", keys);
@@ -47,8 +57,10 @@ class DB {
   }
   async updateSqlODocument(table, flag) {
     let keys = await Redis.getKeys(`${table}.*`);
+
     for (let key of keys) {
-      let data = await Redis.get(key);
+      let data = await getRedisDocument(key);
+      //   console.log("updateSqlODocument=========");
       await editOpsDocument(table, JSON.parse(data));
     }
 
@@ -97,17 +109,18 @@ class DB {
         //         await createOpsDocument(table, { id, ops });
         //       });
         //   },
-        editOpsDocument: async (table, id, ops) => {
+        editOpsDocument: async (table, { id, ops, userId }) => {
+          if (!userId) {
+            return false;
+          }
           ops = JSON.stringify(ops);
-          // console.log('editOpsDocument==');
-          let data = await Redis.set(
+
+          let data = await setRedisDocument(
             `${table}.${id}`,
-            JSON.stringify({ id, ops }),
-            {
-              pexpire: expires
-            }
+            JSON.stringify({ id, ops, update_by: userId })
           )
             .then(() => {
+              console.log("ops写入成功");
               oDocumentThrottle(updateSqlFrequency, () => {
                 this.updateSqlODocument(table);
               });
@@ -151,10 +164,9 @@ class DB {
           return data;
         },
         // removeDocument(data) {
-        //     console.log('removeDocument=====', data);
+
         // },
         editDocument: async (table, data) => {
-          // console.log("editDocument==");
           const {
             userId: user_id,
             id,
@@ -170,47 +182,44 @@ class DB {
           const update_time = moment(mtime).format("YYYY-MM-DD HH:mm:ss");
 
           if (id && user_id && type) {
-            let data = await Redis.set(
+            let data = await setRedisDocument(
               `${table}.${id}`,
               JSON.stringify({
                 id,
-                user_id,
+                // create_by: user_id,
+                update_by: user_id,
                 // title,
                 v,
                 type,
                 content,
                 create_time,
                 update_time
-              }),
-              {
-                pexpire: expires
-              }
+              })
             )
               .then(() => {
-                //   console.log("文档写入成功");
+                console.log("文档写入成功");
                 documentThrottle(updateSqlFrequency, () => {
                   this.updateSqlDocument(table);
                 });
               })
               .catch(async (error) => {
                 console.log("文档写入错误");
-                await editDocument(table, {
-                  id,
-                  user_id,
-                  // title,
-                  v,
-                  type,
-                  content,
-                  create_time,
-                  update_time
-                });
+                // await editDocument(table, {
+                //     id,
+                //     user_id,
+                //     // title,
+                //     v,
+                //     type,
+                //     content,
+                //     create_time,
+                //     update_time,
+                // });
               });
           }
         },
 
         // 创建文档
         createDocument: async (table, data = {}) => {
-          // console.log('createDocument=======');
           const {
             userId: user_id,
             title,
@@ -225,27 +234,27 @@ class DB {
           const create_time = moment(ctime).format("YYYY-MM-DD HH:mm:ss");
           const update_time = moment(mtime).format("YYYY-MM-DD HH:mm:ss");
 
+          console.log("type=====", type);
           if (id && user_id && type) {
             await Promise.all([
-              await Redis.set(
+              await setRedisDocument(
                 `${table}.${id}`,
                 JSON.stringify({
                   id,
-                  user_id,
+                  create_by: user_id,
+                  update_by: user_id,
                   title,
                   v,
                   type,
                   content,
                   create_time,
                   update_time
-                }),
-                {
-                  pexpire: expires
-                }
+                })
               ),
               await createDocument(table, {
                 id,
-                user_id,
+                create_by: user_id,
+                update_by: user_id,
                 title,
                 v,
                 type,
@@ -254,15 +263,19 @@ class DB {
                 update_time
               }),
               // 创建op
-              await Redis.set(
+              await setRedisDocument(
                 `o_${table}.${id}`,
-                JSON.stringify({ id, ops: JSON.stringify([]) }),
-                {
-                  pexpire: expires
-                }
+                JSON.stringify({
+                  id,
+                  create_by: user_id,
+                  update_by: user_id,
+                  ops: JSON.stringify([])
+                })
               ),
               await createOpsDocument(`o_${table}`, {
                 id,
+                create_by: user_id,
+                update_by: user_id,
                 ops: JSON.stringify([])
               })
             ]);
@@ -273,4 +286,4 @@ class DB {
   }
 }
 
-module.exports = new DB();
+export default new DB();
