@@ -91,7 +91,7 @@ class App {
   }
   addRoute() {
     // 导入路由
-    new Route(this.app, (...ags) => {
+    new Route(this.app, this.server, (...ags) => {
       this.socketRoute(...ags);
     });
   }
@@ -113,7 +113,7 @@ class App {
   }
 
   addSocket() {
-    // console.log("addSocket======");
+    console.log("addSocket======");
     // console.log("this.server======", this.server);
     // https://www.cnblogs.com/huenchao/p/6234550.html  文档
 
@@ -135,7 +135,7 @@ class App {
       if (pathname in this.sockets) {
         this.sockets[pathname]({ request, socket, head, params });
       } else {
-        // socket.end();
+        socket.end();
       }
 
       // if (!documentId || !documentType) {

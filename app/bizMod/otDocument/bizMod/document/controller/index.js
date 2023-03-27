@@ -7,6 +7,9 @@ import Service from "../service";
 
 @captureClassError()
 class Controller {
+  static async initSocket(server) {}
+  static async socket() {}
+
   // 查询列表
   static async queryList(ctx, next, { parameter }) {
     const { pageNum, pageSize, id, title, createBy } = parameter;

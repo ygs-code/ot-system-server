@@ -13,8 +13,9 @@ import { verifyToken } from "@/redis";
 import controller from "../controller";
 
 class router {
-  constructor(app, parentRouter, socketRoute) {
+  constructor(app, server, parentRouter, socketRoute) {
     this.app = app;
+    this.server = server;
     this.router = parentRouter;
     this.socketRoute = socketRoute;
     this.init();
@@ -40,6 +41,7 @@ class router {
     // });
   }
 
+  // socket
   addSockets() {
     this.socketRoute(
       "/socket/document",
@@ -67,6 +69,8 @@ class router {
     // 添加路由
     // this.addRouters();
 
+    // 初始化Socket
+    this.initSocket(this.server);
     // 添加 socket
     this.addSockets();
   }

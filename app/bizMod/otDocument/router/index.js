@@ -16,8 +16,9 @@ import { router as DocumentRouter } from "../bizMod/document"; //DocumentRouter 
 import { initTable, initTableData } from "../db";
 // import { tables, CheckTable } from "../db"; //  db
 class router {
-  constructor(app, parentRouter, socketRoute) {
+  constructor(app, server, parentRouter, socketRoute) {
     this.app = app;
+    this.server = server;
     this.router = parentRouter;
     this.socketRoute = socketRoute;
     this.init();
@@ -52,7 +53,12 @@ class router {
   async addRouters() {
     // 为script模块添加路由
     // new scriptRouter(this.app, this.twoLevelRoute);
-    new DocumentRouter(this.app, this.twoLevelRoute, this.socketRoute);
+    new DocumentRouter(
+      this.app,
+      this.server,
+      this.twoLevelRoute,
+      this.socketRoute
+    );
     // 添加路由
     this.router.use(this.twoLevelRoute.routes()); //挂载二级路由
   }
