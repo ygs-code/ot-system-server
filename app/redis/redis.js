@@ -54,19 +54,33 @@ class RedisClass {
       });
     });
   }
-  set(key, value, callback = () => {}, options = () => {}) {
-    return promise((resolve, reject) => {
+  async set(key, value, callback = () => {}, options = () => {}) {
+    await promise((resolve, reject) => {
       this.redisClient.set(key, value, (error, res) => {
         if (error) {
           callback(error);
           reject(error);
         } else {
-          let keys = Object.keys(options);
-          keys.forEach((_key) => {
-            this.redisClient[_key](key, options[key]);
-          });
           callback(res);
           resolve(res);
+        }
+      });
+
+      let keys = Object.keys(options);
+      keys.forEach((_key) => {
+        this.redisClient[_key](key, options[_key]);
+      });
+    });
+  }
+  getKeys(key, callback = () => {}) {
+    return promise((resolve, reject) => {
+      this.redisClient.keys(key, (error, res) => {
+        if (error) {
+          callback(error);
+          reject(error);
+        } else {
+          resolve(res);
+          callback(res);
         }
       });
     });

@@ -6,13 +6,26 @@
  * @Description: In User Settings Edit
  * @FilePath: /error-sytem/server/app/bizMod/set/redis/user.js
  */
-import { Redis } from "@/redis";
+import { Redis, redisClient } from "@/redis";
 
 import { expires } from "../config";
+
+
+console.log('redisClient===',redisClient)
+
 // 设置验证码
 export const setDocument = (key, value, time) => {
-  Redis.set(key, value);
-  Redis.pexpire(key, time || expires);
+  return Redis.set(
+    key,
+    value,
+    () => {},
+    {
+      pexpire: expires
+    }
+  );
+
+  // callback = () => {}, options = () => {}
+  // Redis.pexpire(key, time || expires);
 };
 // 获取验证码
 export const getDocument = (key) => {

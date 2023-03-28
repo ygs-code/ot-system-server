@@ -18,7 +18,7 @@ class Service {
 
     // 查询出列表
     let [list, total] = await queryDocumentList(
-       'document',
+      "document",
       {
         and: {
           id,
@@ -45,35 +45,84 @@ class Service {
   static async create(ctx, next, parameter) {
     const { title, create_by, update_by, v, type, content } = parameter;
 
-    return await Promise.all([
-      createDocument("document", {
-        title,
-        create_by,
-        update_by,
-        v,
-        type,
-        content
-      }),
-      createOpsDocument("o_document", {
-        ops: "[]",
-        create_by,
-        update_by
-      })
-    ])
+    let { data: { id } = {}, status } = await createDocument("document", {
+      title,
+      create_by,
+      update_by,
+      v,
+      type,
+      content
+    })
       .then((data) => {
+        console.log("创建文档成功");
         return {
           data: {
-            id: data[0].insertId
+            id: data.insertId
           },
           status: 1
         };
       })
       .catch(() => {
+        console.log("创建文档失败");
         return {
           data: {},
           status: 2
         };
       });
+
+    if (status == 1 && id) {
+      await createOpsDocument("o_document", {
+        id,
+        ops: "[]",
+        create_by,
+        update_by
+      })
+        .then((data) => {
+          console.log("创建ot文档成功");
+        })
+        .catch((error) => {
+          console.log("创建ot文档成功");
+          console.log("error===", error);
+          id = undefined;
+          status = 2;
+        });
+    }
+    return {
+      data: {
+        id
+      },
+      status
+    };
+
+    // return await Promise.all([
+    //   createDocument("document", {
+    //     title,
+    //     create_by,
+    //     update_by,
+    //     v,
+    //     type,
+    //     content
+    //   }),
+    //   createOpsDocument("o_document", {
+    //     ops: "[]",
+    //     create_by,
+    //     update_by
+    //   })
+    // ])
+    //   .then((data) => {
+    //     return {
+    //       data: {
+    //         id: data[0].insertId
+    //       },
+    //       status: 1
+    //     };
+    //   })
+    //   .catch(() => {
+    //     return {
+    //       data: {},
+    //       status: 2
+    //     };
+    //   });
   }
   // 编辑权限
   static async edit(ctx, next, parameter) {

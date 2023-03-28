@@ -431,7 +431,7 @@ export default {
         test: /\.m?js$/,
         enforce: "pre",
         // 排除文件,因为这些包已经编译过，无需再次编译
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules|bower_components|otServe)/,
         use: ["source-map-loader"].concat(cacheLoader("babel"))
         // use: {
         //  loader: "babel-loader",
