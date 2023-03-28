@@ -10,7 +10,7 @@
 import { connection, exec, mergeCondition, sqlObjToAnd } from "@/db";
 
 // 查询权限列表
-export const queryDocumentList = async (options = {}, page = {}) => {
+export const queryDocumentList = async (table, options = {}, page = {}) => {
   const { pageNum = 1, pageSize = 10 } = page;
 
   let sql = `SELECT  SQL_CALC_FOUND_ROWS
@@ -23,7 +23,7 @@ export const queryDocumentList = async (options = {}, page = {}) => {
                 type,
                 DATE_FORMAT(create_time, "%Y-%m-%d %H:%i:%S")  createTime,
                 DATE_FORMAT(update_time, "%Y-%m-%d %H:%i:%S")  updateTime
-            FROM documents 
+            FROM ${table} 
            `;
 
   sql += mergeCondition(options);

@@ -18,6 +18,7 @@ class Service {
 
     // 查询出列表
     let [list, total] = await queryDocumentList(
+       'document',
       {
         and: {
           id,
@@ -45,7 +46,7 @@ class Service {
     const { title, create_by, update_by, v, type, content } = parameter;
 
     return await Promise.all([
-      createDocument("documents", {
+      createDocument("document", {
         title,
         create_by,
         update_by,
@@ -53,7 +54,7 @@ class Service {
         type,
         content
       }),
-      createOpsDocument("o_documents", {
+      createOpsDocument("o_document", {
         ops: "[]",
         create_by,
         update_by

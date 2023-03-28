@@ -4,13 +4,12 @@ import { captureClassError } from "utils";
 import { forbidden, serverError, success, unsupported } from "@/constant";
 
 import Service from "../service";
-
+import Sockets from "../sockets";
 @captureClassError()
-class Controller {
-  constructor() {}
-  static async initSocket(server) {}
-  static async socket() {
-    
+class Controller {  
+  static async document({ request, socket, head, params }) {
+    // 转换数据
+    Sockets.document({ request, socket, head, params });
   }
 
   // 查询列表
@@ -31,7 +30,6 @@ class Controller {
       data
     };
   }
-
   // 查询单个权限
   static async query(ctx, next, parameter) {
     //添加service

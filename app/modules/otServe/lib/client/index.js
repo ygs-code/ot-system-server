@@ -1,1824 +1,48 @@
-
-/* eslint-disable   */
-
-
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.index = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-"use strict";
-
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-var e = "object" == (typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) ? Reflect : null,
-  f = e && "function" == typeof e.apply ? e.apply : function (e, t, n) {
-    return Function.prototype.apply.call(e, t, n);
-  };
-var t = e && "function" == typeof e.ownKeys ? e.ownKeys : Object.getOwnPropertySymbols ? function (e) {
-    return Object.getOwnPropertyNames(e).concat(Object.getOwnPropertySymbols(e));
-  } : function (e) {
-    return Object.getOwnPropertyNames(e);
-  },
-  n = Number.isNaN || function (e) {
-    return e != e;
-  };
-function r() {
-  r.init.call(this);
-}
-module.exports = r, module.exports.once = function (u, f) {
-  return new Promise(function (e, t) {
-    function n(e) {
-      u.removeListener(f, r), t(e);
-    }
-    function r() {
-      "function" == typeof u.removeListener && u.removeListener("error", n), e([].slice.call(arguments));
-    }
-    var i, o, s;
-    a(u, f, r, {
-      once: !0
-    }), "error" !== f && (o = n, s = {
-      once: !0
-    }, "function" == typeof (i = u).on) && a(i, "error", o, s);
-  });
-}, (r.EventEmitter = r).prototype._events = void 0, r.prototype._eventsCount = 0, r.prototype._maxListeners = void 0;
-var i = 10;
-function c(e) {
-  if ("function" != typeof e) throw new TypeError('The "listener" argument must be of type Function. Received type ' + _typeof(e));
-}
-function s(e) {
-  return void 0 === e._maxListeners ? r.defaultMaxListeners : e._maxListeners;
-}
-function o(e, t, n, r) {
-  var i, o;
-  return c(n), void 0 === (i = e._events) ? (i = e._events = Object.create(null), e._eventsCount = 0) : (void 0 !== i.newListener && (e.emit("newListener", t, n.listener || n), i = e._events), o = i[t]), void 0 === o ? (o = i[t] = n, ++e._eventsCount) : ("function" == typeof o ? o = i[t] = r ? [n, o] : [o, n] : r ? o.unshift(n) : o.push(n), 0 < (i = s(e)) && o.length > i && !o.warned && (o.warned = !0, (r = new Error("Possible EventEmitter memory leak detected. " + o.length + " " + String(t) + " listeners added. Use emitter.setMaxListeners() to increase limit")).name = "MaxListenersExceededWarning", r.emitter = e, r.type = t, r.count = o.length, n = r, console) && console.warn && console.warn(n)), e;
-}
-function u(e, t, n) {
-  e = {
-    fired: !1,
-    wrapFn: void 0,
-    target: e,
-    type: t,
-    listener: n
-  }, t = function () {
-    if (!this.fired) return this.target.removeListener(this.type, this.wrapFn), this.fired = !0, 0 === arguments.length ? this.listener.call(this.target) : this.listener.apply(this.target, arguments);
-  }.bind(e);
-  return t.listener = n, e.wrapFn = t;
-}
-function l(e, t, n) {
-  e = e._events;
-  if (void 0 === e) return [];
-  e = e[t];
-  if (void 0 === e) return [];
-  if ("function" == typeof e) return n ? [e.listener || e] : [e];
-  if (n) {
-    for (var r = e, i = new Array(r.length), o = 0; o < i.length; ++o) i[o] = r[o].listener || r[o];
-    return i;
-  }
-  return p(e, e.length);
-}
-function v(e) {
-  var t = this._events;
-  if (void 0 !== t) {
-    t = t[e];
-    if ("function" == typeof t) return 1;
-    if (void 0 !== t) return t.length;
-  }
-  return 0;
-}
-function p(e, t) {
-  for (var n = new Array(t), r = 0; r < t; ++r) n[r] = e[r];
-  return n;
-}
-function a(n, r, i, o) {
-  if ("function" == typeof n.on) o.once ? n.once(r, i) : n.on(r, i);else {
-    if ("function" != typeof n.addEventListener) throw new TypeError('The "emitter" argument must be of type EventEmitter. Received type ' + _typeof(n));
-    n.addEventListener(r, function e(t) {
-      o.once && n.removeEventListener(r, e), i(t);
-    });
-  }
-}
-Object.defineProperty(r, "defaultMaxListeners", {
-  enumerable: !0,
-  get: function get() {
-    return i;
-  },
-  set: function set(e) {
-    if ("number" != typeof e || e < 0 || n(e)) throw new RangeError('The value of "defaultMaxListeners" is out of range. It must be a non-negative number. Received ' + e + ".");
-    i = e;
-  }
-}), r.init = function () {
-  void 0 !== this._events && this._events !== Object.getPrototypeOf(this)._events || (this._events = Object.create(null), this._eventsCount = 0), this._maxListeners = this._maxListeners || void 0;
-}, r.prototype.setMaxListeners = function (e) {
-  if ("number" != typeof e || e < 0 || n(e)) throw new RangeError('The value of "n" is out of range. It must be a non-negative number. Received ' + e + ".");
-  return this._maxListeners = e, this;
-}, r.prototype.getMaxListeners = function () {
-  return s(this);
-}, r.prototype.emit = function (e) {
-  for (var t = [], n = 1; n < arguments.length; n++) t.push(arguments[n]);
-  var r = "error" === e,
-    i = this._events;
-  if (void 0 !== i) r = r && void 0 === i.error;else if (!r) return !1;
-  if (r) {
-    if ((o = 0 < t.length ? t[0] : o) instanceof Error) throw o;
-    r = new Error("Unhandled error." + (o ? " (" + o.message + ")" : ""));
-    throw r.context = o, r;
-  }
-  var o = i[e];
-  if (void 0 === o) return !1;
-  if ("function" == typeof o) f(o, this, t);else for (var s = o.length, u = p(o, s), n = 0; n < s; ++n) f(u[n], this, t);
-  return !0;
-}, r.prototype.on = r.prototype.addListener = function (e, t) {
-  return o(this, e, t, !1);
-}, r.prototype.prependListener = function (e, t) {
-  return o(this, e, t, !0);
-}, r.prototype.once = function (e, t) {
-  return c(t), this.on(e, u(this, e, t)), this;
-}, r.prototype.prependOnceListener = function (e, t) {
-  return c(t), this.prependListener(e, u(this, e, t)), this;
-}, r.prototype.off = r.prototype.removeListener = function (e, t) {
-  var n, r, i, o, s;
-  if (c(t), void 0 !== (r = this._events) && void 0 !== (n = r[e])) if (n === t || n.listener === t) 0 == --this._eventsCount ? this._events = Object.create(null) : (delete r[e], r.removeListener && this.emit("removeListener", e, n.listener || t));else if ("function" != typeof n) {
-    for (i = -1, o = n.length - 1; 0 <= o; o--) if (n[o] === t || n[o].listener === t) {
-      s = n[o].listener, i = o;
-      break;
-    }
-    if (i < 0) return this;
-    if (0 === i) n.shift();else {
-      for (var u = n, f = i; f + 1 < u.length; f++) u[f] = u[f + 1];
-      u.pop();
-    }
-    1 === n.length && (r[e] = n[0]), void 0 !== r.removeListener && this.emit("removeListener", e, s || t);
-  }
-  return this;
-}, r.prototype.removeAllListeners = function (e) {
-  var t,
-    n = this._events;
-  if (void 0 !== n) if (void 0 === n.removeListener) 0 === arguments.length ? (this._events = Object.create(null), this._eventsCount = 0) : void 0 !== n[e] && (0 == --this._eventsCount ? this._events = Object.create(null) : delete n[e]);else if (0 === arguments.length) {
-    for (var r, i = Object.keys(n), o = 0; o < i.length; ++o) "removeListener" !== (r = i[o]) && this.removeAllListeners(r);
-    this.removeAllListeners("removeListener"), this._events = Object.create(null), this._eventsCount = 0;
-  } else if ("function" == typeof (t = n[e])) this.removeListener(e, t);else if (void 0 !== t) for (o = t.length - 1; 0 <= o; o--) this.removeListener(e, t[o]);
-  return this;
-}, r.prototype.listeners = function (e) {
-  return l(this, e, !0);
-}, r.prototype.rawListeners = function (e) {
-  return l(this, e, !1);
-}, r.listenerCount = function (e, t) {
-  return "function" == typeof e.listenerCount ? e.listenerCount(t) : v.call(e, t);
-}, r.prototype.listenerCount = v, r.prototype.eventNames = function () {
-  return 0 < this._eventsCount ? t(this._events) : [];
-};
-},{}],2:[function(require,module,exports){
-"use strict";
-
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-module.exports = function r(t, e) {
-  if (t === e) return !0;
-  if (t && e && "object" == _typeof(t) && "object" == _typeof(e)) {
-    if (t.constructor !== e.constructor) return !1;
-    var o, n, f;
-    if (Array.isArray(t)) {
-      if ((o = t.length) != e.length) return !1;
-      for (n = o; 0 != n--;) if (!r(t[n], e[n])) return !1;
-    } else {
-      if (t.constructor === RegExp) return t.source === e.source && t.flags === e.flags;
-      if (t.valueOf !== Object.prototype.valueOf) return t.valueOf() === e.valueOf();
-      if (t.toString !== Object.prototype.toString) return t.toString() === e.toString();
-      if ((o = (f = Object.keys(t)).length) !== Object.keys(e).length) return !1;
-      for (n = o; 0 != n--;) if (!Object.prototype.hasOwnProperty.call(e, f[n])) return !1;
-      for (n = o; 0 != n--;) {
-        var u = f[n];
-        if (!r(t[u], e[u])) return !1;
-      }
-    }
-    return !0;
-  }
-  return t != t && e != e;
-};
-},{}],3:[function(require,module,exports){
-"use strict";
-
-var i = module.exports = function (t, o) {
-  if (o = o || 16, (t = void 0 === t ? 128 : t) <= 0) return "0";
-  for (var r = Math.log(Math.pow(2, t)) / Math.log(o), a = 2; r === 1 / 0; a *= 2) r = Math.log(Math.pow(2, t / a)) / Math.log(o) * a;
-  for (var n = r - Math.floor(r), h = "", a = 0; a < Math.floor(r); a++) h = Math.floor(Math.random() * o).toString(o) + h;
-  n && (n = Math.pow(o, n), h = Math.floor(Math.random() * n).toString(o) + h);
-  n = parseInt(h, o);
-  return n !== 1 / 0 && n >= Math.pow(2, t) ? i(t, o) : h;
-};
-i.rack = function (a, n, h) {
-  function r(t) {
-    var o = 0;
-    do {
-      if (10 < o++) {
-        if (!h) throw new Error("too many ID collisions, use more bits");
-        a += h;
-      }
-      var r = i(a, n);
-    } while (Object.hasOwnProperty.call(e, r));
-    return e[r] = t, r;
-  }
-  var e = r.hats = {};
-  return r.get = function (t) {
-    return r.hats[t];
-  }, r.set = function (t, o) {
-    return r.hats[t] = o, r;
-  }, r.bits = a || 128, r.base = n || 16, r;
-};
-},{}],4:[function(require,module,exports){
-"use strict";
-
-module.exports = function (r, m, b, k) {
-  var p = r.transformX = function (r, t) {
-    b(r), b(t);
-    for (var e, n, l, f = [], o = 0; o < t.length; o++) {
-      for (var h = t[o], g = [], a = 0; a < r.length;) {
-        var i = [];
-        if (e = r[a], l = i, m(g, e, n = h, "left"), m(l, n, e, "right"), a++, 1 !== i.length) {
-          if (0 === i.length) {
-            for (var u = a; u < r.length; u++) k(g, r[u]);
-            h = null;
-            break;
-          }
-          for (var v = p(r.slice(a), i), s = 0; s < v[0].length; s++) k(g, v[0][s]);
-          for (var c = 0; c < v[1].length; c++) k(f, v[1][c]);
-          h = null;
-          break;
-        }
-        h = i[0];
-      }
-      null != h && k(f, h), r = g;
-    }
-    return [r, f];
-  };
-  r.transform = function (r, t, e) {
-    if ("left" !== e && "right" !== e) throw new Error("type must be 'left' or 'right'");
-    return 0 === t.length ? r : 1 === r.length && 1 === t.length ? m([], r[0], t[0], e) : "left" === e ? p(r, t)[0] : p(t, r)[1];
-  };
-};
-},{}],5:[function(require,module,exports){
-"use strict";
-
-module.exports = {
-  type: require("./json0")
-};
-},{"./json0":6}],6:[function(require,module,exports){
-"use strict";
-
-function c(i) {
-  return "[object Array]" == Object.prototype.toString.call(i);
-}
-function h(i) {
-  return JSON.parse(JSON.stringify(i));
-}
-var m = {
-    name: "json0",
-    uri: "http://sharejs.org/types/JSONv0"
-  },
-  g = {};
-function O(i) {
-  i.t = "text0";
-  var e = {
-    p: i.p.pop()
-  };
-  null != i.si && (e.i = i.si), null != i.sd && (e.d = i.sd), i.o = [e];
-}
-function y(i) {
-  i.p.push(i.o[0].p), null != i.o[0].i && (i.si = i.o[0].i), null != i.o[0].d && (i.sd = i.o[0].d), delete i.t, delete i.o;
-}
-m.registerSubtype = function (i) {
-  g[i.name] = i;
-}, m.create = function (i) {
-  return void 0 === i ? null : h(i);
-}, m.invertComponent = function (i) {
-  var e = {
-    p: i.p
-  };
-  return i.t && g[i.t] && (e.t = i.t, e.o = g[i.t].invert(i.o)), void 0 !== i.si && (e.sd = i.si), void 0 !== i.sd && (e.si = i.sd), void 0 !== i.oi && (e.od = i.oi), void 0 !== i.od && (e.oi = i.od), void 0 !== i.li && (e.ld = i.li), void 0 !== i.ld && (e.li = i.ld), void 0 !== i.na && (e.na = -i.na), void 0 !== i.lm && (e.lm = i.p[i.p.length - 1], e.p = i.p.slice(0, i.p.length - 1).concat([i.lm])), e;
-}, m.invert = function (i) {
-  for (var e = i.slice().reverse(), l = [], n = 0; n < e.length; n++) l.push(m.invertComponent(e[n]));
-  return l;
-}, m.checkValidOp = function (i) {
-  for (var e = 0; e < i.length; e++) if (!c(i[e].p)) throw new Error("Missing path");
-}, m.checkList = function (i) {
-  if (!c(i)) throw new Error("Referenced element not a list");
-}, m.checkObj = function (i) {
-  if (!(e = i) || e.constructor !== Object) throw new Error("Referenced element not an object (it was " + JSON.stringify(i) + ")");
-  var e;
-}, m.apply = function (i, e) {
-  m.checkValidOp(e), e = h(e);
-  for (var l = {
-      data: i
-    }, n = 0; n < e.length; n++) {
-    for (var o, t = e[n], r = (null == t.si && null == t.sd || O(t), l), p = "data", d = 0; d < t.p.length; d++) {
-      var s = t.p[d],
-        u = r,
-        r = r[p],
-        p = s;
-      if (null == u) throw new Error("Path invalid");
-    }
-    if (t.t && void 0 !== t.o && g[t.t]) r[p] = g[t.t].apply(r[p], t.o);else if (void 0 !== t.na) {
-      if ("number" != typeof r[p]) throw new Error("Referenced element not a number");
-      r[p] += t.na;
-    } else if (void 0 !== t.li && void 0 !== t.ld) m.checkList(r), r[p] = t.li;else if (void 0 !== t.li) m.checkList(r), r.splice(p, 0, t.li);else if (void 0 !== t.ld) m.checkList(r), r.splice(p, 1);else if (void 0 !== t.lm) m.checkList(r), t.lm != p && (o = r[p], r.splice(p, 1), r.splice(t.lm, 0, o));else if (void 0 !== t.oi) m.checkObj(r), r[p] = t.oi;else {
-      if (void 0 === t.od) throw new Error("invalid / missing instruction in op");
-      m.checkObj(r), delete r[p];
-    }
-  }
-  return l.data;
-}, m.shatter = function (i) {
-  for (var e = [], l = 0; l < i.length; l++) e.push([i[l]]);
-  return e;
-}, m.incrementalApply = function (i, e, l) {
-  for (var n = 0; n < e.length; n++) {
-    var o = [e[n]];
-    l(o, i = m.apply(i, o));
-  }
-  return i;
-};
-var t = m.pathMatches = function (i, e, l) {
-    if (i.length != e.length) return !1;
-    for (var n = 0; n < i.length; n++) if (i[n] !== e[n] && (!l || n !== i.length - 1)) return !1;
-    return !0;
-  },
-  i = (m.append = function (i, e) {
-    if (e = h(e), 0 === i.length) i.push(e);else {
-      var l = i[i.length - 1];
-      if (null == e.si && null == e.sd || null == l.si && null == l.sd || (O(e), O(l)), t(e.p, l.p)) {
-        if (e.t && l.t && e.t === l.t && g[e.t]) {
-          if (l.o = g[e.t].compose(l.o, e.o), null != e.si || null != e.sd) {
-            for (var n = e.p, o = 0; o < l.o.length - 1; o++) e.o = [l.o.pop()], e.p = n.slice(), y(e), i.push(e);
-            y(l);
-          }
-        } else null != l.na && null != e.na ? i[i.length - 1] = {
-          p: l.p,
-          na: l.na + e.na
-        } : void 0 !== l.li && void 0 === e.li && e.ld === l.li ? void 0 !== l.ld ? delete l.li : i.pop() : void 0 !== l.od && void 0 === l.oi && void 0 !== e.oi && void 0 === e.od ? l.oi = e.oi : void 0 !== l.oi && void 0 !== e.od ? void 0 !== e.oi ? l.oi = e.oi : void 0 !== l.od ? delete l.oi : i.pop() : void 0 !== e.lm && e.p[e.p.length - 1] === e.lm || i.push(e);
-      } else null == e.si && null == e.sd || null == l.si && null == l.sd || (y(e), y(l)), i.push(e);
-    }
-  }, m.compose = function (i, e) {
-    m.checkValidOp(i), m.checkValidOp(e);
-    for (var l = h(i), n = 0; n < e.length; n++) m.append(l, e[n]);
-    return l;
-  }, m.normalize = function (i) {
-    var e = [];
-    i = c(i) ? i : [i];
-    for (var l = 0; l < i.length; l++) {
-      var n = i[l];
-      null == n.p && (n.p = []), m.append(e, n);
-    }
-    return e;
-  }, m.commonLengthForOps = function (i, e) {
-    var l = i.p.length,
-      n = e.p.length;
-    if (null == i.na && !i.t || l++, null == e.na && !e.t || n++, 0 === l) return -1;
-    if (0 === n) return null;
-    l--, n--;
-    for (var o = 0; o < l; o++) {
-      var t = i.p[o];
-      if (n <= o || t !== e.p[o]) return null;
-    }
-    return l;
-  }, m.canOpAffectPath = function (i, e) {
-    return null != m.commonLengthForOps({
-      p: e
-    }, i);
-  }, m.transformComponent = function (i, e, l, n) {
-    e = h(e);
-    var o = m.commonLengthForOps(l, e),
-      t = m.commonLengthForOps(e, l),
-      r = e.p.length,
-      p = l.p.length;
-    if (null == e.na && !e.t || r++, null == l.na && !l.t || p++, null != t && r < p && e.p[t] == l.p[t] && (void 0 !== e.ld ? ((d = h(l)).p = d.p.slice(r), e.ld = m.apply(h(e.ld), [d])) : void 0 !== e.od && ((d = h(l)).p = d.p.slice(r), e.od = m.apply(h(e.od), [d]))), null != o) {
-      var t = r == p,
-        d = l;
-      if (null == e.si && null == e.sd || null == l.si && null == l.sd || (O(e), O(d = h(l))), d.t && g[d.t]) {
-        if (e.t && e.t === d.t) {
-          var s = g[e.t].transform(e.o, d.o, n);
-          if (null != e.si || null != e.sd) for (var u = e.p, f = 0; f < s.length; f++) e.o = [s[f]], e.p = u.slice(), y(e), m.append(i, e);else (!c(s) || 0 < s.length) && (e.o = s, m.append(i, e));
-          return i;
-        }
-      } else if (void 0 === l.na) if (void 0 !== l.li && void 0 !== l.ld) {
-        if (l.p[o] === e.p[o]) {
-          if (!t) return i;
-          if (void 0 !== e.ld) {
-            if (void 0 === e.li || "left" !== n) return i;
-            e.ld = h(l.li);
-          }
-        }
-      } else if (void 0 !== l.li) void 0 !== e.li && void 0 === e.ld && t && e.p[o] === l.p[o] ? "right" === n && e.p[o]++ : l.p[o] <= e.p[o] && e.p[o]++, void 0 !== e.lm && t && l.p[o] <= e.lm && e.lm++;else if (void 0 !== l.ld) {
-        if (void 0 !== e.lm && t) {
-          if (l.p[o] === e.p[o]) return i;
-          var u = l.p[o],
-            a = e.p[o];
-          (u < (v = e.lm) || u === v && a < v) && e.lm--;
-        }
-        if (l.p[o] < e.p[o]) e.p[o]--;else if (l.p[o] === e.p[o]) {
-          if (p < r) return i;
-          if (void 0 !== e.ld) {
-            if (void 0 === e.li) return i;
-            delete e.ld;
-          }
-        }
-      } else if (void 0 !== l.lm) {
-        if (void 0 !== e.lm && r === p) {
-          var a = e.p[o],
-            v = e.lm,
-            d = l.p[o],
-            r = l.lm;
-          if (d !== r) if (a === d) {
-            if ("left" !== n) return i;
-            e.p[o] = r, a === v && (e.lm = r);
-          } else d < a && e.p[o]--, r < a ? e.p[o]++ : a === r && r < d && (e.p[o]++, a === v) && e.lm++, (d < v || v === d && a < v) && e.lm--, r < v ? e.lm++ : v === r && (d < r && a < v || r < d && v < a ? "right" === n && e.lm++ : a < v ? e.lm++ : v === d && e.lm--);
-        } else void 0 !== e.li && void 0 === e.ld && t ? (a = l.p[o], v = l.lm, a < (u = e.p[o]) && e.p[o]--, v < u && e.p[o]++) : (a = l.p[o], v = l.lm, (u = e.p[o]) === a ? e.p[o] = v : (a < u && e.p[o]--, (v < u || u === v && v < a) && e.p[o]++));
-      } else if (void 0 !== l.oi && void 0 !== l.od) {
-        if (e.p[o] === l.p[o]) {
-          if (void 0 === e.oi || !t) return i;
-          if ("right" === n) return i;
-          e.od = l.oi;
-        }
-      } else if (void 0 !== l.oi) {
-        if (void 0 !== e.oi && e.p[o] === l.p[o]) {
-          if ("left" !== n) return i;
-          m.append(i, {
-            p: e.p,
-            od: l.oi
-          });
-        }
-      } else if (void 0 !== l.od && e.p[o] == l.p[o]) {
-        if (!t) return i;
-        if (void 0 === e.oi) return i;
-        delete e.od;
-      }
-    }
-    return m.append(i, e), i;
-  }, require("./bootstrapTransform")(m, m.transformComponent, m.checkValidOp, m.append), require("./text0"));
-m.registerSubtype(i), module.exports = m;
-},{"./bootstrapTransform":4,"./text0":7}],7:[function(require,module,exports){
-"use strict";
-
-function i(e, n, t) {
-  return e.slice(0, n) + t + e.slice(n);
-}
-function l(e) {
-  if ("number" != typeof e.p) throw new Error("component missing position field");
-  if ("string" == typeof e.i == ("string" == typeof e.d)) throw new Error("component needs an i or d field");
-  if (e.p < 0) throw new Error("position cannot be negative");
-}
-function o(e) {
-  for (var n = 0; n < e.length; n++) l(e[n]);
-}
-function d(e, n, t) {
-  return null != n.i ? n.p < e || n.p === e && t ? e + n.i.length : e : e <= n.p ? e : e <= n.p + n.d.length ? n.p : e - n.d.length;
-}
-var e = module.exports = {
-    name: "text0",
-    uri: "http://sharejs.org/types/textv0",
-    create: function create(e) {
-      if (null != e && "string" != typeof e) throw new Error("Initial data must be a string");
-      return e || "";
-    }
-  },
-  h = (e.apply = function (e, n) {
-    var t;
-    o(n);
-    for (var p = 0; p < n.length; p++) {
-      var r = n[p];
-      if (null != r.i) e = i(e, r.p, r.i);else {
-        if (t = e.slice(r.p, r.p + r.d.length), r.d !== t) throw new Error("Delete component '" + r.d + "' does not match deleted text '" + t + "'");
-        e = e.slice(0, r.p) + e.slice(r.p + r.d.length);
-      }
-    }
-    return e;
-  }, e._append = function (e, n) {
-    var t;
-    "" !== n.i && "" !== n.d && (0 === e.length ? e.push(n) : null != (t = e[e.length - 1]).i && null != n.i && t.p <= n.p && n.p <= t.p + t.i.length ? e[e.length - 1] = {
-      i: i(t.i, n.p - t.p, n.i),
-      p: t.p
-    } : null != t.d && null != n.d && n.p <= t.p && t.p <= n.p + n.d.length ? e[e.length - 1] = {
-      d: i(n.d, t.p - n.p, t.d),
-      p: n.p
-    } : e.push(n));
-  }),
-  n = (e.compose = function (e, n) {
-    o(e), o(n);
-    for (var t = e.slice(), p = 0; p < n.length; p++) h(t, n[p]);
-    return t;
-  }, e.normalize = function (e) {
-    var n = [];
-    null == e.i && null == e.p || (e = [e]);
-    for (var t = 0; t < e.length; t++) {
-      var p = e[t];
-      null == p.p && (p.p = 0), h(n, p);
-    }
-    return n;
-  }, e.transformCursor = function (e, n, t) {
-    for (var p = "right" === t, r = 0; r < n.length; r++) e = d(e, n[r], p);
-    return e;
-  }, e._tc = function (e, n, t, p) {
-    if (l(n), l(t), null != n.i) h(e, {
-      i: n.i,
-      p: d(n.p, t, "right" === p)
-    });else if (null != t.i) {
-      p = n.d;
-      n.p < t.p && (h(e, {
-        d: p.slice(0, t.p - n.p),
-        p: n.p
-      }), p = p.slice(t.p - n.p)), "" !== p && h(e, {
-        d: p,
-        p: n.p + t.i.length
-      });
-    } else if (n.p >= t.p + t.d.length) h(e, {
-      d: n.d,
-      p: n.p - t.d.length
-    });else if (n.p + n.d.length <= t.p) h(e, n);else {
-      var p = {
-          d: "",
-          p: n.p
-        },
-        r = (n.p < t.p && (p.d = n.d.slice(0, t.p - n.p)), n.p + n.d.length > t.p + t.d.length && (p.d += n.d.slice(t.p + t.d.length - n.p)), Math.max(n.p, t.p)),
-        i = Math.min(n.p + n.d.length, t.p + t.d.length);
-      if (n.d.slice(r - n.p, i - n.p) !== t.d.slice(r - t.p, i - t.p)) throw new Error("Delete ops delete different text in the same region of the document");
-      "" !== p.d && (p.p = d(p.p, t), h(e, p));
-    }
-    return e;
-  });
-e.invert = function (e) {
-  e = e.slice().reverse();
-  for (var n, t = 0; t < e.length; t++) e[t] = null != (n = e[t]).i ? {
-    d: n.i,
-    p: n.p
-  } : {
-    i: n.d,
-    p: n.p
-  };
-  return e;
-}, require("./bootstrapTransform")(e, n, o, h);
-},{"./bootstrapTransform":4}],8:[function(require,module,exports){
-"use strict";
-
-function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("Cannot destructure " + obj); }
-var i = require("./doc"),
-  o = require("./query"),
-  n = require("./presence/presence"),
-  r = require("./presence/doc-presence"),
-  c = require("./snapshot-request/snapshot-version-request"),
-  a = require("./snapshot-request/snapshot-timestamp-request"),
-  s = require("../emitter"),
-  h = require("../error"),
-  t = require("../types"),
-  u = require("../util"),
-  d = require("../logger"),
-  p = h.CODES;
-function l(e) {
-  return 0 === e.readyState || 1 === e.readyState ? "connecting" : "disconnected";
-}
-function e(e) {
-  var t = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  this.options = t, s.EventEmitter.call(this), this.collections = {}, this.nextQueryId = 1, this.nextSnapshotRequestId = 1, this.queries = {}, this._presences = {}, this._snapshotRequests = {}, this.seq = 1, this._presenceSeq = 1, this.id = null, this.agent = null, this.debug = !1, this.state = l(e), this.bindToSocket(e);
-}
-function f(e, t) {
-  var n = new Error(e.message);
-  return n.code = e.code, t && (n.data = t), n;
-}
-function _(e) {
-  return e.hasPending();
-}
-function y(e) {
-  return e.hasWritePending();
-}
-s.mixin(e), e.prototype.bindToSocket = function (e) {
-  var _this$options$data = this.options.data;
-  _this$options$data = _this$options$data === void 0 ? {} : _this$options$data;
-  _objectDestructuringEmpty(_this$options$data);
-  var t = (this.socket && (this.socket.close(), this.socket.onmessage = null, this.socket.onopen = null, this.socket.onerror = null, this.socket.onclose = null), l(this.socket = e)),
-    n = (this._setState(t), this.canSend = !1, this);
-  e.onmessage = function (t) {
-    try {
-      var e = "string" == typeof t.data ? JSON.parse(t.data) : t.data;
-    } catch (e) {
-      return void d.warn("Failed to parse message", t);
-    }
-    n.debug && d.info("RECV", JSON.stringify(e));
-    t = {
-      data: e
-    };
-    if (n.emit("receive", t), t.data) try {
-      n.handleMessage(t.data);
-    } catch (e) {
-      u.nextTick(function () {
-        n.emit("error", e);
-      });
-    }
-  }, e.onopen = function () {
-    n._setState("connecting"), n._initializeHandshake();
-  }, e.onerror = function (e) {
-    n.emit("connection error", e);
-  }, e.onclose = function (e) {
-    "closed" === e || "Closed" === e ? n._setState("closed", e) : "stopped" === e || "Stopped by server" === e ? n._setState("stopped", e) : n._setState("disconnected", e);
-  };
-}, e.prototype.handleMessage = function (e) {
-  var t,
-    n,
-    s = null;
-  switch (e.error && (s = f(e.error, e), delete e.error), e.a) {
-    case "init":
-      return this._handleLegacyInit(e);
-    case "hs":
-      return this._handleHandshake(s, e);
-    case "qf":
-      return void ((t = this.queries[e.clientId]) && t._handleFetch(s, e.data, e.extra));
-    case "qs":
-      return void ((t = this.queries[e.clientId]) && t._handleSubscribe(s, e.data, e.extra));
-    case "qu":
-      return;
-    case "q":
-      return (t = this.queries[e.clientId]) ? s ? t._handleError(s) : (e.diff && t._handleDiff(e.diff), void (e.hasOwnProperty("extra") && t._handleExtra(e.extra))) : void 0;
-    case "bf":
-      return this._handleBulkMessage(s, e, "_handleFetch");
-    case "bs":
-    case "bu":
-      return this._handleBulkMessage(s, e, "_handleSubscribe");
-    case "nf":
-    case "nt":
-      return this._handleSnapshotFetch(s, e);
-    case "f":
-      return void ((n = this.getExisting(e.c, e.d)) && n._handleFetch(s, e.data));
-    case "s":
-    case "u":
-      return void ((n = this.getExisting(e.c, e.d)) && n._handleSubscribe(s, e.data));
-    case "op":
-      return void ((n = this.getExisting(e.c, e.d)) && n._handleOp(s, e));
-    case "p":
-      return this._handlePresence(s, e);
-    case "ps":
-      return this._handlePresenceSubscribe(s, e);
-    case "pu":
-      return this._handlePresenceUnsubscribe(s, e);
-    case "pr":
-      return this._handlePresenceRequest(s, e);
-    default:
-      d.warn("Ignoring unrecognized message", e);
-  }
-}, e.prototype._handleBulkMessage = function (e, t, n) {
-  if (t.data) for (var s in t.data) {
-    var i = t.data[s];
-    (o = this.getExisting(t.c, s)) && (e ? o[n](e) : i.error ? o[n](f(i.error)) : o[n](null, i));
-  } else if (Array.isArray(t.b)) for (var r = 0; r < t.b.length; r++) {
-    s = t.b[r];
-    (o = this.getExisting(t.c, s)) && o[n](e);
-  } else if (t.b) for (var s in t.b) {
-    var o;
-    (o = this.getExisting(t.c, s)) && o[n](e);
-  } else d.error("Invalid bulk message", t);
-}, e.prototype._reset = function () {
-  this.agent = null;
-}, e.prototype._setState = function (e, t) {
-  if (this.state !== e) {
-    var n, s, i;
-    if ("connecting" === e && "disconnected" !== this.state && "stopped" !== this.state && "closed" !== this.state || "connected" === e && "connecting" !== this.state) return n = new h(p.ERR_CONNECTION_STATE_TRANSITION_INVALID, "Cannot transition directly from " + this.state + " to " + e), this.emit("error", n);
-    for (r in this.state = e, this.canSend = "connected" === e, "disconnected" !== e && "stopped" !== e && "closed" !== e || this._reset(), this.startBulk(), this.queries) this.queries[r]._onConnectionStateChanged();
-    for (s in this.collections) {
-      var r,
-        o = this.collections[s];
-      for (r in o) o[r]._onConnectionStateChanged();
-    }
-    for (i in this._presences) this._presences[i]._onConnectionStateChanged();
-    for (r in this._snapshotRequests) this._snapshotRequests[r]._onConnectionStateChanged();
-    this.endBulk(), this.emit(e, t), this.emit("state", e, t);
-  }
-}, e.prototype.startBulk = function () {
-  this.bulk || (this.bulk = {});
-}, e.prototype.endBulk = function () {
-  if (this.bulk) for (var e in this.bulk) {
-    var t = this.bulk[e];
-    this._sendBulk("f", e, t.f), this._sendBulk("s", e, t.s), this._sendBulk("u", e, t.u);
-  }
-  this.bulk = null;
-}, e.prototype._sendBulk = function (e, t, n) {
-  if (n) {
-    var s,
-      i,
-      r = [],
-      o = {},
-      c = 0;
-    for (i in n) {
-      var a = n[i];
-      null == a ? r.push(i) : (o[i] = a, s = i, c++);
-    }
-    1 === r.length ? this.send({
-      a: e,
-      c: t,
-      d: i = r[0]
-    }) : r.length && this.send({
-      a: "b" + e,
-      c: t,
-      b: r
-    }), 1 === c ? this.send({
-      a: e,
-      c: t,
-      d: s,
-      v: o[s]
-    }) : c && this.send({
-      a: "b" + e,
-      c: t,
-      b: o
-    });
-  }
-}, e.prototype._sendAction = function (e, t, n) {
-  var s, i;
-  if (this._addDoc(t), this.bulk) return s = (i = (i = this.bulk[t.collection] || (this.bulk[t.collection] = {}))[e] || (i[e] = {})).hasOwnProperty(t.id), i[t.id] = n, s;
-  i = {
-    a: e,
-    c: t.collection,
-    d: t.id,
-    v: n
-  }, this.send(i);
-}, e.prototype.sendFetch = function (e) {
-  return this._sendAction("f", e, e.version);
-}, e.prototype.sendSubscribe = function (e) {
-  return this._sendAction("s", e, e.version);
-}, e.prototype.sendUnsubscribe = function (e) {
-  return this._sendAction("u", e);
-}, e.prototype.sendOp = function (e, t) {
-  this._addDoc(e);
-  var n = {
-    a: "op",
-    c: e.collection,
-    d: e.id,
-    v: e.version,
-    seq: t.seq,
-    x: {},
-    data: t.data
-  };
-  "op" in t && (n.op = t.op), t.create && (n.create = t.create), t.del && (n.del = t.del), e.submitSource && (n.x.source = t.source), this.send(n);
-}, e.prototype.send = function (e) {
-  e.clientId = this.id, this.debug && d.info("SEND", JSON.stringify(e)), this.emit("send", e), this.socket.send(JSON.stringify(e));
-}, e.prototype.close = function () {
-  this.socket.close();
-}, e.prototype.getExisting = function (e, t) {
-  if (this.collections[e]) return this.collections[e][t];
-}, e.prototype.get = function (e, t) {
-  var n = this.collections[e] || (this.collections[e] = {}),
-    s = n[t];
-  return s || (s = n[t] = new i(this, e, t), this.emit("doc", s)), s;
-}, e.prototype._destroyDoc = function (e) {
-  u.digAndRemove(this.collections, e.collection, e.id);
-}, e.prototype._addDoc = function (e) {
-  var t = this.collections[e.collection];
-  (t = t || (this.collections[e.collection] = {}))[e.id] !== e && (t[e.id] = e);
-}, e.prototype._createQuery = function (e, t, n, s, i) {
-  var r = this.nextQueryId++,
-    e = new o(e, this, r, t, n, s, i);
-  return (this.queries[r] = e).send(), e;
-}, e.prototype._destroyQuery = function (e) {
-  delete this.queries[e.id];
-}, e.prototype.createFetchQuery = function (e, t, n, s) {
-  return this._createQuery("qf", e, t, n, s);
-}, e.prototype.createSubscribeQuery = function (e, t, n, s) {
-  return this._createQuery("qs", e, t, n, s);
-}, e.prototype.hasPending = function () {
-  return !!(this._firstDoc(_) || this._firstQuery(_) || this._firstSnapshotRequest());
-}, e.prototype.hasWritePending = function () {
-  return !!this._firstDoc(y);
-}, e.prototype.whenNothingPending = function (e) {
-  var t = this._firstDoc(_);
-  t ? t.once("nothing pending", this._nothingPendingRetry(e)) : (t = this._firstQuery(_)) ? t.once("ready", this._nothingPendingRetry(e)) : (t = this._firstSnapshotRequest()) ? t.once("ready", this._nothingPendingRetry(e)) : u.nextTick(e);
-}, e.prototype._nothingPendingRetry = function (e) {
-  var t = this;
-  return function () {
-    u.nextTick(function () {
-      t.whenNothingPending(e);
-    });
-  };
-}, e.prototype._firstDoc = function (e) {
-  for (var t in this.collections) {
-    var n,
-      s = this.collections[t];
-    for (n in s) {
-      var i = s[n];
-      if (e(i)) return i;
-    }
-  }
-}, e.prototype._firstQuery = function (e) {
-  for (var t in this.queries) {
-    t = this.queries[t];
-    if (e(t)) return t;
-  }
-}, e.prototype._firstSnapshotRequest = function () {
-  for (var e in this._snapshotRequests) return this._snapshotRequests[e];
-}, e.prototype.fetchSnapshot = function (e, t, n, s) {
-  "function" == typeof n && (s = n, n = null);
-  var i = this.nextSnapshotRequestId++,
-    i = new c(this, i, e, t, n, s);
-  (this._snapshotRequests[i.requestId] = i).send();
-}, e.prototype.fetchSnapshotByTimestamp = function (e, t, n, s) {
-  "function" == typeof n && (s = n, n = null);
-  var i = this.nextSnapshotRequestId++,
-    i = new a(this, i, e, t, n, s);
-  (this._snapshotRequests[i.requestId] = i).send();
-}, e.prototype._handleSnapshotFetch = function (e, t) {
-  var n = this._snapshotRequests[t.clientId];
-  n && (delete this._snapshotRequests[t.clientId], n._handleResponse(e, t));
-}, e.prototype._handleLegacyInit = function (e) {
-  this.emit("init", e), this._initialize(e);
-}, e.prototype._initializeHandshake = function () {
-  var _this$options = this.options,
-    _this$options$data2 = _this$options.data,
-    e = _this$options$data2 === void 0 ? {} : _this$options$data2,
-    t = _this$options.c,
-    n = _this$options.d;
-  this.send({
-    a: "hs",
-    id: this.id,
-    data: e,
-    c: t,
-    d: n
-  });
-}, e.prototype._handleHandshake = function (e, t) {
-  if (e) return this.emit("error", e);
-  this.emit("hs", t), this._initialize(t);
-}, e.prototype._initialize = function (e) {
-  if ("connecting" === this.state) return 1 !== e.protocol ? this.emit("error", new h(p.ERR_PROTOCOL_VERSION_NOT_SUPPORTED, "Unsupported protocol version: " + e.protocol)) : t.map[e.type] !== t.defaultType ? this.emit("error", new h(p.ERR_DEFAULT_TYPE_MISMATCH, e.type + " does not match the server default type")) : "string" != typeof e.clientId ? this.emit("error", new h(p.ERR_CLIENT_ID_BADLY_FORMED, "Client id must be a string")) : (this.id = e.clientId, void this._setState("connected"));
-}, e.prototype.getPresence = function (e) {
-  var t = this;
-  return u.digOrCreate(this._presences, e, function () {
-    return new n(t, e);
-  });
-}, e.prototype.getDocPresence = function (e, t) {
-  var n = r.channel(e, t),
-    s = this;
-  return u.digOrCreate(this._presences, n, function () {
-    return new r(s, e, t);
-  });
-}, e.prototype._sendPresenceAction = function (e, t, n) {
-  this._addPresence(n);
-  e = {
-    a: e,
-    ch: n.channel,
-    seq: t
-  };
-  return this.send(e), e.seq;
-}, e.prototype._addPresence = function (e) {
-  u.digOrCreate(this._presences, e.channel, function () {
-    return e;
-  });
-}, e.prototype._handlePresenceSubscribe = function (e, t) {
-  var n = u.dig(this._presences, t.ch);
-  n && n._handleSubscribe(e, t.seq);
-}, e.prototype._handlePresenceUnsubscribe = function (e, t) {
-  var n = u.dig(this._presences, t.ch);
-  n && n._handleUnsubscribe(e, t.seq);
-}, e.prototype._handlePresence = function (e, t) {
-  var n = u.dig(this._presences, t.ch);
-  n && n._receiveUpdate(e, t);
-}, e.prototype._handlePresenceRequest = function (e, t) {
-  var n = u.dig(this._presences, t.ch);
-  n && n._broadcastAllLocalPresence(e, t);
-}, module.exports = e;
-},{"../emitter":21,"../error":22,"../logger":23,"../types":27,"../util":28,"./doc":9,"./presence/doc-presence":11,"./presence/presence":14,"./query":17,"./snapshot-request/snapshot-timestamp-request":19,"./snapshot-request/snapshot-version-request":20}],9:[function(require,module,exports){
-"use strict";
-
-function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("Cannot destructure " + obj); }
-var n = require("../emitter"),
-  i = require("../logger"),
-  p = require("../error"),
-  c = require("../types"),
-  h = require("../util"),
-  t = h.clone,
-  e = require("../../../fast-deep-equal"),
-  a = p.CODES;
-function s(t, i, e) {
-  n.EventEmitter.call(this), this.connection = t, this.collection = i, this.id = e, this.version = null, this.type = null, this.data = void 0, this.inflightFetch = [], this.inflightSubscribe = null, this.pendingFetch = [], this.pendingSubscribe = [], this.subscribed = !1, this.wantSubscribe = !1, this.inflightOp = null, this.pendingOps = [], this.type = null, this.applyStack = null, this.preventCompose = !1, this.submitSource = !1, this.paused = !1, this._dataStateVersion = 0;
-}
-function l(t, i) {
-  var e, n;
-  if (!t.del) return i.del ? new p(a.ERR_DOC_WAS_DELETED, "Document was deleted") : i.create ? new p(a.ERR_DOC_ALREADY_CREATED, "Document already created") : "op" in i ? t.create ? new p(a.ERR_DOC_ALREADY_CREATED, "Document already created") : void (t.type.transformX ? (e = t.type.transformX(t.op, i.op), t.op = e[0], i.op = e[1]) : (e = t.type.transform(t.op, i.op, "left"), n = t.type.transform(i.op, t.op, "right"), t.op = e, i.op = n)) : void 0;
-  delete (t = i).op, delete t.create, delete t.del;
-}
-module.exports = s, n.mixin(s), s.prototype.destroy = function (i) {
-  var e = this;
-  e.whenNothingPending(function () {
-    e.wantSubscribe ? e.unsubscribe(function (t) {
-      if (t) return i ? i(t) : e.emit("error", t);
-      e.connection._destroyDoc(e), e.emit("destroy"), i && i();
-    }) : (e.connection._destroyDoc(e), e.emit("destroy"), i && i());
-  });
-}, s.prototype._setType = function (t) {
-  if (t = "string" == typeof t ? c.map[t] : t) this.type = t;else {
-    var i;
-    if (null !== t) return i = new p(a.ERR_DOC_TYPE_NOT_RECOGNIZED, "Missing type " + t), this.emit("error", i);
-    this.type = t, this._setData(void 0);
-  }
-}, s.prototype._setData = function (t) {
-  this.data = t, this._dataStateVersion++;
-}, s.prototype.ingestSnapshot = function (t, i) {
-  if (!t) return i && i();
-  if ("number" != typeof t.v) return e = new p(a.ERR_INGESTED_SNAPSHOT_HAS_NO_VERSION, "Missing version in ingested snapshot. " + this.collection + "." + this.id), i ? i(e) : this.emit("error", e);
-  if (this.type || this.hasWritePending()) return null == this.version ? this.hasWritePending() ? i && this.once("no write pending", i) : (e = new p(a.ERR_DOC_MISSING_VERSION, "Cannot ingest snapshot in doc with null version. " + this.collection + "." + this.id), i ? i(e) : this.emit("error", e)) : t.v > this.version ? this.fetch(i) : i && i();
-  if (this.version > t.v) return i && i();
-  this.version = t.v;
-  var e = void 0 === t.type ? c.defaultType : t.type;
-  this._setType(e), this._setData(this.type && this.type.deserialize ? this.type.deserialize(t.data) : t.data), this.emit("load"), i && i();
-}, s.prototype.whenNothingPending = function (t) {
-  var i = this;
-  h.nextTick(function () {
-    i.hasPending() ? i.once("nothing pending", t) : t();
-  });
-}, s.prototype.hasPending = function () {
-  return !!(this.inflightOp || this.pendingOps.length || this.inflightFetch.length || this.inflightSubscribe || this.pendingFetch.length || this.pendingSubscribe.length);
-}, s.prototype.hasWritePending = function () {
-  return !(!this.inflightOp && !this.pendingOps.length);
-}, s.prototype._emitNothingPending = function () {
-  this.hasWritePending() || (this.emit("no write pending"), this.hasPending()) || this.emit("nothing pending");
-}, s.prototype._emitResponseError = function (t, i) {
-  t && t.code === a.ERR_SNAPSHOT_READ_SILENT_REJECTION ? (this.wantSubscribe = !1, i && i(), this._emitNothingPending()) : i ? (i(t), this._emitNothingPending()) : (this._emitNothingPending(), this.emit("error", t));
-}, s.prototype._handleFetch = function (t, i) {
-  var e = this.pendingFetch,
-    n = (this.pendingFetch = [], this.inflightFetch.shift());
-  if (n && e.push(n), e.length && (n = function n(t) {
-    h.callEach(e, t);
-  }), t) return this._emitResponseError(t, n);
-  this.ingestSnapshot(i, n), this._emitNothingPending();
-}, s.prototype._handleSubscribe = function (t, i) {
-  var e,
-    n = this.inflightSubscribe,
-    s = (this.inflightSubscribe = null, this.pendingFetch);
-  if (this.pendingFetch = [], n.callback && s.push(n.callback), s.length && (e = function e(t) {
-    h.callEach(s, t);
-  }), t) return this._emitResponseError(t, e);
-  this.subscribed = n.wantSubscribe, this.subscribed ? this.ingestSnapshot(i, e) : e && e(), this._emitNothingPending(), this._flushSubscribe();
-}, s.prototype._handleOp = function (t, i) {
-  if (t) return this.inflightOp ? (t.code === a.ERR_OP_SUBMIT_REJECTED && (t = null), this._rollback(t)) : this.emit("error", t);
-  if (this.inflightOp && i.clientId === this.inflightOp.clientId && i.seq === this.inflightOp.seq) this._opAcknowledged(i);else if (null == this.version || i.v > this.version) this.fetch();else if (!(i.v < this.version)) {
-    if (this.inflightOp) if (e = l(this.inflightOp, i)) return this._hardRollback(e);
-    for (var e, n = 0; n < this.pendingOps.length; n++) if (e = l(this.pendingOps[n], i)) return this._hardRollback(e);
-    this.version++;
-    try {
-      this._otApply(i, !1);
-    } catch (t) {
-      return this._hardRollback(t);
-    }
-  }
-}, s.prototype._onConnectionStateChanged = function () {
-  this.connection.canSend ? (this.flush(), this._resubscribe()) : (this.inflightOp && (this.pendingOps.unshift(this.inflightOp), this.inflightOp = null), this.subscribed = !1, this.inflightSubscribe && (this.inflightSubscribe.wantSubscribe ? (this.pendingSubscribe.unshift(this.inflightSubscribe), this.inflightSubscribe = null) : this._handleSubscribe()), this.inflightFetch.length && (this.pendingFetch = this.pendingFetch.concat(this.inflightFetch), this.inflightFetch.length = 0));
-}, s.prototype._resubscribe = function () {
-  if (!this.pendingSubscribe.length && this.wantSubscribe) return this.subscribe();
-  !this.pendingSubscribe.some(function (t) {
-    return t.wantSubscribe;
-  }) && this.pendingFetch.length && this.fetch(), this._flushSubscribe();
-}, s.prototype.fetch = function (t) {
-  var i, e, n, s;
-  this.connection.canSend ? (i = this.connection.sendFetch(this), n = this.inflightFetch, s = t, i ? (e = n.pop(), n.push(function (t) {
-    e && e(t), s && s(t);
-  })) : n.push(s)) : this.pendingFetch.push(t);
-}, s.prototype.subscribe = function (t) {
-  this._queueSubscribe(!0, t);
-}, s.prototype.unsubscribe = function (t) {
-  this._queueSubscribe(!1, t);
-}, s.prototype._queueSubscribe = function (t, i) {
-  var e,
-    n = this.pendingSubscribe[this.pendingSubscribe.length - 1] || this.inflightSubscribe;
-  n && n.wantSubscribe === t ? n.callback = (e = (e = [n.callback, i]).filter(h.truthy)).length ? function (t) {
-    h.callEach(e, t);
-  } : null : (this.pendingSubscribe.push({
-    wantSubscribe: !!t,
-    callback: i
-  }), this._flushSubscribe());
-}, s.prototype._flushSubscribe = function () {
-  var t;
-  !this.inflightSubscribe && this.pendingSubscribe.length && (this.connection.canSend ? (this.inflightSubscribe = this.pendingSubscribe.shift(), this.wantSubscribe = this.inflightSubscribe.wantSubscribe, this.wantSubscribe ? this.connection.sendSubscribe(this) : (this.subscribed = !1, this.connection.sendUnsubscribe(this))) : this.pendingSubscribe[0].wantSubscribe || (this.inflightSubscribe = this.pendingSubscribe.shift(), t = this, h.nextTick(function () {
-    t._handleSubscribe();
-  })));
-}, s.prototype.flush = function () {
-  this.connection.canSend && !this.inflightOp && !this.paused && this.pendingOps.length && this._sendOp();
-}, s.prototype._otApply = function (t, i) {
-  var e = i["source"];
-  if ("op" in t) {
-    if (!this.type) throw new p(a.ERR_DOC_DOES_NOT_EXIST, "Cannot apply op to uncreated document. " + this.collection + "." + this.id);
-    var _e = i["source"];
-    if (this.emit("before op batch", t.op, _e), !_e && this.type === c.defaultType && 1 < t.op.length) {
-      this.applyStack || (this.applyStack = []);
-      for (var n = this.applyStack.length, s = 0; s < t.op.length; s++) {
-        var h = {
-          op: [t.op[s]]
-        };
-        this.emit("before op", h.op, _e, t.clientId);
-        for (var o = n; o < this.applyStack.length; o++) {
-          var r = l(this.applyStack[o], h);
-          if (r) return this._hardRollback(r);
-        }
-        this._setData(this.type.apply(this.data, h.op)), this.emit("op", h.op, _e, t.clientId);
-      }
-      return this.emit("op batch", t.op, _e), void this._popApplyStack(n);
-    }
-    this.emit("before op", t.op, _e, t.clientId), this._setData(this.type.apply(this.data, t.op)), this.emit("op", t, _e, t.clientId), void this.emit("op batch", t.op, _e);
-  } else t.create ? (this._setType(t.create.type), this.type.deserialize ? this.type.createDeserialized ? this._setData(this.type.createDeserialized(t.create.data)) : this._setData(this.type.deserialize(this.type.create(t.create.data))) : this._setData(this.type.create(t.create.data)), this.emit("create", e)) : t.del && (i = this.data, this._setType(null), this.emit("del", i, e));
-}, s.prototype._sendOp = function () {
-  if (this.connection.canSend) {
-    var t,
-      i = this.connection.id,
-      e = (this.inflightOp || (this.inflightOp = this.pendingOps.shift()), this.inflightOp);
-    if (!e) return t = new p(a.ERR_INFLIGHT_OP_MISSING, "No op to send on call to _sendOp"), this.emit("error", t);
-    if (e.sentAt = Date.now(), e.retries = null == e.retries ? 0 : e.retries + 1, null == e.seq) {
-      if (this.connection.seq >= h.MAX_SAFE_INTEGER) return this.emit("error", new p(a.ERR_CONNECTION_SEQ_INTEGER_OVERFLOW, "Connection seq has exceeded the max safe integer, maybe from being open for too long"));
-      e.seq = this.connection.seq++;
-    }
-    this.connection.sendOp(this, e), null == e.clientId && (e.clientId = i);
-  }
-}, s.prototype._submit = function (t) {
-  var i = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var e = arguments.length > 2 ? arguments[2] : undefined;
-  _objectDestructuringEmpty();
-  if ("op" in t) {
-    if (!this.type) return n = new p(a.ERR_DOC_DOES_NOT_EXIST, "Cannot submit op. Document has not been created. " + this.collection + "." + this.id), e ? e(n) : this.emit("error", n);
-    this.type.normalize && (t.op = this.type.normalize(t.op));
-  }
-  try {
-    this._pushOp(t, i, e), this._otApply(t, i);
-  } catch (t) {
-    return this._hardRollback(t);
-  }
-  var s = this;
-  h.nextTick(function () {
-    s.flush();
-  });
-}, s.prototype._pushOp = function (t, i, e) {
-  i = i.source;
-  if (t.source = i, this.applyStack) this.applyStack.push(t);else {
-    i = this._tryCompose(t);
-    if (i) return void i.callbacks.push(e);
-  }
-  t.type = this.type, t.callbacks = [e], this.pendingOps.push(t);
-}, s.prototype._popApplyStack = function (t) {
-  if (0 < t) this.applyStack.length = t;else {
-    var i = this.applyStack[0];
-    if (this.applyStack = null, i) {
-      var e = this.pendingOps.indexOf(i);
-      if (-1 !== e) for (var n = this.pendingOps.splice(e), e = 0; e < n.length; e++) {
-        var i = n[e],
-          s = this._tryCompose(i);
-        s ? s.callbacks = s.callbacks.concat(i.callbacks) : this.pendingOps.push(i);
-      }
-    }
-  }
-}, s.prototype._tryCompose = function (t) {
-  if (!this.preventCompose) {
-    var i = this.pendingOps[this.pendingOps.length - 1];
-    if (i && !i.sentAt && (!this.submitSource || e(t.source, i.source))) return i.create && "op" in t ? (i.create.data = this.type.apply(i.create.data, t.op), i) : "op" in i && "op" in t && this.type.compose ? (i.op = this.type.compose(i.op, t.op), i) : void 0;
-  }
-}, s.prototype.submitOp = function (t, i, e) {
-  "function" == typeof i && (e = i, i = null);
-  t = {
-    op: t.op,
-    data: t.data
-  };
-  this._submit(t, i, e);
-}, s.prototype.create = function (t, i, e, n) {
-  var s,
-    _t = t,
-    _t$op$ops = _t.op.ops,
-    t = _t$op$ops === void 0 ? [] : _t$op$ops,
-    h = _t.data;
-  if ("function" == typeof i ? (n = i, i = e = null) : "function" == typeof e && (n = e, e = null), i = i || c.defaultType.uri, this.type) return s = new p(a.ERR_DOC_ALREADY_CREATED, "Document already exists"), n ? n(s) : this.emit("error", s);
-  this._submit({
-    create: {
-      type: i,
-      data: t
-    },
-    data: h
-  }, e, n);
-}, s.prototype.del = function (t, i) {
-  var e;
-  if ("function" == typeof t && (i = t, t = null), !this.type) return e = new p(a.ERR_DOC_DOES_NOT_EXIST, "Document does not exist"), i ? i(e) : this.emit("error", e);
-  this._submit({
-    del: !0
-  }, t, i);
-}, s.prototype.pause = function () {
-  this.paused = !0;
-}, s.prototype.resume = function () {
-  this.paused = !1, this.flush();
-}, s.prototype.toSnapshot = function () {
-  return {
-    v: this.version,
-    data: t(this.data),
-    type: this.type.uri
-  };
-}, s.prototype._opAcknowledged = function (t) {
-  if (this.inflightOp.create) this.version = t.v;else if (t.v !== this.version) return i.warn("Invalid version from server. Expected: " + this.version + " Received: " + t.v, t), this.fetch();
-  this.version++, this._clearInflightOp();
-}, s.prototype._rollback = function (i) {
-  var t = this.inflightOp;
-  if ("op" in t && t.type.invert) {
-    try {
-      t.op = t.type.invert(t.op);
-    } catch (t) {
-      return this._hardRollback(i);
-    }
-    for (var e = 0; e < this.pendingOps.length; e++) {
-      var n = l(this.pendingOps[e], t);
-      if (n) return this._hardRollback(n);
-    }
-    try {
-      this._otApply(t, !1);
-    } catch (t) {
-      return this._hardRollback(t);
-    }
-    this._clearInflightOp(i);
-  } else this._hardRollback(i);
-}, s.prototype._hardRollback = function (e) {
-  var n = [],
-    s = (this.inflightOp && n.push(this.inflightOp), n = n.concat(this.pendingOps), this._setType(null), this.version = null, this.inflightOp = null, this.pendingOps = [], this);
-  this.fetch(function () {
-    for (var t = !!n.length, i = 0; i < n.length; i++) t = h.callEach(n[i].callbacks, e) && t;
-    if (e && !t) return s.emit("error", e);
-  });
-}, s.prototype._clearInflightOp = function (t) {
-  var i = this.inflightOp,
-    i = (this.inflightOp = null, h.callEach(i.callbacks, t));
-  if (this.flush(), this._emitNothingPending(), t && !i) return this.emit("error", t);
-};
-},{"../../../fast-deep-equal":2,"../emitter":21,"../error":22,"../logger":23,"../types":27,"../util":28}],10:[function(require,module,exports){
-"use strict";
-
-exports.Connection = require("./connection"), exports.Doc = require("./doc"), exports.Error = require("../error"), exports.Query = require("./query"), exports.types = require("../types"), exports.logger = require("../logger");
-},{"../error":22,"../logger":23,"../types":27,"./connection":8,"./doc":9,"./query":17}],11:[function(require,module,exports){
-"use strict";
-
-var c = require("./presence"),
-  r = require("./local-doc-presence"),
-  t = require("./remote-doc-presence");
-function o(e, r, t) {
-  var n = o.channel(r, t);
-  c.call(this, e, n), this.collection = r, this.id = t;
-}
-(module.exports = o).prototype = Object.create(c.prototype), o.channel = function (e, r) {
-  return e + "." + r;
-}, o.prototype._createLocalPresence = function (e) {
-  return new r(this, e);
-}, o.prototype._createRemotePresence = function (e) {
-  return new t(this, e);
-};
-},{"./local-doc-presence":12,"./presence":14,"./remote-doc-presence":15}],12:[function(require,module,exports){
-"use strict";
-
-var n = require("./local-presence"),
-  i = require("../../error"),
-  o = require("../../util"),
-  r = i.CODES;
-function e(e, t) {
-  n.call(this, e, t), this.collection = this.presence.collection, this.id = this.presence.id, this._doc = this.connection.get(this.collection, this.id), this._isSending = !1, this._docDataVersionByPresenceVersion = {}, this._opHandler = this._transformAgainstOp.bind(this), this._createOrDelHandler = this._handleCreateOrDel.bind(this), this._loadHandler = this._handleLoad.bind(this), this._destroyHandler = this.destroy.bind(this), this._registerWithDoc();
-}
-((module.exports = e).prototype = Object.create(n.prototype)).submit = function (e, t) {
-  var s;
-  if (!this._doc.type) return null === e ? this._callbackOrEmit(null, t) : (s = {
-    code: r.ERR_DOC_DOES_NOT_EXIST,
-    message: "Cannot submit presence. Document has not been created"
-  }, this._callbackOrEmit(s, t));
-  this._docDataVersionByPresenceVersion[this.presenceVersion] = this._doc._dataStateVersion, n.prototype.submit.call(this, e, t);
-}, e.prototype.destroy = function (e) {
-  this._doc.removeListener("op", this._opHandler), this._doc.removeListener("create", this._createOrDelHandler), this._doc.removeListener("del", this._createOrDelHandler), this._doc.removeListener("load", this._loadHandler), this._doc.removeListener("destroy", this._destroyHandler), n.prototype.destroy.call(this, e);
-}, e.prototype._sendPending = function () {
-  var t;
-  this._isSending || (this._isSending = !0, (t = this)._doc.whenNothingPending(function () {
-    t._isSending = !1, t.connection.canSend && (t._pendingMessages.forEach(function (e) {
-      e.t = t._doc.type.uri, e.v = t._doc.version, t.connection.send(e);
-    }), t._pendingMessages = [], t._docDataVersionByPresenceVersion = {});
-  }));
-}, e.prototype._registerWithDoc = function () {
-  this._doc.on("op", this._opHandler), this._doc.on("create", this._createOrDelHandler), this._doc.on("del", this._createOrDelHandler), this._doc.on("load", this._loadHandler), this._doc.on("destroy", this._destroyHandler);
-}, e.prototype._transformAgainstOp = function (e, n) {
-  var i = this,
-    o = this._doc._dataStateVersion;
-  this._pendingMessages.forEach(function (t) {
-    var s = i._docDataVersionByPresenceVersion[t.pv];
-    if (!(o <= s)) try {
-      t.p = i._transformPresence(t.p, e, n), i._docDataVersionByPresenceVersion[t.pv] = o;
-    } catch (e) {
-      s = i._getCallback(t.pv);
-      i._callbackOrEmit(e, s);
-    }
-  });
-  try {
-    this.value = this._transformPresence(this.value, e, n);
-  } catch (e) {
-    this.emit("error", e);
-  }
-}, e.prototype._handleCreateOrDel = function () {
-  this._pendingMessages.forEach(function (e) {
-    e.p = null;
-  }), this.value = null;
-}, e.prototype._handleLoad = function () {
-  this.value = null, this._pendingMessages = [], this._docDataVersionByPresenceVersion = {};
-}, e.prototype._message = function () {
-  var e = n.prototype._message.call(this);
-  return e.c = this.collection, e.d = this.id, e.v = null, e.t = null, e;
-}, e.prototype._transformPresence = function (e, t, s) {
-  var n = this._doc.type;
-  if (o.supportsPresence(n)) return n.transformPresence(e, t, s);
-  throw new i(r.ERR_TYPE_DOES_NOT_SUPPORT_PRESENCE, "Type does not support presence: " + n.name);
-};
-},{"../../error":22,"../../util":28,"./local-presence":13}],13:[function(require,module,exports){
-"use strict";
-
-var t = require("../../emitter"),
-  s = require("../../util");
-function e(e, n) {
-  if (t.EventEmitter.call(this), !n || "string" != typeof n) throw new Error("LocalPresence presenceId must be a string");
-  this.presence = e, this.presenceId = n, this.connection = e.connection, this.presenceVersion = 0, this.value = null, this._pendingMessages = [], this._callbacksByPresenceVersion = {};
-}
-module.exports = e, t.mixin(e), e.prototype.submit = function (e, n) {
-  this.value = e, this.send(n);
-}, e.prototype.send = function (e) {
-  var n = this._message();
-  this._pendingMessages.push(n), this._callbacksByPresenceVersion[n.pv] = e, this._sendPending();
-}, e.prototype.destroy = function (n) {
-  var t = this;
-  this.submit(null, function (e) {
-    if (e) return t._callbackOrEmit(e, n);
-    delete t.presence.localPresences[t.presenceId], n && n();
-  });
-}, e.prototype._sendPending = function () {
-  var n;
-  this.connection.canSend && ((n = this)._pendingMessages.forEach(function (e) {
-    n.connection.send(e);
-  }), this._pendingMessages = []);
-}, e.prototype._ack = function (e, n) {
-  n = this._getCallback(n);
-  this._callbackOrEmit(e, n);
-}, e.prototype._message = function () {
-  return {
-    a: "p",
-    ch: this.presence.channel,
-    id: this.presenceId,
-    p: this.value,
-    pv: this.presenceVersion++
-  };
-}, e.prototype._getCallback = function (e) {
-  var n = this._callbacksByPresenceVersion[e];
-  return delete this._callbacksByPresenceVersion[e], n;
-}, e.prototype._callbackOrEmit = function (e, n) {
-  if (n) return s.nextTick(n, e);
-  e && this.emit("error", e);
-};
-},{"../../emitter":21,"../../util":28}],14:[function(require,module,exports){
-"use strict";
-
-var n = require("../../emitter"),
-  t = require("./local-presence"),
-  s = require("./remote-presence"),
-  r = require("../../util"),
-  i = require("async"),
-  c = require("../../../../hat");
-function e(e, t) {
-  if (n.EventEmitter.call(this), !t || "string" != typeof t) throw new Error("Presence channel must be provided");
-  this.connection = e, this.channel = t, this.wantSubscribe = !1, this.subscribed = !1, this.remotePresences = {}, this.localPresences = {}, this._remotePresenceInstances = {}, this._subscriptionCallbacksBySeq = {};
-}
-module.exports = e, n.mixin(e), e.prototype.subscribe = function (e) {
-  this._sendSubscriptionAction(!0, e);
-}, e.prototype.unsubscribe = function (e) {
-  this._sendSubscriptionAction(!1, e);
-}, e.prototype.create = function (e) {
-  e = e || c();
-  var t = this._createLocalPresence(e);
-  return this.localPresences[e] = t;
-}, e.prototype.destroy = function (s) {
-  var r = this;
-  this.unsubscribe(function (e) {
-    if (e) return r._callbackOrEmit(e, s);
-    var t = Object.keys(r.localPresences),
-      n = Object.keys(r._remotePresenceInstances);
-    i.parallel([function (e) {
-      i.each(t, function (e, t) {
-        r.localPresences[e].destroy(t);
-      }, e);
-    }, function (e) {
-      i.each(n, function (e, t) {
-        r._remotePresenceInstances[e].destroy(t);
-      }, e);
-    }], function (e) {
-      delete r.connection._presences[r.channel], r._callbackOrEmit(e, s);
-    });
-  });
-}, e.prototype._sendSubscriptionAction = function (e, t) {
-  this.wantSubscribe = !!e;
-  var e = this.wantSubscribe ? "ps" : "pu",
-    n = this.connection._presenceSeq++;
-  this._subscriptionCallbacksBySeq[n] = t, this.connection.canSend && this.connection._sendPresenceAction(e, n, this);
-}, e.prototype._handleSubscribe = function (e, t) {
-  this.wantSubscribe && (this.subscribed = !0);
-  t = this._subscriptionCallback(t);
-  this._callbackOrEmit(e, t);
-}, e.prototype._handleUnsubscribe = function (e, t) {
-  this.subscribed = !1;
-  t = this._subscriptionCallback(t);
-  this._callbackOrEmit(e, t);
-}, e.prototype._receiveUpdate = function (e, t) {
-  var n,
-    s = r.dig(this.localPresences, t.clientId);
-  return s ? s._ack(e, t.pv) : e ? this.emit("error", e) : void r.digOrCreate((n = this)._remotePresenceInstances, t.clientId, function () {
-    return n._createRemotePresence(t.clientId);
-  }).receiveUpdate(t);
-}, e.prototype._updateRemotePresence = function (e) {
-  this.remotePresences[e.presenceId] = e.value, null === e.value && this._removeRemotePresence(e.presenceId), this.emit("receive", e.presenceId, e.value);
-}, e.prototype._broadcastAllLocalPresence = function (e) {
-  if (e) return this.emit("error", e);
-  for (var t in this.localPresences) {
-    t = this.localPresences[t];
-    null !== t.value && t.send();
-  }
-}, e.prototype._removeRemotePresence = function (e) {
-  this._remotePresenceInstances[e].destroy(), delete this._remotePresenceInstances[e], delete this.remotePresences[e];
-}, e.prototype._onConnectionStateChanged = function () {
-  if (this.connection.canSend) for (var e in this._resubscribe(), this.localPresences) this.localPresences[e]._sendPending();
-}, e.prototype._resubscribe = function () {
-  var e,
-    t = [];
-  for (e in this._subscriptionCallbacksBySeq) {
-    var n = this._subscriptionCallback(e);
-    t.push(n);
-  }
-  if (!this.wantSubscribe) return this._callEachOrEmit(t);
-  var s = this;
-  this.subscribe(function (e) {
-    s._callEachOrEmit(t, e);
-  });
-}, e.prototype._subscriptionCallback = function (e) {
-  var t = this._subscriptionCallbacksBySeq[e];
-  return delete this._subscriptionCallbacksBySeq[e], t;
-}, e.prototype._callbackOrEmit = function (e, t) {
-  if (t) return r.nextTick(t, e);
-  e && this.emit("error", e);
-}, e.prototype._createLocalPresence = function (e) {
-  return new t(this, e);
-}, e.prototype._createRemotePresence = function (e) {
-  return new s(this, e);
-}, e.prototype._callEachOrEmit = function (e, t) {
-  !r.callEach(e, t) && t && this.emit("error", t);
-};
-},{"../../../../hat":3,"../../emitter":21,"../../util":28,"./local-presence":13,"./remote-presence":16,"async":29}],15:[function(require,module,exports){
-"use strict";
-
-var n = require("./remote-presence"),
-  i = require("../../ot");
-function e(e, t) {
-  n.call(this, e, t), this.collection = this.presence.collection, this.id = this.presence.id, this.clientId = null, this.presenceVersion = null, this._doc = this.connection.get(this.collection, this.id), this._pending = null, this._opCache = null, this._pendingSetPending = !1, this._opHandler = this._handleOp.bind(this), this._createDelHandler = this._handleCreateDel.bind(this), this._loadHandler = this._handleLoad.bind(this), this._registerWithDoc();
-}
-((module.exports = e).prototype = Object.create(n.prototype)).receiveUpdate = function (e) {
-  this._pending && e.pv < this._pending.pv || (this.clientId = e.clientId, this._pending = e, this._setPendingPresence());
-}, e.prototype.destroy = function (e) {
-  this._doc.removeListener("op", this._opHandler), this._doc.removeListener("create", this._createDelHandler), this._doc.removeListener("del", this._createDelHandler), this._doc.removeListener("load", this._loadHandler), n.prototype.destroy.call(this, e);
-}, e.prototype._registerWithDoc = function () {
-  this._doc.on("op", this._opHandler), this._doc.on("create", this._createDelHandler), this._doc.on("del", this._createDelHandler), this._doc.on("load", this._loadHandler);
-}, e.prototype._setPendingPresence = function () {
-  var e;
-  this._pendingSetPending || (this._pendingSetPending = !0, (e = this)._doc.whenNothingPending(function () {
-    if (e._pendingSetPending = !1, e._pending) return e._pending.pv < e.presenceVersion ? e._pending = null : e._pending.v > e._doc.version ? e._doc.fetch() : void (e._catchUpStalePresence() && (e.value = e._pending.p, e.presenceVersion = e._pending.pv, e._pending = null, e.presence._updateRemotePresence(e)));
-  }));
-}, e.prototype._handleOp = function (e, t, n) {
-  n = n === this.clientId;
-  this._transformAgainstOp(e, n), this._cacheOp(e, n), this._setPendingPresence();
-}, n.prototype._handleCreateDel = function () {
-  this._cacheOp(null), this._setPendingPresence();
-}, n.prototype._handleLoad = function () {
-  this.value = null, this._pending = null, this._opCache = null, this.presence._updateRemotePresence(this);
-}, e.prototype._transformAgainstOp = function (e, t) {
-  if (this.value) {
-    try {
-      this.value = this._doc.type.transformPresence(this.value, e, t);
-    } catch (e) {
-      return this.presence.emit("error", e);
-    }
-    this.presence._updateRemotePresence(this);
-  }
-}, e.prototype._catchUpStalePresence = function () {
-  if (this._pending.v >= this._doc.version) return !0;
-  if (!this._opCache) return this._startCachingOps(), this._doc.fetch(), this.presence.subscribe(), !1;
-  for (; this._opCache[this._pending.v];) {
-    var e = this._opCache[this._pending.v],
-      t = e.op,
-      e = e.isOwnOp;
-    null === t ? (this._pending.p = null, this._pending.v++) : i.transformPresence(this._pending, t, e);
-  }
-  var n = this._pending.v >= this._doc.version;
-  return n && this._stopCachingOps(), n;
-}, e.prototype._startCachingOps = function () {
-  this._opCache = [];
-}, e.prototype._stopCachingOps = function () {
-  this._opCache = null;
-}, e.prototype._cacheOp = function (e, t) {
-  this._opCache && (this._opCache[this._doc.version - 1] = {
-    op: e = e ? {
-      op: e
-    } : null,
-    isOwnOp: t
-  });
-};
-},{"../../ot":25,"./remote-presence":16}],16:[function(require,module,exports){
-"use strict";
-
-var s = require("../../util");
-function e(e, s) {
-  this.presence = e, this.presenceId = s, this.connection = this.presence.connection, this.value = null, this.presenceVersion = 0;
-}
-(module.exports = e).prototype.receiveUpdate = function (e) {
-  e.pv < this.presenceVersion || (this.value = e.p, this.presenceVersion = e.pv, this.presence._updateRemotePresence(this));
-}, e.prototype.destroy = function (e) {
-  delete this.presence._remotePresenceInstances[this.presenceId], delete this.presence.remotePresences[this.presenceId], e && s.nextTick(e);
-};
-},{"../../util":28}],17:[function(require,module,exports){
-"use strict";
-
-var h = require("../emitter"),
-  e = require("../util");
-function t(t, e, s, i, n, o, r) {
-  h.EventEmitter.call(this), this.action = t, this.connection = e, this.id = s, this.collection = i, this.query = n, this.results = null, o && o.results && (this.results = o.results, delete o.results), this.extra = void 0, this.options = o, this.callback = r, this.ready = !1, this.sent = !1;
-}
-module.exports = t, h.mixin(t), t.prototype.hasPending = function () {
-  return !this.ready;
-}, t.prototype.send = function () {
-  if (this.connection.canSend) {
-    var t = {
-      a: this.action,
-      id: this.id,
-      c: this.collection,
-      q: this.query
-    };
-    if (this.options && (t.o = this.options), this.results) {
-      for (var e = [], s = 0; s < this.results.length; s++) {
-        var i = this.results[s];
-        e.push([i.id, i.version]);
-      }
-      t.r = e;
-    }
-    this.connection.send(t), this.sent = !0;
-  }
-}, t.prototype.destroy = function (t) {
-  this.connection.canSend && "qs" === this.action && this.connection.send({
-    a: "qu",
-    id: this.id
-  }), this.connection._destroyQuery(this), t && e.nextTick(t);
-}, t.prototype._onConnectionStateChanged = function () {
-  this.connection.canSend && !this.sent ? this.send() : this.sent = !1;
-}, t.prototype._handleFetch = function (t, e, s) {
-  this.connection._destroyQuery(this), this._handleResponse(t, e, s);
-}, t.prototype._handleSubscribe = function (t, e, s) {
-  this._handleResponse(t, e, s);
-}, t.prototype._handleResponse = function (t, e, s) {
-  var i = this.callback;
-  if (this.callback = null, t) return this._finishResponse(t, i);
-  if (!e) return this._finishResponse(null, i);
-  function n(t) {
-    if (t) return o._finishResponse(t, i);
-    --r || o._finishResponse(null, i);
-  }
-  var o = this,
-    r = 1;
-  if (Array.isArray(e)) r += e.length, this.results = this._ingestSnapshots(e, n), this.extra = s;else for (var h in e) {
-    r++;
-    var c = e[h];
-    this.connection.get(c.c || this.collection, h).ingestSnapshot(c, n);
-  }
-  n();
-}, t.prototype._ingestSnapshots = function (t, e) {
-  for (var s = [], i = 0; i < t.length; i++) {
-    var n = t[i],
-      o = this.connection.get(n.c || this.collection, n.d);
-    o.ingestSnapshot(n, e), s.push(o);
-  }
-  return s;
-}, t.prototype._finishResponse = function (t, e) {
-  if (this.emit("ready"), this.ready = !0, t) return this.connection._destroyQuery(this), e ? e(t) : this.emit("error", t);
-  e && e(null, this.results, this.extra);
-}, t.prototype._handleError = function (t) {
-  this.emit("error", t);
-}, t.prototype._handleDiff = function (t) {
-  for (var e = 0; e < t.length; e++) "insert" === (s = t[e]).type && (s.values = this._ingestSnapshots(s.values));
-  for (var s, e = 0; e < t.length; e++) switch ((s = t[e]).type) {
-    case "insert":
-      var i = s.values;
-      Array.prototype.splice.apply(this.results, [s.index, 0].concat(i)), this.emit("insert", i, s.index);
-      break;
-    case "remove":
-      var n = s.howMany || 1,
-        i = this.results.splice(s.index, n);
-      this.emit("remove", i, s.index);
-      break;
-    case "move":
-      var n = s.howMany || 1,
-        o = this.results.splice(s.from, n);
-      Array.prototype.splice.apply(this.results, [s.to, 0].concat(o)), this.emit("move", o, s.from, s.to);
-  }
-  this.emit("changed", this.results);
-}, t.prototype._handleExtra = function (t) {
-  this.extra = t, this.emit("extra", t);
-};
-},{"../emitter":21,"../util":28}],18:[function(require,module,exports){
-"use strict";
-
-var e = require("../../snapshot"),
-  o = require("../../emitter");
-function t(t, n, e, i, s) {
-  if (o.EventEmitter.call(this), "function" != typeof s) throw new Error("Callback is required for SnapshotRequest");
-  this.requestId = n, this.connection = t, this.id = i, this.collection = e, this.callback = s, this.sent = !1;
-}
-module.exports = t, o.mixin(t), t.prototype.send = function () {
-  this.connection.canSend && (this.connection.send(this._message()), this.sent = !0);
-}, t.prototype._onConnectionStateChanged = function () {
-  this.connection.canSend ? this.sent || this.send() : this.sent = !1;
-}, t.prototype._handleResponse = function (t, n) {
-  if (this.emit("ready"), t) return this.callback(t);
-  t = n.meta || null, n = new e(this.id, n.v, n.type, n.data, t);
-  this.callback(null, n);
-};
-},{"../../emitter":21,"../../snapshot":26}],19:[function(require,module,exports){
-"use strict";
-
-var a = require("./snapshot-request"),
-  n = require("../../util");
-function t(t, e, i, s, r, o) {
-  if (a.call(this, t, e, i, s, o), !n.isValidTimestamp(r)) throw new Error("Snapshot timestamp must be a positive integer or null");
-  this.timestamp = r;
-}
-((module.exports = t).prototype = Object.create(a.prototype))._message = function () {
-  return {
-    a: "nt",
-    id: this.requestId,
-    c: this.collection,
-    d: this.id,
-    ts: this.timestamp
-  };
-};
-},{"../../util":28,"./snapshot-request":18}],20:[function(require,module,exports){
-"use strict";
-
-var n = require("./snapshot-request"),
-  u = require("../../util");
-function e(e, t, i, r, s, o) {
-  if (n.call(this, e, t, i, r, o), !u.isValidVersion(s)) throw new Error("Snapshot version must be a positive integer or null");
-  this.version = s;
-}
-((module.exports = e).prototype = Object.create(n.prototype))._message = function () {
-  return {
-    a: "nf",
-    id: this.requestId,
-    c: this.collection,
-    d: this.id,
-    v: this.version
-  };
-};
-},{"../../util":28,"./snapshot-request":18}],21:[function(require,module,exports){
-"use strict";
-
-var r = require("../../events").EventEmitter;
-exports.EventEmitter = r, exports.mixin = function (t) {
-  for (var e in r.prototype) t.prototype[e] = r.prototype[e];
-};
-},{"../../events":1}],22:[function(require,module,exports){
-"use strict";
-
-function R(_, E) {
-  this.code = _, this.message = E || "", Error.captureStackTrace ? Error.captureStackTrace(this, R) : this.stack = new Error().stack;
-}
-((R.prototype = Object.create(Error.prototype)).constructor = R).prototype.name = "ShareDBError", R.CODES = {
-  ERR_APPLY_OP_VERSION_DOES_NOT_MATCH_SNAPSHOT: "ERR_APPLY_OP_VERSION_DOES_NOT_MATCH_SNAPSHOT",
-  ERR_APPLY_SNAPSHOT_NOT_PROVIDED: "ERR_APPLY_SNAPSHOT_NOT_PROVIDED",
-  ERR_CLIENT_ID_BADLY_FORMED: "ERR_CLIENT_ID_BADLY_FORMED",
-  ERR_CONNECTION_SEQ_INTEGER_OVERFLOW: "ERR_CONNECTION_SEQ_INTEGER_OVERFLOW",
-  ERR_CONNECTION_STATE_TRANSITION_INVALID: "ERR_CONNECTION_STATE_TRANSITION_INVALID",
-  ERR_DATABASE_ADAPTER_NOT_FOUND: "ERR_DATABASE_ADAPTER_NOT_FOUND",
-  ERR_DATABASE_DOES_NOT_SUPPORT_SUBSCRIBE: "ERR_DATABASE_DOES_NOT_SUPPORT_SUBSCRIBE",
-  ERR_DATABASE_METHOD_NOT_IMPLEMENTED: "ERR_DATABASE_METHOD_NOT_IMPLEMENTED",
-  ERR_DEFAULT_TYPE_MISMATCH: "ERR_DEFAULT_TYPE_MISMATCH",
-  ERR_DOC_MISSING_VERSION: "ERR_DOC_MISSING_VERSION",
-  ERR_DOC_ALREADY_CREATED: "ERR_DOC_ALREADY_CREATED",
-  ERR_DOC_DOES_NOT_EXIST: "ERR_DOC_DOES_NOT_EXIST",
-  ERR_DOC_TYPE_NOT_RECOGNIZED: "ERR_DOC_TYPE_NOT_RECOGNIZED",
-  ERR_DOC_WAS_DELETED: "ERR_DOC_WAS_DELETED",
-  ERR_INFLIGHT_OP_MISSING: "ERR_INFLIGHT_OP_MISSING",
-  ERR_INGESTED_SNAPSHOT_HAS_NO_VERSION: "ERR_INGESTED_SNAPSHOT_HAS_NO_VERSION",
-  ERR_MAX_SUBMIT_RETRIES_EXCEEDED: "ERR_MAX_SUBMIT_RETRIES_EXCEEDED",
-  ERR_MESSAGE_BADLY_FORMED: "ERR_MESSAGE_BADLY_FORMED",
-  ERR_MILESTONE_ARGUMENT_INVALID: "ERR_MILESTONE_ARGUMENT_INVALID",
-  ERR_OP_ALREADY_SUBMITTED: "ERR_OP_ALREADY_SUBMITTED",
-  ERR_OP_NOT_ALLOWED_IN_PROJECTION: "ERR_OP_NOT_ALLOWED_IN_PROJECTION",
-  ERR_OP_SUBMIT_REJECTED: "ERR_OP_SUBMIT_REJECTED",
-  ERR_OP_VERSION_MISMATCH_AFTER_TRANSFORM: "ERR_OP_VERSION_MISMATCH_AFTER_TRANSFORM",
-  ERR_OP_VERSION_MISMATCH_DURING_TRANSFORM: "ERR_OP_VERSION_MISMATCH_DURING_TRANSFORM",
-  ERR_OP_VERSION_NEWER_THAN_CURRENT_SNAPSHOT: "ERR_OP_VERSION_NEWER_THAN_CURRENT_SNAPSHOT",
-  ERR_OT_LEGACY_JSON0_OP_CANNOT_BE_NORMALIZED: "ERR_OT_LEGACY_JSON0_OP_CANNOT_BE_NORMALIZED",
-  ERR_OT_OP_BADLY_FORMED: "ERR_OT_OP_BADLY_FORMED",
-  ERR_OT_OP_NOT_APPLIED: "ERR_OT_OP_NOT_APPLIED",
-  ERR_OT_OP_NOT_PROVIDED: "ERR_OT_OP_NOT_PROVIDED",
-  ERR_PRESENCE_TRANSFORM_FAILED: "ERR_PRESENCE_TRANSFORM_FAILED",
-  ERR_PROTOCOL_VERSION_NOT_SUPPORTED: "ERR_PROTOCOL_VERSION_NOT_SUPPORTED",
-  ERR_QUERY_EMITTER_LISTENER_NOT_ASSIGNED: "ERR_QUERY_EMITTER_LISTENER_NOT_ASSIGNED",
-  ERR_SNAPSHOT_READ_SILENT_REJECTION: "ERR_SNAPSHOT_READ_SILENT_REJECTION",
-  ERR_SNAPSHOT_READS_REJECTED: "ERR_SNAPSHOT_READS_REJECTED",
-  ERR_SUBMIT_TRANSFORM_OPS_NOT_FOUND: "ERR_SUBMIT_TRANSFORM_OPS_NOT_FOUND",
-  ERR_TYPE_CANNOT_BE_PROJECTED: "ERR_TYPE_CANNOT_BE_PROJECTED",
-  ERR_TYPE_DOES_NOT_SUPPORT_PRESENCE: "ERR_TYPE_DOES_NOT_SUPPORT_PRESENCE",
-  ERR_UNKNOWN_ERROR: "ERR_UNKNOWN_ERROR"
-}, module.exports = R;
-},{}],23:[function(require,module,exports){
-"use strict";
-
-var e = new (require("./logger"))();
-module.exports = e;
-},{"./logger":24}],24:[function(require,module,exports){
-"use strict";
-
-var o = ["info", "warn", "error"];
-function n() {
-  var n = {};
-  o.forEach(function (o) {
-    n[o] = console[o].bind(console);
-  }), this.setMethods(n);
-}
-(module.exports = n).prototype.setMethods = function (n) {
-  n = n || {};
-  var t = this;
-  o.forEach(function (o) {
-    "function" == typeof n[o] && (t[o] = n[o]);
-  });
-};
-},{}],25:[function(require,module,exports){
-"use strict";
-
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-var f = require("./types"),
-  D = require("./error"),
-  T = require("./util"),
-  y = D.CODES;
-exports.checkOp = function (e) {
-  if (null == e || "object" != _typeof(e)) return new D(y.ERR_OT_OP_BADLY_FORMED, "Op must be an object");
-  if (null != e.create) {
-    if ("object" != _typeof(e.create)) return new D(y.ERR_OT_OP_BADLY_FORMED, "Create data must be an object");
-    var t = e.create.type;
-    if ("string" != typeof t) return new D(y.ERR_OT_OP_BADLY_FORMED, "Missing create type");
-    t = f.map[t];
-    if (null == t || "object" != _typeof(t)) return new D(y.ERR_DOC_TYPE_NOT_RECOGNIZED, "Unknown type");
-  } else if (null != e.del) {
-    if (!0 !== e.del) return new D(y.ERR_OT_OP_BADLY_FORMED, "del value must be true");
-  } else if (!("op" in e)) return new D(y.ERR_OT_OP_BADLY_FORMED, "Missing op, create, or del");
-  return null != e.clientId && "string" != typeof e.clientId ? new D(y.ERR_OT_OP_BADLY_FORMED, "src must be a string") : null != e.seq && "number" != typeof e.seq ? new D(y.ERR_OT_OP_BADLY_FORMED, "seq must be a number") : null == e.clientId && null != e.seq || null != e.clientId && null == e.seq ? new D(y.ERR_OT_OP_BADLY_FORMED, "Both src and seq must be set together") : null != e.m && "object" != _typeof(e.m) ? new D(y.ERR_OT_OP_BADLY_FORMED, "op.m must be an object or null") : void 0;
-}, exports.normalizeType = function (e) {
-  return f.map[e] && f.map[e].uri;
-}, exports.apply = function (e, t) {
-  if ("object" != _typeof(e)) return new D(y.ERR_APPLY_SNAPSHOT_NOT_PROVIDED, "Missing snapshot");
-  if (null != e.v && null != t.v && e.v !== t.v) return new D(y.ERR_APPLY_OP_VERSION_DOES_NOT_MATCH_SNAPSHOT, "Version mismatch");
-  if (t.create) {
-    if (e.type) return new D(y.ERR_DOC_ALREADY_CREATED, "Document already exists");
-    var n = t.create,
-      r = f.map[n.type];
-    if (!r) return new D(y.ERR_DOC_TYPE_NOT_RECOGNIZED, "Unknown type");
-    try {
-      e.data = r.create(n.data), e.type = r.uri, e.v++;
-    } catch (_) {
-      return _;
-    }
-  } else {
-    if (t.del) e.data = void 0, e.type = null;else if ("op" in t) {
-      var _ = function (e, t) {
-        if (!e.type) return new D(y.ERR_DOC_DOES_NOT_EXIST, "Document does not exist");
-        if (void 0 === t) return new D(y.ERR_OT_OP_NOT_PROVIDED, "Missing op");
-        var n = f.map[e.type];
-        if (!n) return new D(y.ERR_DOC_TYPE_NOT_RECOGNIZED, "Unknown type");
-        try {
-          e.data = n.apply(e.data, t);
-        } catch (e) {
-          return new D(y.ERR_OT_OP_NOT_APPLIED, e.message);
-        }
-      }(e, t.op);
-      if (_) return _;
-    }
-    e.v++;
-  }
-}, exports.transform = function (e, t, n) {
-  if (null != t.v && t.v !== n.v) return new D(y.ERR_OP_VERSION_MISMATCH_DURING_TRANSFORM, "Version mismatch");
-  if (n.del) {
-    if (t.create || "op" in t) return new D(y.ERR_DOC_WAS_DELETED, "Document was deleted");
-  } else {
-    if (n.create && ("op" in t || t.create || t.del) || "op" in n && t.create) return new D(y.ERR_DOC_ALREADY_CREATED, "Document was created remotely");
-    if ("op" in n && "op" in t) {
-      if (!e) return new D(y.ERR_DOC_DOES_NOT_EXIST, "Document does not exist");
-      if ("string" == typeof e && !(e = f.map[e])) return new D(y.ERR_DOC_TYPE_NOT_RECOGNIZED, "Unknown type");
-      try {
-        t.op = e.transform(t.op, n.op, "left");
-      } catch (e) {
-        return e;
-      }
-    }
-  }
-  null != t.v && t.v++;
-}, exports.applyOps = function (e, t, n) {
-  n = n || {};
-  for (var r = 0; r < t.length; r++) {
-    var _ = t[r];
-    if (n._normalizeLegacyJson0Ops) try {
-      E = R = u = O = s = l = p = i = a = o = void 0;
-      var o = e,
-        a = _;
-      if (o.type === f.defaultType.uri) {
-        var i = a.op;
-        if (i) {
-          var p = o.data;
-          1 < i.length && (p = T.clone(p));
-          for (var l = 0; l < i.length; l++) {
-            for (var s = i[l], O = ("string" == typeof s.lm && (s.lm = +s.lm), s.p), u = p, R = 0; R < O.length; R++) {
-              var E = O[R];
-              "[object Array]" == Object.prototype.toString.call(u) ? O[R] = +E : u.constructor === Object && (O[R] = E.toString()), u = u[E];
-            }
-            l < i.length - 1 && (p = f.defaultType.apply(p, [s]));
-          }
-        }
-      }
-    } catch (c) {
-      return new D(y.ERR_OT_LEGACY_JSON0_OP_CANNOT_BE_NORMALIZED, "Cannot normalize legacy json0 op");
-    }
-    e.v = _.v;
-    var c = exports.apply(e, _);
-    if (c) return c;
-  }
-}, exports.transformPresence = function (e, t, n) {
-  var r = this.checkOp(t);
-  if (r) return r;
-  r = e.t;
-  if (!(r = "string" == typeof r ? f.map[r] : r)) return {
-    code: y.ERR_DOC_TYPE_NOT_RECOGNIZED,
-    message: "Unknown type"
-  };
-  if (!T.supportsPresence(r)) return {
-    code: y.ERR_TYPE_DOES_NOT_SUPPORT_PRESENCE,
-    message: "Type does not support presence"
-  };
-  if (t.create || t.del) e.p = null;else try {
-    e.p = null === e.p ? null : r.transformPresence(e.p, t.op, n);
-  } catch (e) {
-    return {
-      code: y.ERR_PRESENCE_TRANSFORM_FAILED,
-      message: e.message || e
-    };
-  }
-  e.v++;
-};
-},{"./error":22,"./types":27,"./util":28}],26:[function(require,module,exports){
-"use strict";
-
-module.exports = function (t, i, s, h, d) {
-  this.id = t, this.v = i, this.type = s, this.data = h, this.m = d;
-};
-},{}],27:[function(require,module,exports){
-"use strict";
-
-exports.defaultType = require("../../ot-json0").type, exports.map = {}, exports.register = function (e) {
-  e.name && (exports.map[e.name] = e), e.uri && (exports.map[e.uri] = e);
-}, exports.register(exports.defaultType);
-},{"../../ot-json0":5}],28:[function(require,module,exports){
+var i=require("./doc"),o=require("./query"),n=require("./presence/presence"),r=require("./presence/doc-presence"),c=require("./snapshot-request/snapshot-version-request"),a=require("./snapshot-request/snapshot-timestamp-request"),s=require("../emitter"),h=require("../error"),t=require("../types"),u=require("../util"),d=require("../logger"),p=h.CODES;function l(e){return 0===e.readyState||1===e.readyState?"connecting":"disconnected"}function e(e,t={}){this.options=t,s.EventEmitter.call(this),this.collections={},this.nextQueryId=1,this.nextSnapshotRequestId=1,this.queries={},this._presences={},this._snapshotRequests={},this.seq=1,this._presenceSeq=1,this.id=null,this.agent=null,this.debug=!1,this.state=l(e),this.bindToSocket(e)}function f(e,t){var n=new Error(e.message);return n.code=e.code,t&&(n.data=t),n}function _(e){return e.hasPending()}function y(e){return e.hasWritePending()}s.mixin(e),e.prototype.bindToSocket=function(e){var{data:{}={}}=this.options,t=(this.socket&&(this.socket.close(),this.socket.onmessage=null,this.socket.onopen=null,this.socket.onerror=null,this.socket.onclose=null),l(this.socket=e)),n=(this._setState(t),this.canSend=!1,this);e.onmessage=function(t){try{var e="string"==typeof t.data?JSON.parse(t.data):t.data}catch(e){return void d.warn("Failed to parse message",t)}n.debug&&d.info("RECV",JSON.stringify(e));t={data:e};if(n.emit("receive",t),t.data)try{n.handleMessage(t.data)}catch(e){u.nextTick(function(){n.emit("error",e)})}},e.onopen=function(){n._setState("connecting"),n._initializeHandshake()},e.onerror=function(e){n.emit("connection error",e)},e.onclose=function(e){"closed"===e||"Closed"===e?n._setState("closed",e):"stopped"===e||"Stopped by server"===e?n._setState("stopped",e):n._setState("disconnected",e)}},e.prototype.handleMessage=function(e){var t,n,s=null;switch(e.error&&(s=f(e.error,e),delete e.error),e.a){case"init":return this._handleLegacyInit(e);case"hs":return this._handleHandshake(s,e);case"qf":return void((t=this.queries[e.clientId])&&t._handleFetch(s,e.data,e.extra));case"qs":return void((t=this.queries[e.clientId])&&t._handleSubscribe(s,e.data,e.extra));case"qu":return;case"q":return(t=this.queries[e.clientId])?s?t._handleError(s):(e.diff&&t._handleDiff(e.diff),void(e.hasOwnProperty("extra")&&t._handleExtra(e.extra))):void 0;case"bf":return this._handleBulkMessage(s,e,"_handleFetch");case"bs":case"bu":return this._handleBulkMessage(s,e,"_handleSubscribe");case"nf":case"nt":return this._handleSnapshotFetch(s,e);case"f":return void((n=this.getExisting(e.c,e.d))&&n._handleFetch(s,e.data));case"s":case"u":return void((n=this.getExisting(e.c,e.d))&&n._handleSubscribe(s,e.data));case"op":return void((n=this.getExisting(e.c,e.d))&&n._handleOp(s,e));case"p":return this._handlePresence(s,e);case"ps":return this._handlePresenceSubscribe(s,e);case"pu":return this._handlePresenceUnsubscribe(s,e);case"pr":return this._handlePresenceRequest(s,e);default:d.warn("Ignoring unrecognized message",e)}},e.prototype._handleBulkMessage=function(e,t,n){if(t.data)for(var s in t.data){var i=t.data[s];(o=this.getExisting(t.c,s))&&(e?o[n](e):i.error?o[n](f(i.error)):o[n](null,i))}else if(Array.isArray(t.b))for(var r=0;r<t.b.length;r++){s=t.b[r];(o=this.getExisting(t.c,s))&&o[n](e)}else if(t.b)for(var s in t.b){var o;(o=this.getExisting(t.c,s))&&o[n](e)}else d.error("Invalid bulk message",t)},e.prototype._reset=function(){this.agent=null},e.prototype._setState=function(e,t){if(this.state!==e){var n,s,i;if("connecting"===e&&"disconnected"!==this.state&&"stopped"!==this.state&&"closed"!==this.state||"connected"===e&&"connecting"!==this.state)return n=new h(p.ERR_CONNECTION_STATE_TRANSITION_INVALID,"Cannot transition directly from "+this.state+" to "+e),this.emit("error",n);for(r in this.state=e,this.canSend="connected"===e,"disconnected"!==e&&"stopped"!==e&&"closed"!==e||this._reset(),this.startBulk(),this.queries)this.queries[r]._onConnectionStateChanged();for(s in this.collections){var r,o=this.collections[s];for(r in o)o[r]._onConnectionStateChanged()}for(i in this._presences)this._presences[i]._onConnectionStateChanged();for(r in this._snapshotRequests)this._snapshotRequests[r]._onConnectionStateChanged();this.endBulk(),this.emit(e,t),this.emit("state",e,t)}},e.prototype.startBulk=function(){this.bulk||(this.bulk={})},e.prototype.endBulk=function(){if(this.bulk)for(var e in this.bulk){var t=this.bulk[e];this._sendBulk("f",e,t.f),this._sendBulk("s",e,t.s),this._sendBulk("u",e,t.u)}this.bulk=null},e.prototype._sendBulk=function(e,t,n){if(n){var s,i,r=[],o={},c=0;for(i in n){var a=n[i];null==a?r.push(i):(o[i]=a,s=i,c++)}1===r.length?this.send({a:e,c:t,d:i=r[0]}):r.length&&this.send({a:"b"+e,c:t,b:r}),1===c?this.send({a:e,c:t,d:s,v:o[s]}):c&&this.send({a:"b"+e,c:t,b:o})}},e.prototype._sendAction=function(e,t,n){var s,i;if(this._addDoc(t),this.bulk)return s=(i=(i=this.bulk[t.collection]||(this.bulk[t.collection]={}))[e]||(i[e]={})).hasOwnProperty(t.id),i[t.id]=n,s;i={a:e,c:t.collection,d:t.id,v:n},this.send(i)},e.prototype.sendFetch=function(e){return this._sendAction("f",e,e.version)},e.prototype.sendSubscribe=function(e){return this._sendAction("s",e,e.version)},e.prototype.sendUnsubscribe=function(e){return this._sendAction("u",e)},e.prototype.sendOp=function(e,t){this._addDoc(e);var n={a:"op",c:e.collection,d:e.id,v:e.version,seq:t.seq,x:{},data:t.data};"op"in t&&(n.op=t.op),t.create&&(n.create=t.create),t.del&&(n.del=t.del),e.submitSource&&(n.x.source=t.source),this.send(n)},e.prototype.send=function(e){e.clientId=this.id,this.debug&&d.info("SEND",JSON.stringify(e)),this.emit("send",e),this.socket.send(JSON.stringify(e))},e.prototype.close=function(){this.socket.close()},e.prototype.getExisting=function(e,t){if(this.collections[e])return this.collections[e][t]},e.prototype.get=function(e,t){var n=this.collections[e]||(this.collections[e]={}),s=n[t];return s||(s=n[t]=new i(this,e,t),this.emit("doc",s)),s},e.prototype._destroyDoc=function(e){u.digAndRemove(this.collections,e.collection,e.id)},e.prototype._addDoc=function(e){var t=this.collections[e.collection];(t=t||(this.collections[e.collection]={}))[e.id]!==e&&(t[e.id]=e)},e.prototype._createQuery=function(e,t,n,s,i){var r=this.nextQueryId++,e=new o(e,this,r,t,n,s,i);return(this.queries[r]=e).send(),e},e.prototype._destroyQuery=function(e){delete this.queries[e.id]},e.prototype.createFetchQuery=function(e,t,n,s){return this._createQuery("qf",e,t,n,s)},e.prototype.createSubscribeQuery=function(e,t,n,s){return this._createQuery("qs",e,t,n,s)},e.prototype.hasPending=function(){return!!(this._firstDoc(_)||this._firstQuery(_)||this._firstSnapshotRequest())},e.prototype.hasWritePending=function(){return!!this._firstDoc(y)},e.prototype.whenNothingPending=function(e){var t=this._firstDoc(_);t?t.once("nothing pending",this._nothingPendingRetry(e)):(t=this._firstQuery(_))?t.once("ready",this._nothingPendingRetry(e)):(t=this._firstSnapshotRequest())?t.once("ready",this._nothingPendingRetry(e)):u.nextTick(e)},e.prototype._nothingPendingRetry=function(e){var t=this;return function(){u.nextTick(function(){t.whenNothingPending(e)})}},e.prototype._firstDoc=function(e){for(var t in this.collections){var n,s=this.collections[t];for(n in s){var i=s[n];if(e(i))return i}}},e.prototype._firstQuery=function(e){for(var t in this.queries){t=this.queries[t];if(e(t))return t}},e.prototype._firstSnapshotRequest=function(){for(var e in this._snapshotRequests)return this._snapshotRequests[e]},e.prototype.fetchSnapshot=function(e,t,n,s){"function"==typeof n&&(s=n,n=null);var i=this.nextSnapshotRequestId++,i=new c(this,i,e,t,n,s);(this._snapshotRequests[i.requestId]=i).send()},e.prototype.fetchSnapshotByTimestamp=function(e,t,n,s){"function"==typeof n&&(s=n,n=null);var i=this.nextSnapshotRequestId++,i=new a(this,i,e,t,n,s);(this._snapshotRequests[i.requestId]=i).send()},e.prototype._handleSnapshotFetch=function(e,t){var n=this._snapshotRequests[t.clientId];n&&(delete this._snapshotRequests[t.clientId],n._handleResponse(e,t))},e.prototype._handleLegacyInit=function(e){this.emit("init",e),this._initialize(e)},e.prototype._initializeHandshake=function(){var{data:e={},c:t,d:n}=this.options;this.send({a:"hs",id:this.id,data:e,c:t,d:n})},e.prototype._handleHandshake=function(e,t){if(e)return this.emit("error",e);this.emit("hs",t),this._initialize(t)},e.prototype._initialize=function(e){if("connecting"===this.state)return 1!==e.protocol?this.emit("error",new h(p.ERR_PROTOCOL_VERSION_NOT_SUPPORTED,"Unsupported protocol version: "+e.protocol)):t.map[e.type]!==t.defaultType?this.emit("error",new h(p.ERR_DEFAULT_TYPE_MISMATCH,e.type+" does not match the server default type")):"string"!=typeof e.clientId?this.emit("error",new h(p.ERR_CLIENT_ID_BADLY_FORMED,"Client id must be a string")):(this.id=e.clientId,void this._setState("connected"))},e.prototype.getPresence=function(e){var t=this;return u.digOrCreate(this._presences,e,function(){return new n(t,e)})},e.prototype.getDocPresence=function(e,t){var n=r.channel(e,t),s=this;return u.digOrCreate(this._presences,n,function(){return new r(s,e,t)})},e.prototype._sendPresenceAction=function(e,t,n){this._addPresence(n);e={a:e,ch:n.channel,seq:t};return this.send(e),e.seq},e.prototype._addPresence=function(e){u.digOrCreate(this._presences,e.channel,function(){return e})},e.prototype._handlePresenceSubscribe=function(e,t){var n=u.dig(this._presences,t.ch);n&&n._handleSubscribe(e,t.seq)},e.prototype._handlePresenceUnsubscribe=function(e,t){var n=u.dig(this._presences,t.ch);n&&n._handleUnsubscribe(e,t.seq)},e.prototype._handlePresence=function(e,t){var n=u.dig(this._presences,t.ch);n&&n._receiveUpdate(e,t)},e.prototype._handlePresenceRequest=function(e,t){var n=u.dig(this._presences,t.ch);n&&n._broadcastAllLocalPresence(e,t)},module.exports=e;
+},{"../emitter":14,"../error":15,"../logger":16,"../types":20,"../util":21,"./doc":2,"./presence/doc-presence":4,"./presence/presence":7,"./query":10,"./snapshot-request/snapshot-timestamp-request":12,"./snapshot-request/snapshot-version-request":13}],2:[function(require,module,exports){
+var n=require("../emitter"),i=require("../logger"),p=require("../error"),c=require("../types"),h=require("../util"),t=h.clone,e=require("fast-deep-equal"),a=p.CODES;function s(t,i,e){n.EventEmitter.call(this),this.connection=t,this.collection=i,this.id=e,this.version=null,this.type=null,this.data=void 0,this.inflightFetch=[],this.inflightSubscribe=null,this.pendingFetch=[],this.pendingSubscribe=[],this.subscribed=!1,this.wantSubscribe=!1,this.inflightOp=null,this.pendingOps=[],this.type=null,this.applyStack=null,this.preventCompose=!1,this.submitSource=!1,this.paused=!1,this._dataStateVersion=0}function l(t,i){var e,n;if(!t.del)return i.del?new p(a.ERR_DOC_WAS_DELETED,"Document was deleted"):i.create?new p(a.ERR_DOC_ALREADY_CREATED,"Document already created"):"op"in i?t.create?new p(a.ERR_DOC_ALREADY_CREATED,"Document already created"):void(t.type.transformX?(e=t.type.transformX(t.op,i.op),t.op=e[0],i.op=e[1]):(e=t.type.transform(t.op,i.op,"left"),n=t.type.transform(i.op,t.op,"right"),t.op=e,i.op=n)):void 0;delete(t=i).op,delete t.create,delete t.del}module.exports=s,n.mixin(s),s.prototype.destroy=function(i){var e=this;e.whenNothingPending(function(){e.wantSubscribe?e.unsubscribe(function(t){if(t)return i?i(t):e.emit("error",t);e.connection._destroyDoc(e),e.emit("destroy"),i&&i()}):(e.connection._destroyDoc(e),e.emit("destroy"),i&&i())})},s.prototype._setType=function(t){if(t="string"==typeof t?c.map[t]:t)this.type=t;else{var i;if(null!==t)return i=new p(a.ERR_DOC_TYPE_NOT_RECOGNIZED,"Missing type "+t),this.emit("error",i);this.type=t,this._setData(void 0)}},s.prototype._setData=function(t){this.data=t,this._dataStateVersion++},s.prototype.ingestSnapshot=function(t,i){if(!t)return i&&i();if("number"!=typeof t.v)return e=new p(a.ERR_INGESTED_SNAPSHOT_HAS_NO_VERSION,"Missing version in ingested snapshot. "+this.collection+"."+this.id),i?i(e):this.emit("error",e);if(this.type||this.hasWritePending())return null==this.version?this.hasWritePending()?i&&this.once("no write pending",i):(e=new p(a.ERR_DOC_MISSING_VERSION,"Cannot ingest snapshot in doc with null version. "+this.collection+"."+this.id),i?i(e):this.emit("error",e)):t.v>this.version?this.fetch(i):i&&i();if(this.version>t.v)return i&&i();this.version=t.v;var e=void 0===t.type?c.defaultType:t.type;this._setType(e),this._setData(this.type&&this.type.deserialize?this.type.deserialize(t.data):t.data),this.emit("load"),i&&i()},s.prototype.whenNothingPending=function(t){var i=this;h.nextTick(function(){i.hasPending()?i.once("nothing pending",t):t()})},s.prototype.hasPending=function(){return!!(this.inflightOp||this.pendingOps.length||this.inflightFetch.length||this.inflightSubscribe||this.pendingFetch.length||this.pendingSubscribe.length)},s.prototype.hasWritePending=function(){return!(!this.inflightOp&&!this.pendingOps.length)},s.prototype._emitNothingPending=function(){this.hasWritePending()||(this.emit("no write pending"),this.hasPending())||this.emit("nothing pending")},s.prototype._emitResponseError=function(t,i){t&&t.code===a.ERR_SNAPSHOT_READ_SILENT_REJECTION?(this.wantSubscribe=!1,i&&i(),this._emitNothingPending()):i?(i(t),this._emitNothingPending()):(this._emitNothingPending(),this.emit("error",t))},s.prototype._handleFetch=function(t,i){var e=this.pendingFetch,n=(this.pendingFetch=[],this.inflightFetch.shift());if(n&&e.push(n),e.length&&(n=function(t){h.callEach(e,t)}),t)return this._emitResponseError(t,n);this.ingestSnapshot(i,n),this._emitNothingPending()},s.prototype._handleSubscribe=function(t,i){var e,n=this.inflightSubscribe,s=(this.inflightSubscribe=null,this.pendingFetch);if(this.pendingFetch=[],n.callback&&s.push(n.callback),s.length&&(e=function(t){h.callEach(s,t)}),t)return this._emitResponseError(t,e);this.subscribed=n.wantSubscribe,this.subscribed?this.ingestSnapshot(i,e):e&&e(),this._emitNothingPending(),this._flushSubscribe()},s.prototype._handleOp=function(t,i){if(t)return this.inflightOp?(t.code===a.ERR_OP_SUBMIT_REJECTED&&(t=null),this._rollback(t)):this.emit("error",t);if(this.inflightOp&&i.clientId===this.inflightOp.clientId&&i.seq===this.inflightOp.seq)this._opAcknowledged(i);else if(null==this.version||i.v>this.version)this.fetch();else if(!(i.v<this.version)){if(this.inflightOp)if(e=l(this.inflightOp,i))return this._hardRollback(e);for(var e,n=0;n<this.pendingOps.length;n++)if(e=l(this.pendingOps[n],i))return this._hardRollback(e);this.version++;try{this._otApply(i,!1)}catch(t){return this._hardRollback(t)}}},s.prototype._onConnectionStateChanged=function(){this.connection.canSend?(this.flush(),this._resubscribe()):(this.inflightOp&&(this.pendingOps.unshift(this.inflightOp),this.inflightOp=null),this.subscribed=!1,this.inflightSubscribe&&(this.inflightSubscribe.wantSubscribe?(this.pendingSubscribe.unshift(this.inflightSubscribe),this.inflightSubscribe=null):this._handleSubscribe()),this.inflightFetch.length&&(this.pendingFetch=this.pendingFetch.concat(this.inflightFetch),this.inflightFetch.length=0))},s.prototype._resubscribe=function(){if(!this.pendingSubscribe.length&&this.wantSubscribe)return this.subscribe();!this.pendingSubscribe.some(function(t){return t.wantSubscribe})&&this.pendingFetch.length&&this.fetch(),this._flushSubscribe()},s.prototype.fetch=function(t){var i,e,n,s;this.connection.canSend?(i=this.connection.sendFetch(this),n=this.inflightFetch,s=t,i?(e=n.pop(),n.push(function(t){e&&e(t),s&&s(t)})):n.push(s)):this.pendingFetch.push(t)},s.prototype.subscribe=function(t){this._queueSubscribe(!0,t)},s.prototype.unsubscribe=function(t){this._queueSubscribe(!1,t)},s.prototype._queueSubscribe=function(t,i){var e,n=this.pendingSubscribe[this.pendingSubscribe.length-1]||this.inflightSubscribe;n&&n.wantSubscribe===t?n.callback=(e=(e=[n.callback,i]).filter(h.truthy)).length?function(t){h.callEach(e,t)}:null:(this.pendingSubscribe.push({wantSubscribe:!!t,callback:i}),this._flushSubscribe())},s.prototype._flushSubscribe=function(){var t;!this.inflightSubscribe&&this.pendingSubscribe.length&&(this.connection.canSend?(this.inflightSubscribe=this.pendingSubscribe.shift(),this.wantSubscribe=this.inflightSubscribe.wantSubscribe,this.wantSubscribe?this.connection.sendSubscribe(this):(this.subscribed=!1,this.connection.sendUnsubscribe(this))):this.pendingSubscribe[0].wantSubscribe||(this.inflightSubscribe=this.pendingSubscribe.shift(),t=this,h.nextTick(function(){t._handleSubscribe()})))},s.prototype.flush=function(){this.connection.canSend&&!this.inflightOp&&!this.paused&&this.pendingOps.length&&this._sendOp()},s.prototype._otApply=function(t,i){const e=i["source"];if("op"in t){if(!this.type)throw new p(a.ERR_DOC_DOES_NOT_EXIST,"Cannot apply op to uncreated document. "+this.collection+"."+this.id);const e=i["source"];if(this.emit("before op batch",t.op,e),!e&&this.type===c.defaultType&&1<t.op.length){this.applyStack||(this.applyStack=[]);for(var n=this.applyStack.length,s=0;s<t.op.length;s++){var h={op:[t.op[s]]};this.emit("before op",h.op,e,t.clientId);for(var o=n;o<this.applyStack.length;o++){var r=l(this.applyStack[o],h);if(r)return this._hardRollback(r)}this._setData(this.type.apply(this.data,h.op)),this.emit("op",h.op,e,t.clientId)}return this.emit("op batch",t.op,e),void this._popApplyStack(n)}this.emit("before op",t.op,e,t.clientId),this._setData(this.type.apply(this.data,t.op)),this.emit("op",t,e,t.clientId),void this.emit("op batch",t.op,e)}else t.create?(this._setType(t.create.type),this.type.deserialize?this.type.createDeserialized?this._setData(this.type.createDeserialized(t.create.data)):this._setData(this.type.deserialize(this.type.create(t.create.data))):this._setData(this.type.create(t.create.data)),this.emit("create",e)):t.del&&(i=this.data,this._setType(null),this.emit("del",i,e))},s.prototype._sendOp=function(){if(this.connection.canSend){var t,i=this.connection.id,e=(this.inflightOp||(this.inflightOp=this.pendingOps.shift()),this.inflightOp);if(!e)return t=new p(a.ERR_INFLIGHT_OP_MISSING,"No op to send on call to _sendOp"),this.emit("error",t);if(e.sentAt=Date.now(),e.retries=null==e.retries?0:e.retries+1,null==e.seq){if(this.connection.seq>=h.MAX_SAFE_INTEGER)return this.emit("error",new p(a.ERR_CONNECTION_SEQ_INTEGER_OVERFLOW,"Connection seq has exceeded the max safe integer, maybe from being open for too long"));e.seq=this.connection.seq++}this.connection.sendOp(this,e),null==e.clientId&&(e.clientId=i)}},s.prototype._submit=function(t,i={},e){var n,{}=i;if("op"in t){if(!this.type)return n=new p(a.ERR_DOC_DOES_NOT_EXIST,"Cannot submit op. Document has not been created. "+this.collection+"."+this.id),e?e(n):this.emit("error",n);this.type.normalize&&(t.op=this.type.normalize(t.op))}try{this._pushOp(t,i,e),this._otApply(t,i)}catch(t){return this._hardRollback(t)}var s=this;h.nextTick(function(){s.flush()})},s.prototype._pushOp=function(t,i,e){i=i.source;if(t.source=i,this.applyStack)this.applyStack.push(t);else{i=this._tryCompose(t);if(i)return void i.callbacks.push(e)}t.type=this.type,t.callbacks=[e],this.pendingOps.push(t)},s.prototype._popApplyStack=function(t){if(0<t)this.applyStack.length=t;else{var i=this.applyStack[0];if(this.applyStack=null,i){var e=this.pendingOps.indexOf(i);if(-1!==e)for(var n=this.pendingOps.splice(e),e=0;e<n.length;e++){var i=n[e],s=this._tryCompose(i);s?s.callbacks=s.callbacks.concat(i.callbacks):this.pendingOps.push(i)}}}},s.prototype._tryCompose=function(t){if(!this.preventCompose){var i=this.pendingOps[this.pendingOps.length-1];if(i&&!i.sentAt&&(!this.submitSource||e(t.source,i.source)))return i.create&&"op"in t?(i.create.data=this.type.apply(i.create.data,t.op),i):"op"in i&&"op"in t&&this.type.compose?(i.op=this.type.compose(i.op,t.op),i):void 0}},s.prototype.submitOp=function(t,i,e){"function"==typeof i&&(e=i,i=null);t={op:t.op,data:t.data};this._submit(t,i,e)},s.prototype.create=function(t,i,e,n){var s,{op:{ops:t=[]},data:h}=t;if("function"==typeof i?(n=i,i=e=null):"function"==typeof e&&(n=e,e=null),i=i||c.defaultType.uri,this.type)return s=new p(a.ERR_DOC_ALREADY_CREATED,"Document already exists"),n?n(s):this.emit("error",s);this._submit({create:{type:i,data:t},data:h},e,n)},s.prototype.del=function(t,i){var e;if("function"==typeof t&&(i=t,t=null),!this.type)return e=new p(a.ERR_DOC_DOES_NOT_EXIST,"Document does not exist"),i?i(e):this.emit("error",e);this._submit({del:!0},t,i)},s.prototype.pause=function(){this.paused=!0},s.prototype.resume=function(){this.paused=!1,this.flush()},s.prototype.toSnapshot=function(){return{v:this.version,data:t(this.data),type:this.type.uri}},s.prototype._opAcknowledged=function(t){if(this.inflightOp.create)this.version=t.v;else if(t.v!==this.version)return i.warn("Invalid version from server. Expected: "+this.version+" Received: "+t.v,t),this.fetch();this.version++,this._clearInflightOp()},s.prototype._rollback=function(i){var t=this.inflightOp;if("op"in t&&t.type.invert){try{t.op=t.type.invert(t.op)}catch(t){return this._hardRollback(i)}for(var e=0;e<this.pendingOps.length;e++){var n=l(this.pendingOps[e],t);if(n)return this._hardRollback(n)}try{this._otApply(t,!1)}catch(t){return this._hardRollback(t)}this._clearInflightOp(i)}else this._hardRollback(i)},s.prototype._hardRollback=function(e){var n=[],s=(this.inflightOp&&n.push(this.inflightOp),n=n.concat(this.pendingOps),this._setType(null),this.version=null,this.inflightOp=null,this.pendingOps=[],this);this.fetch(function(){for(var t=!!n.length,i=0;i<n.length;i++)t=h.callEach(n[i].callbacks,e)&&t;if(e&&!t)return s.emit("error",e)})},s.prototype._clearInflightOp=function(t){var i=this.inflightOp,i=(this.inflightOp=null,h.callEach(i.callbacks,t));if(this.flush(),this._emitNothingPending(),t&&!i)return this.emit("error",t)};
+},{"../emitter":14,"../error":15,"../logger":16,"../types":20,"../util":21,"fast-deep-equal":24}],3:[function(require,module,exports){
+exports.Connection=require("./connection"),exports.Doc=require("./doc"),exports.Error=require("../error"),exports.Query=require("./query"),exports.types=require("../types"),exports.logger=require("../logger");
+},{"../error":15,"../logger":16,"../types":20,"./connection":1,"./doc":2,"./query":10}],4:[function(require,module,exports){
+var c=require("./presence"),r=require("./local-doc-presence"),t=require("./remote-doc-presence");function o(e,r,t){var n=o.channel(r,t);c.call(this,e,n),this.collection=r,this.id=t}(module.exports=o).prototype=Object.create(c.prototype),o.channel=function(e,r){return e+"."+r},o.prototype._createLocalPresence=function(e){return new r(this,e)},o.prototype._createRemotePresence=function(e){return new t(this,e)};
+},{"./local-doc-presence":5,"./presence":7,"./remote-doc-presence":8}],5:[function(require,module,exports){
+var n=require("./local-presence"),i=require("../../error"),o=require("../../util"),r=i.CODES;function e(e,t){n.call(this,e,t),this.collection=this.presence.collection,this.id=this.presence.id,this._doc=this.connection.get(this.collection,this.id),this._isSending=!1,this._docDataVersionByPresenceVersion={},this._opHandler=this._transformAgainstOp.bind(this),this._createOrDelHandler=this._handleCreateOrDel.bind(this),this._loadHandler=this._handleLoad.bind(this),this._destroyHandler=this.destroy.bind(this),this._registerWithDoc()}((module.exports=e).prototype=Object.create(n.prototype)).submit=function(e,t){var s;if(!this._doc.type)return null===e?this._callbackOrEmit(null,t):(s={code:r.ERR_DOC_DOES_NOT_EXIST,message:"Cannot submit presence. Document has not been created"},this._callbackOrEmit(s,t));this._docDataVersionByPresenceVersion[this.presenceVersion]=this._doc._dataStateVersion,n.prototype.submit.call(this,e,t)},e.prototype.destroy=function(e){this._doc.removeListener("op",this._opHandler),this._doc.removeListener("create",this._createOrDelHandler),this._doc.removeListener("del",this._createOrDelHandler),this._doc.removeListener("load",this._loadHandler),this._doc.removeListener("destroy",this._destroyHandler),n.prototype.destroy.call(this,e)},e.prototype._sendPending=function(){var t;this._isSending||(this._isSending=!0,(t=this)._doc.whenNothingPending(function(){t._isSending=!1,t.connection.canSend&&(t._pendingMessages.forEach(function(e){e.t=t._doc.type.uri,e.v=t._doc.version,t.connection.send(e)}),t._pendingMessages=[],t._docDataVersionByPresenceVersion={})}))},e.prototype._registerWithDoc=function(){this._doc.on("op",this._opHandler),this._doc.on("create",this._createOrDelHandler),this._doc.on("del",this._createOrDelHandler),this._doc.on("load",this._loadHandler),this._doc.on("destroy",this._destroyHandler)},e.prototype._transformAgainstOp=function(e,n){var i=this,o=this._doc._dataStateVersion;this._pendingMessages.forEach(function(t){var s=i._docDataVersionByPresenceVersion[t.pv];if(!(o<=s))try{t.p=i._transformPresence(t.p,e,n),i._docDataVersionByPresenceVersion[t.pv]=o}catch(e){s=i._getCallback(t.pv);i._callbackOrEmit(e,s)}});try{this.value=this._transformPresence(this.value,e,n)}catch(e){this.emit("error",e)}},e.prototype._handleCreateOrDel=function(){this._pendingMessages.forEach(function(e){e.p=null}),this.value=null},e.prototype._handleLoad=function(){this.value=null,this._pendingMessages=[],this._docDataVersionByPresenceVersion={}},e.prototype._message=function(){var e=n.prototype._message.call(this);return e.c=this.collection,e.d=this.id,e.v=null,e.t=null,e},e.prototype._transformPresence=function(e,t,s){var n=this._doc.type;if(o.supportsPresence(n))return n.transformPresence(e,t,s);throw new i(r.ERR_TYPE_DOES_NOT_SUPPORT_PRESENCE,"Type does not support presence: "+n.name)};
+},{"../../error":15,"../../util":21,"./local-presence":6}],6:[function(require,module,exports){
+var t=require("../../emitter"),s=require("../../util");function e(e,n){if(t.EventEmitter.call(this),!n||"string"!=typeof n)throw new Error("LocalPresence presenceId must be a string");this.presence=e,this.presenceId=n,this.connection=e.connection,this.presenceVersion=0,this.value=null,this._pendingMessages=[],this._callbacksByPresenceVersion={}}module.exports=e,t.mixin(e),e.prototype.submit=function(e,n){this.value=e,this.send(n)},e.prototype.send=function(e){var n=this._message();this._pendingMessages.push(n),this._callbacksByPresenceVersion[n.pv]=e,this._sendPending()},e.prototype.destroy=function(n){var t=this;this.submit(null,function(e){if(e)return t._callbackOrEmit(e,n);delete t.presence.localPresences[t.presenceId],n&&n()})},e.prototype._sendPending=function(){var n;this.connection.canSend&&((n=this)._pendingMessages.forEach(function(e){n.connection.send(e)}),this._pendingMessages=[])},e.prototype._ack=function(e,n){n=this._getCallback(n);this._callbackOrEmit(e,n)},e.prototype._message=function(){return{a:"p",ch:this.presence.channel,id:this.presenceId,p:this.value,pv:this.presenceVersion++}},e.prototype._getCallback=function(e){var n=this._callbacksByPresenceVersion[e];return delete this._callbacksByPresenceVersion[e],n},e.prototype._callbackOrEmit=function(e,n){if(n)return s.nextTick(n,e);e&&this.emit("error",e)};
+},{"../../emitter":14,"../../util":21}],7:[function(require,module,exports){
+var n=require("../../emitter"),t=require("./local-presence"),s=require("./remote-presence"),r=require("../../util"),i=require("async"),c=require("hat");function e(e,t){if(n.EventEmitter.call(this),!t||"string"!=typeof t)throw new Error("Presence channel must be provided");this.connection=e,this.channel=t,this.wantSubscribe=!1,this.subscribed=!1,this.remotePresences={},this.localPresences={},this._remotePresenceInstances={},this._subscriptionCallbacksBySeq={}}module.exports=e,n.mixin(e),e.prototype.subscribe=function(e){this._sendSubscriptionAction(!0,e)},e.prototype.unsubscribe=function(e){this._sendSubscriptionAction(!1,e)},e.prototype.create=function(e){e=e||c();var t=this._createLocalPresence(e);return this.localPresences[e]=t},e.prototype.destroy=function(s){var r=this;this.unsubscribe(function(e){if(e)return r._callbackOrEmit(e,s);var t=Object.keys(r.localPresences),n=Object.keys(r._remotePresenceInstances);i.parallel([function(e){i.each(t,function(e,t){r.localPresences[e].destroy(t)},e)},function(e){i.each(n,function(e,t){r._remotePresenceInstances[e].destroy(t)},e)}],function(e){delete r.connection._presences[r.channel],r._callbackOrEmit(e,s)})})},e.prototype._sendSubscriptionAction=function(e,t){this.wantSubscribe=!!e;var e=this.wantSubscribe?"ps":"pu",n=this.connection._presenceSeq++;this._subscriptionCallbacksBySeq[n]=t,this.connection.canSend&&this.connection._sendPresenceAction(e,n,this)},e.prototype._handleSubscribe=function(e,t){this.wantSubscribe&&(this.subscribed=!0);t=this._subscriptionCallback(t);this._callbackOrEmit(e,t)},e.prototype._handleUnsubscribe=function(e,t){this.subscribed=!1;t=this._subscriptionCallback(t);this._callbackOrEmit(e,t)},e.prototype._receiveUpdate=function(e,t){var n,s=r.dig(this.localPresences,t.clientId);return s?s._ack(e,t.pv):e?this.emit("error",e):void r.digOrCreate((n=this)._remotePresenceInstances,t.clientId,function(){return n._createRemotePresence(t.clientId)}).receiveUpdate(t)},e.prototype._updateRemotePresence=function(e){this.remotePresences[e.presenceId]=e.value,null===e.value&&this._removeRemotePresence(e.presenceId),this.emit("receive",e.presenceId,e.value)},e.prototype._broadcastAllLocalPresence=function(e){if(e)return this.emit("error",e);for(var t in this.localPresences){t=this.localPresences[t];null!==t.value&&t.send()}},e.prototype._removeRemotePresence=function(e){this._remotePresenceInstances[e].destroy(),delete this._remotePresenceInstances[e],delete this.remotePresences[e]},e.prototype._onConnectionStateChanged=function(){if(this.connection.canSend)for(var e in this._resubscribe(),this.localPresences)this.localPresences[e]._sendPending()},e.prototype._resubscribe=function(){var e,t=[];for(e in this._subscriptionCallbacksBySeq){var n=this._subscriptionCallback(e);t.push(n)}if(!this.wantSubscribe)return this._callEachOrEmit(t);var s=this;this.subscribe(function(e){s._callEachOrEmit(t,e)})},e.prototype._subscriptionCallback=function(e){var t=this._subscriptionCallbacksBySeq[e];return delete this._subscriptionCallbacksBySeq[e],t},e.prototype._callbackOrEmit=function(e,t){if(t)return r.nextTick(t,e);e&&this.emit("error",e)},e.prototype._createLocalPresence=function(e){return new t(this,e)},e.prototype._createRemotePresence=function(e){return new s(this,e)},e.prototype._callEachOrEmit=function(e,t){!r.callEach(e,t)&&t&&this.emit("error",t)};
+},{"../../emitter":14,"../../util":21,"./local-presence":6,"./remote-presence":9,"async":22,"hat":25}],8:[function(require,module,exports){
+var n=require("./remote-presence"),i=require("../../ot");function e(e,t){n.call(this,e,t),this.collection=this.presence.collection,this.id=this.presence.id,this.clientId=null,this.presenceVersion=null,this._doc=this.connection.get(this.collection,this.id),this._pending=null,this._opCache=null,this._pendingSetPending=!1,this._opHandler=this._handleOp.bind(this),this._createDelHandler=this._handleCreateDel.bind(this),this._loadHandler=this._handleLoad.bind(this),this._registerWithDoc()}((module.exports=e).prototype=Object.create(n.prototype)).receiveUpdate=function(e){this._pending&&e.pv<this._pending.pv||(this.clientId=e.clientId,this._pending=e,this._setPendingPresence())},e.prototype.destroy=function(e){this._doc.removeListener("op",this._opHandler),this._doc.removeListener("create",this._createDelHandler),this._doc.removeListener("del",this._createDelHandler),this._doc.removeListener("load",this._loadHandler),n.prototype.destroy.call(this,e)},e.prototype._registerWithDoc=function(){this._doc.on("op",this._opHandler),this._doc.on("create",this._createDelHandler),this._doc.on("del",this._createDelHandler),this._doc.on("load",this._loadHandler)},e.prototype._setPendingPresence=function(){var e;this._pendingSetPending||(this._pendingSetPending=!0,(e=this)._doc.whenNothingPending(function(){if(e._pendingSetPending=!1,e._pending)return e._pending.pv<e.presenceVersion?e._pending=null:e._pending.v>e._doc.version?e._doc.fetch():void(e._catchUpStalePresence()&&(e.value=e._pending.p,e.presenceVersion=e._pending.pv,e._pending=null,e.presence._updateRemotePresence(e)))}))},e.prototype._handleOp=function(e,t,n){n=n===this.clientId;this._transformAgainstOp(e,n),this._cacheOp(e,n),this._setPendingPresence()},n.prototype._handleCreateDel=function(){this._cacheOp(null),this._setPendingPresence()},n.prototype._handleLoad=function(){this.value=null,this._pending=null,this._opCache=null,this.presence._updateRemotePresence(this)},e.prototype._transformAgainstOp=function(e,t){if(this.value){try{this.value=this._doc.type.transformPresence(this.value,e,t)}catch(e){return this.presence.emit("error",e)}this.presence._updateRemotePresence(this)}},e.prototype._catchUpStalePresence=function(){if(this._pending.v>=this._doc.version)return!0;if(!this._opCache)return this._startCachingOps(),this._doc.fetch(),this.presence.subscribe(),!1;for(;this._opCache[this._pending.v];){var e=this._opCache[this._pending.v],t=e.op,e=e.isOwnOp;null===t?(this._pending.p=null,this._pending.v++):i.transformPresence(this._pending,t,e)}var n=this._pending.v>=this._doc.version;return n&&this._stopCachingOps(),n},e.prototype._startCachingOps=function(){this._opCache=[]},e.prototype._stopCachingOps=function(){this._opCache=null},e.prototype._cacheOp=function(e,t){this._opCache&&(this._opCache[this._doc.version-1]={op:e=e?{op:e}:null,isOwnOp:t})};
+},{"../../ot":18,"./remote-presence":9}],9:[function(require,module,exports){
+var s=require("../../util");function e(e,s){this.presence=e,this.presenceId=s,this.connection=this.presence.connection,this.value=null,this.presenceVersion=0}(module.exports=e).prototype.receiveUpdate=function(e){e.pv<this.presenceVersion||(this.value=e.p,this.presenceVersion=e.pv,this.presence._updateRemotePresence(this))},e.prototype.destroy=function(e){delete this.presence._remotePresenceInstances[this.presenceId],delete this.presence.remotePresences[this.presenceId],e&&s.nextTick(e)};
+},{"../../util":21}],10:[function(require,module,exports){
+var h=require("../emitter"),e=require("../util");function t(t,e,s,i,n,o,r){h.EventEmitter.call(this),this.action=t,this.connection=e,this.id=s,this.collection=i,this.query=n,this.results=null,o&&o.results&&(this.results=o.results,delete o.results),this.extra=void 0,this.options=o,this.callback=r,this.ready=!1,this.sent=!1}module.exports=t,h.mixin(t),t.prototype.hasPending=function(){return!this.ready},t.prototype.send=function(){if(this.connection.canSend){var t={a:this.action,id:this.id,c:this.collection,q:this.query};if(this.options&&(t.o=this.options),this.results){for(var e=[],s=0;s<this.results.length;s++){var i=this.results[s];e.push([i.id,i.version])}t.r=e}this.connection.send(t),this.sent=!0}},t.prototype.destroy=function(t){this.connection.canSend&&"qs"===this.action&&this.connection.send({a:"qu",id:this.id}),this.connection._destroyQuery(this),t&&e.nextTick(t)},t.prototype._onConnectionStateChanged=function(){this.connection.canSend&&!this.sent?this.send():this.sent=!1},t.prototype._handleFetch=function(t,e,s){this.connection._destroyQuery(this),this._handleResponse(t,e,s)},t.prototype._handleSubscribe=function(t,e,s){this._handleResponse(t,e,s)},t.prototype._handleResponse=function(t,e,s){var i=this.callback;if(this.callback=null,t)return this._finishResponse(t,i);if(!e)return this._finishResponse(null,i);function n(t){if(t)return o._finishResponse(t,i);--r||o._finishResponse(null,i)}var o=this,r=1;if(Array.isArray(e))r+=e.length,this.results=this._ingestSnapshots(e,n),this.extra=s;else for(var h in e){r++;var c=e[h];this.connection.get(c.c||this.collection,h).ingestSnapshot(c,n)}n()},t.prototype._ingestSnapshots=function(t,e){for(var s=[],i=0;i<t.length;i++){var n=t[i],o=this.connection.get(n.c||this.collection,n.d);o.ingestSnapshot(n,e),s.push(o)}return s},t.prototype._finishResponse=function(t,e){if(this.emit("ready"),this.ready=!0,t)return this.connection._destroyQuery(this),e?e(t):this.emit("error",t);e&&e(null,this.results,this.extra)},t.prototype._handleError=function(t){this.emit("error",t)},t.prototype._handleDiff=function(t){for(var e=0;e<t.length;e++)"insert"===(s=t[e]).type&&(s.values=this._ingestSnapshots(s.values));for(var s,e=0;e<t.length;e++)switch((s=t[e]).type){case"insert":var i=s.values;Array.prototype.splice.apply(this.results,[s.index,0].concat(i)),this.emit("insert",i,s.index);break;case"remove":var n=s.howMany||1,i=this.results.splice(s.index,n);this.emit("remove",i,s.index);break;case"move":var n=s.howMany||1,o=this.results.splice(s.from,n);Array.prototype.splice.apply(this.results,[s.to,0].concat(o)),this.emit("move",o,s.from,s.to)}this.emit("changed",this.results)},t.prototype._handleExtra=function(t){this.extra=t,this.emit("extra",t)};
+},{"../emitter":14,"../util":21}],11:[function(require,module,exports){
+var e=require("../../snapshot"),o=require("../../emitter");function t(t,n,e,i,s){if(o.EventEmitter.call(this),"function"!=typeof s)throw new Error("Callback is required for SnapshotRequest");this.requestId=n,this.connection=t,this.id=i,this.collection=e,this.callback=s,this.sent=!1}module.exports=t,o.mixin(t),t.prototype.send=function(){this.connection.canSend&&(this.connection.send(this._message()),this.sent=!0)},t.prototype._onConnectionStateChanged=function(){this.connection.canSend?this.sent||this.send():this.sent=!1},t.prototype._handleResponse=function(t,n){if(this.emit("ready"),t)return this.callback(t);t=n.meta||null,n=new e(this.id,n.v,n.type,n.data,t);this.callback(null,n)};
+},{"../../emitter":14,"../../snapshot":19}],12:[function(require,module,exports){
+var a=require("./snapshot-request"),n=require("../../util");function t(t,e,i,s,r,o){if(a.call(this,t,e,i,s,o),!n.isValidTimestamp(r))throw new Error("Snapshot timestamp must be a positive integer or null");this.timestamp=r}((module.exports=t).prototype=Object.create(a.prototype))._message=function(){return{a:"nt",id:this.requestId,c:this.collection,d:this.id,ts:this.timestamp}};
+},{"../../util":21,"./snapshot-request":11}],13:[function(require,module,exports){
+var n=require("./snapshot-request"),u=require("../../util");function e(e,t,i,r,s,o){if(n.call(this,e,t,i,r,o),!u.isValidVersion(s))throw new Error("Snapshot version must be a positive integer or null");this.version=s}((module.exports=e).prototype=Object.create(n.prototype))._message=function(){return{a:"nf",id:this.requestId,c:this.collection,d:this.id,v:this.version}};
+},{"../../util":21,"./snapshot-request":11}],14:[function(require,module,exports){
+var r=require("events").EventEmitter;exports.EventEmitter=r,exports.mixin=function(t){for(var e in r.prototype)t.prototype[e]=r.prototype[e]};
+},{"events":23}],15:[function(require,module,exports){
+function R(_,E){this.code=_,this.message=E||"",Error.captureStackTrace?Error.captureStackTrace(this,R):this.stack=(new Error).stack}((R.prototype=Object.create(Error.prototype)).constructor=R).prototype.name="ShareDBError",R.CODES={ERR_APPLY_OP_VERSION_DOES_NOT_MATCH_SNAPSHOT:"ERR_APPLY_OP_VERSION_DOES_NOT_MATCH_SNAPSHOT",ERR_APPLY_SNAPSHOT_NOT_PROVIDED:"ERR_APPLY_SNAPSHOT_NOT_PROVIDED",ERR_CLIENT_ID_BADLY_FORMED:"ERR_CLIENT_ID_BADLY_FORMED",ERR_CONNECTION_SEQ_INTEGER_OVERFLOW:"ERR_CONNECTION_SEQ_INTEGER_OVERFLOW",ERR_CONNECTION_STATE_TRANSITION_INVALID:"ERR_CONNECTION_STATE_TRANSITION_INVALID",ERR_DATABASE_ADAPTER_NOT_FOUND:"ERR_DATABASE_ADAPTER_NOT_FOUND",ERR_DATABASE_DOES_NOT_SUPPORT_SUBSCRIBE:"ERR_DATABASE_DOES_NOT_SUPPORT_SUBSCRIBE",ERR_DATABASE_METHOD_NOT_IMPLEMENTED:"ERR_DATABASE_METHOD_NOT_IMPLEMENTED",ERR_DEFAULT_TYPE_MISMATCH:"ERR_DEFAULT_TYPE_MISMATCH",ERR_DOC_MISSING_VERSION:"ERR_DOC_MISSING_VERSION",ERR_DOC_ALREADY_CREATED:"ERR_DOC_ALREADY_CREATED",ERR_DOC_DOES_NOT_EXIST:"ERR_DOC_DOES_NOT_EXIST",ERR_DOC_TYPE_NOT_RECOGNIZED:"ERR_DOC_TYPE_NOT_RECOGNIZED",ERR_DOC_WAS_DELETED:"ERR_DOC_WAS_DELETED",ERR_INFLIGHT_OP_MISSING:"ERR_INFLIGHT_OP_MISSING",ERR_INGESTED_SNAPSHOT_HAS_NO_VERSION:"ERR_INGESTED_SNAPSHOT_HAS_NO_VERSION",ERR_MAX_SUBMIT_RETRIES_EXCEEDED:"ERR_MAX_SUBMIT_RETRIES_EXCEEDED",ERR_MESSAGE_BADLY_FORMED:"ERR_MESSAGE_BADLY_FORMED",ERR_MILESTONE_ARGUMENT_INVALID:"ERR_MILESTONE_ARGUMENT_INVALID",ERR_OP_ALREADY_SUBMITTED:"ERR_OP_ALREADY_SUBMITTED",ERR_OP_NOT_ALLOWED_IN_PROJECTION:"ERR_OP_NOT_ALLOWED_IN_PROJECTION",ERR_OP_SUBMIT_REJECTED:"ERR_OP_SUBMIT_REJECTED",ERR_OP_VERSION_MISMATCH_AFTER_TRANSFORM:"ERR_OP_VERSION_MISMATCH_AFTER_TRANSFORM",ERR_OP_VERSION_MISMATCH_DURING_TRANSFORM:"ERR_OP_VERSION_MISMATCH_DURING_TRANSFORM",ERR_OP_VERSION_NEWER_THAN_CURRENT_SNAPSHOT:"ERR_OP_VERSION_NEWER_THAN_CURRENT_SNAPSHOT",ERR_OT_LEGACY_JSON0_OP_CANNOT_BE_NORMALIZED:"ERR_OT_LEGACY_JSON0_OP_CANNOT_BE_NORMALIZED",ERR_OT_OP_BADLY_FORMED:"ERR_OT_OP_BADLY_FORMED",ERR_OT_OP_NOT_APPLIED:"ERR_OT_OP_NOT_APPLIED",ERR_OT_OP_NOT_PROVIDED:"ERR_OT_OP_NOT_PROVIDED",ERR_PRESENCE_TRANSFORM_FAILED:"ERR_PRESENCE_TRANSFORM_FAILED",ERR_PROTOCOL_VERSION_NOT_SUPPORTED:"ERR_PROTOCOL_VERSION_NOT_SUPPORTED",ERR_QUERY_EMITTER_LISTENER_NOT_ASSIGNED:"ERR_QUERY_EMITTER_LISTENER_NOT_ASSIGNED",ERR_SNAPSHOT_READ_SILENT_REJECTION:"ERR_SNAPSHOT_READ_SILENT_REJECTION",ERR_SNAPSHOT_READS_REJECTED:"ERR_SNAPSHOT_READS_REJECTED",ERR_SUBMIT_TRANSFORM_OPS_NOT_FOUND:"ERR_SUBMIT_TRANSFORM_OPS_NOT_FOUND",ERR_TYPE_CANNOT_BE_PROJECTED:"ERR_TYPE_CANNOT_BE_PROJECTED",ERR_TYPE_DOES_NOT_SUPPORT_PRESENCE:"ERR_TYPE_DOES_NOT_SUPPORT_PRESENCE",ERR_UNKNOWN_ERROR:"ERR_UNKNOWN_ERROR"},module.exports=R;
+},{}],16:[function(require,module,exports){
+var e=new(require("./logger"));module.exports=e;
+},{"./logger":17}],17:[function(require,module,exports){
+var o=["info","warn","error"];function n(){var n={};o.forEach(function(o){n[o]=console[o].bind(console)}),this.setMethods(n)}(module.exports=n).prototype.setMethods=function(n){n=n||{};var t=this;o.forEach(function(o){"function"==typeof n[o]&&(t[o]=n[o])})};
+},{}],18:[function(require,module,exports){
+var f=require("./types"),D=require("./error"),T=require("./util"),y=D.CODES;exports.checkOp=function(e){if(null==e||"object"!=typeof e)return new D(y.ERR_OT_OP_BADLY_FORMED,"Op must be an object");if(null!=e.create){if("object"!=typeof e.create)return new D(y.ERR_OT_OP_BADLY_FORMED,"Create data must be an object");var t=e.create.type;if("string"!=typeof t)return new D(y.ERR_OT_OP_BADLY_FORMED,"Missing create type");t=f.map[t];if(null==t||"object"!=typeof t)return new D(y.ERR_DOC_TYPE_NOT_RECOGNIZED,"Unknown type")}else if(null!=e.del){if(!0!==e.del)return new D(y.ERR_OT_OP_BADLY_FORMED,"del value must be true")}else if(!("op"in e))return new D(y.ERR_OT_OP_BADLY_FORMED,"Missing op, create, or del");return null!=e.clientId&&"string"!=typeof e.clientId?new D(y.ERR_OT_OP_BADLY_FORMED,"src must be a string"):null!=e.seq&&"number"!=typeof e.seq?new D(y.ERR_OT_OP_BADLY_FORMED,"seq must be a number"):null==e.clientId&&null!=e.seq||null!=e.clientId&&null==e.seq?new D(y.ERR_OT_OP_BADLY_FORMED,"Both src and seq must be set together"):null!=e.m&&"object"!=typeof e.m?new D(y.ERR_OT_OP_BADLY_FORMED,"op.m must be an object or null"):void 0},exports.normalizeType=function(e){return f.map[e]&&f.map[e].uri},exports.apply=function(e,t){if("object"!=typeof e)return new D(y.ERR_APPLY_SNAPSHOT_NOT_PROVIDED,"Missing snapshot");if(null!=e.v&&null!=t.v&&e.v!==t.v)return new D(y.ERR_APPLY_OP_VERSION_DOES_NOT_MATCH_SNAPSHOT,"Version mismatch");if(t.create){if(e.type)return new D(y.ERR_DOC_ALREADY_CREATED,"Document already exists");var n=t.create,r=f.map[n.type];if(!r)return new D(y.ERR_DOC_TYPE_NOT_RECOGNIZED,"Unknown type");try{e.data=r.create(n.data),e.type=r.uri,e.v++}catch(_){return _}}else{if(t.del)e.data=void 0,e.type=null;else if("op"in t){var _=function(e,t){if(!e.type)return new D(y.ERR_DOC_DOES_NOT_EXIST,"Document does not exist");if(void 0===t)return new D(y.ERR_OT_OP_NOT_PROVIDED,"Missing op");var n=f.map[e.type];if(!n)return new D(y.ERR_DOC_TYPE_NOT_RECOGNIZED,"Unknown type");try{e.data=n.apply(e.data,t)}catch(e){return new D(y.ERR_OT_OP_NOT_APPLIED,e.message)}}(e,t.op);if(_)return _}e.v++}},exports.transform=function(e,t,n){if(null!=t.v&&t.v!==n.v)return new D(y.ERR_OP_VERSION_MISMATCH_DURING_TRANSFORM,"Version mismatch");if(n.del){if(t.create||"op"in t)return new D(y.ERR_DOC_WAS_DELETED,"Document was deleted")}else{if(n.create&&("op"in t||t.create||t.del)||"op"in n&&t.create)return new D(y.ERR_DOC_ALREADY_CREATED,"Document was created remotely");if("op"in n&&"op"in t){if(!e)return new D(y.ERR_DOC_DOES_NOT_EXIST,"Document does not exist");if("string"==typeof e&&!(e=f.map[e]))return new D(y.ERR_DOC_TYPE_NOT_RECOGNIZED,"Unknown type");try{t.op=e.transform(t.op,n.op,"left")}catch(e){return e}}}null!=t.v&&t.v++},exports.applyOps=function(e,t,n){n=n||{};for(var r=0;r<t.length;r++){var _=t[r];if(n._normalizeLegacyJson0Ops)try{E=R=u=O=s=l=p=i=a=o=void 0;var o=e,a=_;if(o.type===f.defaultType.uri){var i=a.op;if(i){var p=o.data;1<i.length&&(p=T.clone(p));for(var l=0;l<i.length;l++){for(var s=i[l],O=("string"==typeof s.lm&&(s.lm=+s.lm),s.p),u=p,R=0;R<O.length;R++){var E=O[R];"[object Array]"==Object.prototype.toString.call(u)?O[R]=+E:u.constructor===Object&&(O[R]=E.toString()),u=u[E]}l<i.length-1&&(p=f.defaultType.apply(p,[s]))}}}}catch(c){return new D(y.ERR_OT_LEGACY_JSON0_OP_CANNOT_BE_NORMALIZED,"Cannot normalize legacy json0 op")}e.v=_.v;var c=exports.apply(e,_);if(c)return c}},exports.transformPresence=function(e,t,n){var r=this.checkOp(t);if(r)return r;r=e.t;if(!(r="string"==typeof r?f.map[r]:r))return{code:y.ERR_DOC_TYPE_NOT_RECOGNIZED,message:"Unknown type"};if(!T.supportsPresence(r))return{code:y.ERR_TYPE_DOES_NOT_SUPPORT_PRESENCE,message:"Type does not support presence"};if(t.create||t.del)e.p=null;else try{e.p=null===e.p?null:r.transformPresence(e.p,t.op,n)}catch(e){return{code:y.ERR_PRESENCE_TRANSFORM_FAILED,message:e.message||e}}e.v++};
+},{"./error":15,"./types":20,"./util":21}],19:[function(require,module,exports){
+module.exports=function(t,i,s,h,d){this.id=t,this.v=i,this.type=s,this.data=h,this.m=d};
+},{}],20:[function(require,module,exports){
+exports.defaultType=require("ot-json0").type,exports.map={},exports.register=function(e){e.name&&(exports.map[e.name]=e),e.uri&&(exports.map[e.uri]=e)},exports.register(exports.defaultType);
+},{"ot-json0":29}],21:[function(require,module,exports){
 (function (process){(function (){
-"use strict";
-
-exports.doNothing = function () {}, exports.hasKeys = function (e) {
-  for (var r in e) return !0;
-  return !1;
-}, exports.isInteger = Number.isInteger || function (e) {
-  return "number" == typeof e && isFinite(e) && Math.floor(e) === e;
-}, exports.isValidVersion = function (e) {
-  return null === e || exports.isInteger(e) && 0 <= e;
-}, exports.isValidTimestamp = function (e) {
-  return exports.isValidVersion(e);
-}, exports.MAX_SAFE_INTEGER = 9007199254740991, exports.dig = function () {
-  for (var e = arguments[0], r = 1; r < arguments.length; r++) e = e[arguments[r]] || (r === arguments.length - 1 ? void 0 : {});
-  return e;
-}, exports.digOrCreate = function () {
-  for (var e = arguments[0], r = arguments[arguments.length - 1], n = 1; n < arguments.length - 1; n++) var t = arguments[n], e = e[t] || (e[t] = n === arguments.length - 2 ? r() : {});
-  return e;
-}, exports.digAndRemove = function () {
-  for (var e = arguments[0], r = [e], n = 1; n < arguments.length - 1; n++) {
-    var t = arguments[n];
-    if (!e.hasOwnProperty(t)) break;
-    e = e[t], r.push(e);
-  }
-  for (n = r.length - 1; 0 <= n; n--) {
-    var o = r[n],
-      i = o[t = arguments[n + 1]];
-    n !== r.length - 1 && exports.hasKeys(i) || delete o[t];
-  }
-}, exports.supportsPresence = function (e) {
-  return e && "function" == typeof e.transformPresence;
-}, exports.callEach = function (e, r) {
-  var n = !1;
-  return e.forEach(function (e) {
-    e && (e(r), n = !0);
-  }), n;
-}, exports.truthy = function (e) {
-  return !!e;
-}, exports.nextTick = function (e) {
-  if ("undefined" != typeof process && process.nextTick) return process.nextTick.apply(null, arguments);
-  for (var r = [], n = 1; n < arguments.length; n++) r[n - 1] = arguments[n];
-  setTimeout(function () {
-    e.apply(null, r);
-  });
-}, exports.clone = function (e) {
-  return void 0 === e ? void 0 : JSON.parse(JSON.stringify(e));
-};
+exports.doNothing=function(){},exports.hasKeys=function(e){for(var r in e)return!0;return!1},exports.isInteger=Number.isInteger||function(e){return"number"==typeof e&&isFinite(e)&&Math.floor(e)===e},exports.isValidVersion=function(e){return null===e||exports.isInteger(e)&&0<=e},exports.isValidTimestamp=function(e){return exports.isValidVersion(e)},exports.MAX_SAFE_INTEGER=9007199254740991,exports.dig=function(){for(var e=arguments[0],r=1;r<arguments.length;r++)e=e[arguments[r]]||(r===arguments.length-1?void 0:{});return e},exports.digOrCreate=function(){for(var e=arguments[0],r=arguments[arguments.length-1],n=1;n<arguments.length-1;n++)var t=arguments[n],e=e[t]||(e[t]=n===arguments.length-2?r():{});return e},exports.digAndRemove=function(){for(var e=arguments[0],r=[e],n=1;n<arguments.length-1;n++){var t=arguments[n];if(!e.hasOwnProperty(t))break;e=e[t],r.push(e)}for(n=r.length-1;0<=n;n--){var o=r[n],i=o[t=arguments[n+1]];n!==r.length-1&&exports.hasKeys(i)||delete o[t]}},exports.supportsPresence=function(e){return e&&"function"==typeof e.transformPresence},exports.callEach=function(e,r){var n=!1;return e.forEach(function(e){e&&(e(r),n=!0)}),n},exports.truthy=function(e){return!!e},exports.nextTick=function(e){if("undefined"!=typeof process&&process.nextTick)return process.nextTick.apply(null,arguments);for(var r=[],n=1;n<arguments.length;n++)r[n-1]=arguments[n];setTimeout(function(){e.apply(null,r)})},exports.clone=function(e){return void 0===e?void 0:JSON.parse(JSON.stringify(e))};
 }).call(this)}).call(this,require('_process'))
-},{"_process":30}],29:[function(require,module,exports){
+},{"_process":26}],22:[function(require,module,exports){
 (function (process,global,setImmediate){(function (){
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
@@ -7434,7 +5658,627 @@ Object.defineProperty(exports, '__esModule', { value: true });
 })));
 
 }).call(this)}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
-},{"_process":30,"timers":31}],30:[function(require,module,exports){
+},{"_process":26,"timers":27}],23:[function(require,module,exports){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+'use strict';
+
+var R = typeof Reflect === 'object' ? Reflect : null
+var ReflectApply = R && typeof R.apply === 'function'
+  ? R.apply
+  : function ReflectApply(target, receiver, args) {
+    return Function.prototype.apply.call(target, receiver, args);
+  }
+
+var ReflectOwnKeys
+if (R && typeof R.ownKeys === 'function') {
+  ReflectOwnKeys = R.ownKeys
+} else if (Object.getOwnPropertySymbols) {
+  ReflectOwnKeys = function ReflectOwnKeys(target) {
+    return Object.getOwnPropertyNames(target)
+      .concat(Object.getOwnPropertySymbols(target));
+  };
+} else {
+  ReflectOwnKeys = function ReflectOwnKeys(target) {
+    return Object.getOwnPropertyNames(target);
+  };
+}
+
+function ProcessEmitWarning(warning) {
+  if (console && console.warn) console.warn(warning);
+}
+
+var NumberIsNaN = Number.isNaN || function NumberIsNaN(value) {
+  return value !== value;
+}
+
+function EventEmitter() {
+  EventEmitter.init.call(this);
+}
+module.exports = EventEmitter;
+module.exports.once = once;
+
+// Backwards-compat with node 0.10.x
+EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._eventsCount = 0;
+EventEmitter.prototype._maxListeners = undefined;
+
+// By default EventEmitters will print a warning if more than 10 listeners are
+// added to it. This is a useful default which helps finding memory leaks.
+var defaultMaxListeners = 10;
+
+function checkListener(listener) {
+  if (typeof listener !== 'function') {
+    throw new TypeError('The "listener" argument must be of type Function. Received type ' + typeof listener);
+  }
+}
+
+Object.defineProperty(EventEmitter, 'defaultMaxListeners', {
+  enumerable: true,
+  get: function() {
+    return defaultMaxListeners;
+  },
+  set: function(arg) {
+    if (typeof arg !== 'number' || arg < 0 || NumberIsNaN(arg)) {
+      throw new RangeError('The value of "defaultMaxListeners" is out of range. It must be a non-negative number. Received ' + arg + '.');
+    }
+    defaultMaxListeners = arg;
+  }
+});
+
+EventEmitter.init = function() {
+
+  if (this._events === undefined ||
+      this._events === Object.getPrototypeOf(this)._events) {
+    this._events = Object.create(null);
+    this._eventsCount = 0;
+  }
+
+  this._maxListeners = this._maxListeners || undefined;
+};
+
+// Obviously not all Emitters should be limited to 10. This function allows
+// that to be increased. Set to zero for unlimited.
+EventEmitter.prototype.setMaxListeners = function setMaxListeners(n) {
+  if (typeof n !== 'number' || n < 0 || NumberIsNaN(n)) {
+    throw new RangeError('The value of "n" is out of range. It must be a non-negative number. Received ' + n + '.');
+  }
+  this._maxListeners = n;
+  return this;
+};
+
+function _getMaxListeners(that) {
+  if (that._maxListeners === undefined)
+    return EventEmitter.defaultMaxListeners;
+  return that._maxListeners;
+}
+
+EventEmitter.prototype.getMaxListeners = function getMaxListeners() {
+  return _getMaxListeners(this);
+};
+
+EventEmitter.prototype.emit = function emit(type) {
+  var args = [];
+  for (var i = 1; i < arguments.length; i++) args.push(arguments[i]);
+  var doError = (type === 'error');
+
+  var events = this._events;
+  if (events !== undefined)
+    doError = (doError && events.error === undefined);
+  else if (!doError)
+    return false;
+
+  // If there is no 'error' event listener then throw.
+  if (doError) {
+    var er;
+    if (args.length > 0)
+      er = args[0];
+    if (er instanceof Error) {
+      // Note: The comments on the `throw` lines are intentional, they show
+      // up in Node's output if this results in an unhandled exception.
+      throw er; // Unhandled 'error' event
+    }
+    // At least give some kind of context to the user
+    var err = new Error('Unhandled error.' + (er ? ' (' + er.message + ')' : ''));
+    err.context = er;
+    throw err; // Unhandled 'error' event
+  }
+
+  var handler = events[type];
+
+  if (handler === undefined)
+    return false;
+
+  if (typeof handler === 'function') {
+    ReflectApply(handler, this, args);
+  } else {
+    var len = handler.length;
+    var listeners = arrayClone(handler, len);
+    for (var i = 0; i < len; ++i)
+      ReflectApply(listeners[i], this, args);
+  }
+
+  return true;
+};
+
+function _addListener(target, type, listener, prepend) {
+  var m;
+  var events;
+  var existing;
+
+  checkListener(listener);
+
+  events = target._events;
+  if (events === undefined) {
+    events = target._events = Object.create(null);
+    target._eventsCount = 0;
+  } else {
+    // To avoid recursion in the case that type === "newListener"! Before
+    // adding it to the listeners, first emit "newListener".
+    if (events.newListener !== undefined) {
+      target.emit('newListener', type,
+                  listener.listener ? listener.listener : listener);
+
+      // Re-assign `events` because a newListener handler could have caused the
+      // this._events to be assigned to a new object
+      events = target._events;
+    }
+    existing = events[type];
+  }
+
+  if (existing === undefined) {
+    // Optimize the case of one listener. Don't need the extra array object.
+    existing = events[type] = listener;
+    ++target._eventsCount;
+  } else {
+    if (typeof existing === 'function') {
+      // Adding the second element, need to change to array.
+      existing = events[type] =
+        prepend ? [listener, existing] : [existing, listener];
+      // If we've already got an array, just append.
+    } else if (prepend) {
+      existing.unshift(listener);
+    } else {
+      existing.push(listener);
+    }
+
+    // Check for listener leak
+    m = _getMaxListeners(target);
+    if (m > 0 && existing.length > m && !existing.warned) {
+      existing.warned = true;
+      // No error code for this since it is a Warning
+      // eslint-disable-next-line no-restricted-syntax
+      var w = new Error('Possible EventEmitter memory leak detected. ' +
+                          existing.length + ' ' + String(type) + ' listeners ' +
+                          'added. Use emitter.setMaxListeners() to ' +
+                          'increase limit');
+      w.name = 'MaxListenersExceededWarning';
+      w.emitter = target;
+      w.type = type;
+      w.count = existing.length;
+      ProcessEmitWarning(w);
+    }
+  }
+
+  return target;
+}
+
+EventEmitter.prototype.addListener = function addListener(type, listener) {
+  return _addListener(this, type, listener, false);
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.prependListener =
+    function prependListener(type, listener) {
+      return _addListener(this, type, listener, true);
+    };
+
+function onceWrapper() {
+  if (!this.fired) {
+    this.target.removeListener(this.type, this.wrapFn);
+    this.fired = true;
+    if (arguments.length === 0)
+      return this.listener.call(this.target);
+    return this.listener.apply(this.target, arguments);
+  }
+}
+
+function _onceWrap(target, type, listener) {
+  var state = { fired: false, wrapFn: undefined, target: target, type: type, listener: listener };
+  var wrapped = onceWrapper.bind(state);
+  wrapped.listener = listener;
+  state.wrapFn = wrapped;
+  return wrapped;
+}
+
+EventEmitter.prototype.once = function once(type, listener) {
+  checkListener(listener);
+  this.on(type, _onceWrap(this, type, listener));
+  return this;
+};
+
+EventEmitter.prototype.prependOnceListener =
+    function prependOnceListener(type, listener) {
+      checkListener(listener);
+      this.prependListener(type, _onceWrap(this, type, listener));
+      return this;
+    };
+
+// Emits a 'removeListener' event if and only if the listener was removed.
+EventEmitter.prototype.removeListener =
+    function removeListener(type, listener) {
+      var list, events, position, i, originalListener;
+
+      checkListener(listener);
+
+      events = this._events;
+      if (events === undefined)
+        return this;
+
+      list = events[type];
+      if (list === undefined)
+        return this;
+
+      if (list === listener || list.listener === listener) {
+        if (--this._eventsCount === 0)
+          this._events = Object.create(null);
+        else {
+          delete events[type];
+          if (events.removeListener)
+            this.emit('removeListener', type, list.listener || listener);
+        }
+      } else if (typeof list !== 'function') {
+        position = -1;
+
+        for (i = list.length - 1; i >= 0; i--) {
+          if (list[i] === listener || list[i].listener === listener) {
+            originalListener = list[i].listener;
+            position = i;
+            break;
+          }
+        }
+
+        if (position < 0)
+          return this;
+
+        if (position === 0)
+          list.shift();
+        else {
+          spliceOne(list, position);
+        }
+
+        if (list.length === 1)
+          events[type] = list[0];
+
+        if (events.removeListener !== undefined)
+          this.emit('removeListener', type, originalListener || listener);
+      }
+
+      return this;
+    };
+
+EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
+
+EventEmitter.prototype.removeAllListeners =
+    function removeAllListeners(type) {
+      var listeners, events, i;
+
+      events = this._events;
+      if (events === undefined)
+        return this;
+
+      // not listening for removeListener, no need to emit
+      if (events.removeListener === undefined) {
+        if (arguments.length === 0) {
+          this._events = Object.create(null);
+          this._eventsCount = 0;
+        } else if (events[type] !== undefined) {
+          if (--this._eventsCount === 0)
+            this._events = Object.create(null);
+          else
+            delete events[type];
+        }
+        return this;
+      }
+
+      // emit removeListener for all listeners on all events
+      if (arguments.length === 0) {
+        var keys = Object.keys(events);
+        var key;
+        for (i = 0; i < keys.length; ++i) {
+          key = keys[i];
+          if (key === 'removeListener') continue;
+          this.removeAllListeners(key);
+        }
+        this.removeAllListeners('removeListener');
+        this._events = Object.create(null);
+        this._eventsCount = 0;
+        return this;
+      }
+
+      listeners = events[type];
+
+      if (typeof listeners === 'function') {
+        this.removeListener(type, listeners);
+      } else if (listeners !== undefined) {
+        // LIFO order
+        for (i = listeners.length - 1; i >= 0; i--) {
+          this.removeListener(type, listeners[i]);
+        }
+      }
+
+      return this;
+    };
+
+function _listeners(target, type, unwrap) {
+  var events = target._events;
+
+  if (events === undefined)
+    return [];
+
+  var evlistener = events[type];
+  if (evlistener === undefined)
+    return [];
+
+  if (typeof evlistener === 'function')
+    return unwrap ? [evlistener.listener || evlistener] : [evlistener];
+
+  return unwrap ?
+    unwrapListeners(evlistener) : arrayClone(evlistener, evlistener.length);
+}
+
+EventEmitter.prototype.listeners = function listeners(type) {
+  return _listeners(this, type, true);
+};
+
+EventEmitter.prototype.rawListeners = function rawListeners(type) {
+  return _listeners(this, type, false);
+};
+
+EventEmitter.listenerCount = function(emitter, type) {
+  if (typeof emitter.listenerCount === 'function') {
+    return emitter.listenerCount(type);
+  } else {
+    return listenerCount.call(emitter, type);
+  }
+};
+
+EventEmitter.prototype.listenerCount = listenerCount;
+function listenerCount(type) {
+  var events = this._events;
+
+  if (events !== undefined) {
+    var evlistener = events[type];
+
+    if (typeof evlistener === 'function') {
+      return 1;
+    } else if (evlistener !== undefined) {
+      return evlistener.length;
+    }
+  }
+
+  return 0;
+}
+
+EventEmitter.prototype.eventNames = function eventNames() {
+  return this._eventsCount > 0 ? ReflectOwnKeys(this._events) : [];
+};
+
+function arrayClone(arr, n) {
+  var copy = new Array(n);
+  for (var i = 0; i < n; ++i)
+    copy[i] = arr[i];
+  return copy;
+}
+
+function spliceOne(list, index) {
+  for (; index + 1 < list.length; index++)
+    list[index] = list[index + 1];
+  list.pop();
+}
+
+function unwrapListeners(arr) {
+  var ret = new Array(arr.length);
+  for (var i = 0; i < ret.length; ++i) {
+    ret[i] = arr[i].listener || arr[i];
+  }
+  return ret;
+}
+
+function once(emitter, name) {
+  return new Promise(function (resolve, reject) {
+    function errorListener(err) {
+      emitter.removeListener(name, resolver);
+      reject(err);
+    }
+
+    function resolver() {
+      if (typeof emitter.removeListener === 'function') {
+        emitter.removeListener('error', errorListener);
+      }
+      resolve([].slice.call(arguments));
+    };
+
+    eventTargetAgnosticAddListener(emitter, name, resolver, { once: true });
+    if (name !== 'error') {
+      addErrorHandlerIfEventEmitter(emitter, errorListener, { once: true });
+    }
+  });
+}
+
+function addErrorHandlerIfEventEmitter(emitter, handler, flags) {
+  if (typeof emitter.on === 'function') {
+    eventTargetAgnosticAddListener(emitter, 'error', handler, flags);
+  }
+}
+
+function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
+  if (typeof emitter.on === 'function') {
+    if (flags.once) {
+      emitter.once(name, listener);
+    } else {
+      emitter.on(name, listener);
+    }
+  } else if (typeof emitter.addEventListener === 'function') {
+    // EventTarget does not have `error` event semantics like Node
+    // EventEmitters, we do not listen for `error` events here.
+    emitter.addEventListener(name, function wrapListener(arg) {
+      // IE does not have builtin `{ once: true }` support so we
+      // have to do it manually.
+      if (flags.once) {
+        emitter.removeEventListener(name, wrapListener);
+      }
+      listener(arg);
+    });
+  } else {
+    throw new TypeError('The "emitter" argument must be of type EventEmitter. Received type ' + typeof emitter);
+  }
+}
+
+},{}],24:[function(require,module,exports){
+'use strict';
+
+var isArray = Array.isArray;
+var keyList = Object.keys;
+var hasProp = Object.prototype.hasOwnProperty;
+
+module.exports = function equal(a, b) {
+  if (a === b) return true;
+
+  if (a && b && typeof a == 'object' && typeof b == 'object') {
+    var arrA = isArray(a)
+      , arrB = isArray(b)
+      , i
+      , length
+      , key;
+
+    if (arrA && arrB) {
+      length = a.length;
+      if (length != b.length) return false;
+      for (i = length; i-- !== 0;)
+        if (!equal(a[i], b[i])) return false;
+      return true;
+    }
+
+    if (arrA != arrB) return false;
+
+    var dateA = a instanceof Date
+      , dateB = b instanceof Date;
+    if (dateA != dateB) return false;
+    if (dateA && dateB) return a.getTime() == b.getTime();
+
+    var regexpA = a instanceof RegExp
+      , regexpB = b instanceof RegExp;
+    if (regexpA != regexpB) return false;
+    if (regexpA && regexpB) return a.toString() == b.toString();
+
+    var keys = keyList(a);
+    length = keys.length;
+
+    if (length !== keyList(b).length)
+      return false;
+
+    for (i = length; i-- !== 0;)
+      if (!hasProp.call(b, keys[i])) return false;
+
+    for (i = length; i-- !== 0;) {
+      key = keys[i];
+      if (!equal(a[key], b[key])) return false;
+    }
+
+    return true;
+  }
+
+  return a!==a && b!==b;
+};
+
+},{}],25:[function(require,module,exports){
+var hat = module.exports = function (bits, base) {
+    if (!base) base = 16;
+    if (bits === undefined) bits = 128;
+    if (bits <= 0) return '0';
+    
+    var digits = Math.log(Math.pow(2, bits)) / Math.log(base);
+    for (var i = 2; digits === Infinity; i *= 2) {
+        digits = Math.log(Math.pow(2, bits / i)) / Math.log(base) * i;
+    }
+    
+    var rem = digits - Math.floor(digits);
+    
+    var res = '';
+    
+    for (var i = 0; i < Math.floor(digits); i++) {
+        var x = Math.floor(Math.random() * base).toString(base);
+        res = x + res;
+    }
+    
+    if (rem) {
+        var b = Math.pow(base, rem);
+        var x = Math.floor(Math.random() * b).toString(base);
+        res = x + res;
+    }
+    
+    var parsed = parseInt(res, base);
+    if (parsed !== Infinity && parsed >= Math.pow(2, bits)) {
+        return hat(bits, base)
+    }
+    else return res;
+};
+
+hat.rack = function (bits, base, expandBy) {
+    var fn = function (data) {
+        var iters = 0;
+        do {
+            if (iters ++ > 10) {
+                if (expandBy) bits += expandBy;
+                else throw new Error('too many ID collisions, use more bits')
+            }
+            
+            var id = hat(bits, base);
+        } while (Object.hasOwnProperty.call(hats, id));
+        
+        hats[id] = data;
+        return id;
+    };
+    var hats = fn.hats = {};
+    
+    fn.get = function (id) {
+        return fn.hats[id];
+    };
+    
+    fn.set = function (id, value) {
+        fn.hats[id] = value;
+        return fn;
+    };
+    
+    fn.bits = bits || 128;
+    fn.base = base || 16;
+    return fn;
+};
+
+},{}],26:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -7620,7 +6464,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],31:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 (function (setImmediate,clearImmediate){(function (){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -7699,7 +6543,1017 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this)}).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":30,"timers":31}]},{},[10])(10)
-});
+},{"process/browser.js":26,"timers":27}],28:[function(require,module,exports){
+// These methods let you build a transform function from a transformComponent
+// function for OT types like JSON0 in which operations are lists of components
+// and transforming them requires N^2 work. I find it kind of nasty that I need
+// this, but I'm not really sure what a better solution is. Maybe I should do
+// this automatically to types that don't have a compose function defined.
 
-/* eslint-enable   */
+// Add transform and transformX functions for an OT type which has
+// transformComponent defined.  transformComponent(destination array,
+// component, other component, side)
+module.exports = bootstrapTransform
+function bootstrapTransform(type, transformComponent, checkValidOp, append) {
+  var transformComponentX = function(left, right, destLeft, destRight) {
+    transformComponent(destLeft, left, right, 'left');
+    transformComponent(destRight, right, left, 'right');
+  };
+
+  var transformX = type.transformX = function(leftOp, rightOp) {
+    checkValidOp(leftOp);
+    checkValidOp(rightOp);
+    var newRightOp = [];
+
+    for (var i = 0; i < rightOp.length; i++) {
+      var rightComponent = rightOp[i];
+
+      // Generate newLeftOp by composing leftOp by rightComponent
+      var newLeftOp = [];
+      var k = 0;
+      while (k < leftOp.length) {
+        var nextC = [];
+        transformComponentX(leftOp[k], rightComponent, newLeftOp, nextC);
+        k++;
+
+        if (nextC.length === 1) {
+          rightComponent = nextC[0];
+        } else if (nextC.length === 0) {
+          for (var j = k; j < leftOp.length; j++) {
+            append(newLeftOp, leftOp[j]);
+          }
+          rightComponent = null;
+          break;
+        } else {
+          // Recurse.
+          var pair = transformX(leftOp.slice(k), nextC);
+          for (var l = 0; l < pair[0].length; l++) {
+            append(newLeftOp, pair[0][l]);
+          }
+          for (var r = 0; r < pair[1].length; r++) {
+            append(newRightOp, pair[1][r]);
+          }
+          rightComponent = null;
+          break;
+        }
+      }
+
+      if (rightComponent != null) {
+        append(newRightOp, rightComponent);
+      }
+      leftOp = newLeftOp;
+    }
+    return [leftOp, newRightOp];
+  };
+
+  // Transforms op with specified type ('left' or 'right') by otherOp.
+  type.transform = function(op, otherOp, type) {
+    if (!(type === 'left' || type === 'right'))
+      throw new Error("type must be 'left' or 'right'");
+
+    if (otherOp.length === 0) return op;
+
+    if (op.length === 1 && otherOp.length === 1)
+      return transformComponent([], op[0], otherOp[0], type);
+
+    if (type === 'left')
+      return transformX(op, otherOp)[0];
+    else
+      return transformX(otherOp, op)[1];
+  };
+};
+
+},{}],29:[function(require,module,exports){
+// Only the JSON type is exported, because the text type is deprecated
+// otherwise. (If you want to use it somewhere, you're welcome to pull it out
+// into a separate module that json0 can depend on).
+
+module.exports = {
+  type: require('./json0')
+};
+
+},{"./json0":30}],30:[function(require,module,exports){
+/*
+ This is the implementation of the JSON OT type.
+
+ Spec is here: https://github.com/josephg/ShareJS/wiki/JSON-Operations
+
+ Note: This is being made obsolete. It will soon be replaced by the JSON2 type.
+*/
+
+/**
+ * UTILITY FUNCTIONS
+ */
+
+/**
+ * Checks if the passed object is an Array instance. Can't use Array.isArray
+ * yet because its not supported on IE8.
+ *
+ * @param obj
+ * @returns {boolean}
+ */
+var isArray = function(obj) {
+  return Object.prototype.toString.call(obj) == '[object Array]';
+};
+
+/**
+ * Checks if the passed object is an Object instance.
+ * No function call (fast) version
+ *
+ * @param obj
+ * @returns {boolean}
+ */
+var isObject = function(obj) {
+  return (!!obj) && (obj.constructor === Object);
+};
+
+/**
+ * Clones the passed object using JSON serialization (which is slow).
+ *
+ * hax, copied from test/types/json. Apparently this is still the fastest way
+ * to deep clone an object, assuming we have browser support for JSON.  @see
+ * http://jsperf.com/cloning-an-object/12
+ */
+var clone = function(o) {
+  return JSON.parse(JSON.stringify(o));
+};
+
+/**
+ * JSON OT Type
+ * @type {*}
+ */
+var json = {
+  name: 'json0',
+  uri: 'http://sharejs.org/types/JSONv0'
+};
+
+// You can register another OT type as a subtype in a JSON document using
+// the following function. This allows another type to handle certain
+// operations instead of the builtin JSON type.
+var subtypes = {};
+json.registerSubtype = function(subtype) {
+  subtypes[subtype.name] = subtype;
+};
+
+json.create = function(data) {
+  // Null instead of undefined if you don't pass an argument.
+  return data === undefined ? null : clone(data);
+};
+
+json.invertComponent = function(c) {
+  var c_ = {p: c.p};
+
+  // handle subtype ops
+  if (c.t && subtypes[c.t]) {
+    c_.t = c.t;
+    c_.o = subtypes[c.t].invert(c.o);
+  }
+
+  if (c.si !== void 0) c_.sd = c.si;
+  if (c.sd !== void 0) c_.si = c.sd;
+  if (c.oi !== void 0) c_.od = c.oi;
+  if (c.od !== void 0) c_.oi = c.od;
+  if (c.li !== void 0) c_.ld = c.li;
+  if (c.ld !== void 0) c_.li = c.ld;
+  if (c.na !== void 0) c_.na = -c.na;
+
+  if (c.lm !== void 0) {
+    c_.lm = c.p[c.p.length-1];
+    c_.p = c.p.slice(0,c.p.length-1).concat([c.lm]);
+  }
+
+  return c_;
+};
+
+json.invert = function(op) {
+  var op_ = op.slice().reverse();
+  var iop = [];
+  for (var i = 0; i < op_.length; i++) {
+    iop.push(json.invertComponent(op_[i]));
+  }
+  return iop;
+};
+
+json.checkValidOp = function(op) {
+  for (var i = 0; i < op.length; i++) {
+    if (!isArray(op[i].p)) throw new Error('Missing path');
+  }
+};
+
+json.checkList = function(elem) {
+  if (!isArray(elem))
+    throw new Error('Referenced element not a list');
+};
+
+json.checkObj = function(elem) {
+  if (!isObject(elem)) {
+    throw new Error("Referenced element not an object (it was " + JSON.stringify(elem) + ")");
+  }
+};
+
+// helper functions to convert old string ops to and from subtype ops
+function convertFromText(c) {
+  c.t = 'text0';
+  var o = {p: c.p.pop()};
+  if (c.si != null) o.i = c.si;
+  if (c.sd != null) o.d = c.sd;
+  c.o = [o];
+}
+
+function convertToText(c) {
+  c.p.push(c.o[0].p);
+  if (c.o[0].i != null) c.si = c.o[0].i;
+  if (c.o[0].d != null) c.sd = c.o[0].d;
+  delete c.t;
+  delete c.o;
+}
+
+json.apply = function(snapshot, op) {
+  json.checkValidOp(op);
+
+  op = clone(op);
+
+  var container = {
+    data: snapshot
+  };
+
+  for (var i = 0; i < op.length; i++) {
+    var c = op[i];
+
+    // convert old string ops to use subtype for backwards compatibility
+    if (c.si != null || c.sd != null)
+      convertFromText(c);
+
+    var parent = null;
+    var parentKey = null;
+    var elem = container;
+    var key = 'data';
+
+    for (var j = 0; j < c.p.length; j++) {
+      var p = c.p[j];
+
+      parent = elem;
+      parentKey = key;
+      elem = elem[key];
+      key = p;
+
+      if (parent == null)
+        throw new Error('Path invalid');
+    }
+
+    // handle subtype ops
+    if (c.t && c.o !== void 0 && subtypes[c.t]) {
+      elem[key] = subtypes[c.t].apply(elem[key], c.o);
+
+    // Number add
+    } else if (c.na !== void 0) {
+      if (typeof elem[key] != 'number')
+        throw new Error('Referenced element not a number');
+
+      elem[key] += c.na;
+    }
+
+    // List replace
+    else if (c.li !== void 0 && c.ld !== void 0) {
+      json.checkList(elem);
+      // Should check the list element matches c.ld
+      elem[key] = c.li;
+    }
+
+    // List insert
+    else if (c.li !== void 0) {
+      json.checkList(elem);
+      elem.splice(key,0, c.li);
+    }
+
+    // List delete
+    else if (c.ld !== void 0) {
+      json.checkList(elem);
+      // Should check the list element matches c.ld here too.
+      elem.splice(key,1);
+    }
+
+    // List move
+    else if (c.lm !== void 0) {
+      json.checkList(elem);
+      if (c.lm != key) {
+        var e = elem[key];
+        // Remove it...
+        elem.splice(key,1);
+        // And insert it back.
+        elem.splice(c.lm,0,e);
+      }
+    }
+
+    // Object insert / replace
+    else if (c.oi !== void 0) {
+      json.checkObj(elem);
+
+      // Should check that elem[key] == c.od
+      elem[key] = c.oi;
+    }
+
+    // Object delete
+    else if (c.od !== void 0) {
+      json.checkObj(elem);
+
+      // Should check that elem[key] == c.od
+      delete elem[key];
+    }
+
+    else {
+      throw new Error('invalid / missing instruction in op');
+    }
+  }
+
+  return container.data;
+};
+
+// Helper to break an operation up into a bunch of small ops.
+json.shatter = function(op) {
+  var results = [];
+  for (var i = 0; i < op.length; i++) {
+    results.push([op[i]]);
+  }
+  return results;
+};
+
+// Helper for incrementally applying an operation to a snapshot. Calls yield
+// after each op component has been applied.
+json.incrementalApply = function(snapshot, op, _yield) {
+  for (var i = 0; i < op.length; i++) {
+    var smallOp = [op[i]];
+    snapshot = json.apply(snapshot, smallOp);
+    // I'd just call this yield, but thats a reserved keyword. Bah!
+    _yield(smallOp, snapshot);
+  }
+
+  return snapshot;
+};
+
+// Checks if two paths, p1 and p2 match.
+var pathMatches = json.pathMatches = function(p1, p2, ignoreLast) {
+  if (p1.length != p2.length)
+    return false;
+
+  for (var i = 0; i < p1.length; i++) {
+    if (p1[i] !== p2[i] && (!ignoreLast || i !== p1.length - 1))
+      return false;
+  }
+
+  return true;
+};
+
+json.append = function(dest,c) {
+  c = clone(c);
+
+  if (dest.length === 0) {
+    dest.push(c);
+    return;
+  }
+
+  var last = dest[dest.length - 1];
+
+  // convert old string ops to use subtype for backwards compatibility
+  if ((c.si != null || c.sd != null) && (last.si != null || last.sd != null)) {
+    convertFromText(c);
+    convertFromText(last);
+  }
+
+  if (pathMatches(c.p, last.p)) {
+    // handle subtype ops
+    if (c.t && last.t && c.t === last.t && subtypes[c.t]) {
+      last.o = subtypes[c.t].compose(last.o, c.o);
+
+      // convert back to old string ops
+      if (c.si != null || c.sd != null) {
+        var p = c.p;
+        for (var i = 0; i < last.o.length - 1; i++) {
+          c.o = [last.o.pop()];
+          c.p = p.slice();
+          convertToText(c);
+          dest.push(c);
+        }
+
+        convertToText(last);
+      }
+    } else if (last.na != null && c.na != null) {
+      dest[dest.length - 1] = {p: last.p, na: last.na + c.na};
+    } else if (last.li !== undefined && c.li === undefined && c.ld === last.li) {
+      // insert immediately followed by delete becomes a noop.
+      if (last.ld !== undefined) {
+        // leave the delete part of the replace
+        delete last.li;
+      } else {
+        dest.pop();
+      }
+    } else if (last.od !== undefined && last.oi === undefined && c.oi !== undefined && c.od === undefined) {
+      last.oi = c.oi;
+    } else if (last.oi !== undefined && c.od !== undefined) {
+      // The last path component inserted something that the new component deletes (or replaces).
+      // Just merge them.
+      if (c.oi !== undefined) {
+        last.oi = c.oi;
+      } else if (last.od !== undefined) {
+        delete last.oi;
+      } else {
+        // An insert directly followed by a delete turns into a no-op and can be removed.
+        dest.pop();
+      }
+    } else if (c.lm !== undefined && c.p[c.p.length - 1] === c.lm) {
+      // don't do anything
+    } else {
+      dest.push(c);
+    }
+  } else {
+    // convert string ops back
+    if ((c.si != null || c.sd != null) && (last.si != null || last.sd != null)) {
+      convertToText(c);
+      convertToText(last);
+    }
+
+    dest.push(c);
+  }
+};
+
+json.compose = function(op1,op2) {
+  json.checkValidOp(op1);
+  json.checkValidOp(op2);
+
+  var newOp = clone(op1);
+
+  for (var i = 0; i < op2.length; i++) {
+    json.append(newOp,op2[i]);
+  }
+
+  return newOp;
+};
+
+json.normalize = function(op) {
+  var newOp = [];
+
+  op = isArray(op) ? op : [op];
+
+  for (var i = 0; i < op.length; i++) {
+    var c = op[i];
+    if (c.p == null) c.p = [];
+
+    json.append(newOp,c);
+  }
+
+  return newOp;
+};
+
+// Returns the common length of the paths of ops a and b
+json.commonLengthForOps = function(a, b) {
+  var alen = a.p.length;
+  var blen = b.p.length;
+  if (a.na != null || a.t)
+    alen++;
+
+  if (b.na != null || b.t)
+    blen++;
+
+  if (alen === 0) return -1;
+  if (blen === 0) return null;
+
+  alen--;
+  blen--;
+
+  for (var i = 0; i < alen; i++) {
+    var p = a.p[i];
+    if (i >= blen || p !== b.p[i])
+      return null;
+  }
+
+  return alen;
+};
+
+// Returns true if an op can affect the given path
+json.canOpAffectPath = function(op, path) {
+  return json.commonLengthForOps({p:path}, op) != null;
+};
+
+// transform c so it applies to a document with otherC applied.
+json.transformComponent = function(dest, c, otherC, type) {
+  c = clone(c);
+
+  var common = json.commonLengthForOps(otherC, c);
+  var common2 = json.commonLengthForOps(c, otherC);
+  var cplength = c.p.length;
+  var otherCplength = otherC.p.length;
+
+  if (c.na != null || c.t)
+    cplength++;
+
+  if (otherC.na != null || otherC.t)
+    otherCplength++;
+
+  // if c is deleting something, and that thing is changed by otherC, we need to
+  // update c to reflect that change for invertibility.
+  if (common2 != null && otherCplength > cplength && c.p[common2] == otherC.p[common2]) {
+    if (c.ld !== void 0) {
+      var oc = clone(otherC);
+      oc.p = oc.p.slice(cplength);
+      c.ld = json.apply(clone(c.ld),[oc]);
+    } else if (c.od !== void 0) {
+      var oc = clone(otherC);
+      oc.p = oc.p.slice(cplength);
+      c.od = json.apply(clone(c.od),[oc]);
+    }
+  }
+
+  if (common != null) {
+    var commonOperand = cplength == otherCplength;
+
+    // backward compatibility for old string ops
+    var oc = otherC;
+    if ((c.si != null || c.sd != null) && (otherC.si != null || otherC.sd != null)) {
+      convertFromText(c);
+      oc = clone(otherC);
+      convertFromText(oc);
+    }
+
+    // handle subtype ops
+    if (oc.t && subtypes[oc.t]) {
+      if (c.t && c.t === oc.t) {
+        var res = subtypes[c.t].transform(c.o, oc.o, type);
+
+        // convert back to old string ops
+        if (c.si != null || c.sd != null) {
+          var p = c.p;
+          for (var i = 0; i < res.length; i++) {
+            c.o = [res[i]];
+            c.p = p.slice();
+            convertToText(c);
+            json.append(dest, c);
+          }
+        } else if (!isArray(res) || res.length > 0) {
+          c.o = res;
+          json.append(dest, c);
+        }
+
+        return dest;
+      }
+    }
+
+    // transform based on otherC
+    else if (otherC.na !== void 0) {
+      // this case is handled below
+    } else if (otherC.li !== void 0 && otherC.ld !== void 0) {
+      if (otherC.p[common] === c.p[common]) {
+        // noop
+
+        if (!commonOperand) {
+          return dest;
+        } else if (c.ld !== void 0) {
+          // we're trying to delete the same element, -> noop
+          if (c.li !== void 0 && type === 'left') {
+            // we're both replacing one element with another. only one can survive
+            c.ld = clone(otherC.li);
+          } else {
+            return dest;
+          }
+        }
+      }
+    } else if (otherC.li !== void 0) {
+      if (c.li !== void 0 && c.ld === undefined && commonOperand && c.p[common] === otherC.p[common]) {
+        // in li vs. li, left wins.
+        if (type === 'right')
+          c.p[common]++;
+      } else if (otherC.p[common] <= c.p[common]) {
+        c.p[common]++;
+      }
+
+      if (c.lm !== void 0) {
+        if (commonOperand) {
+          // otherC edits the same list we edit
+          if (otherC.p[common] <= c.lm)
+            c.lm++;
+          // changing c.from is handled above.
+        }
+      }
+    } else if (otherC.ld !== void 0) {
+      if (c.lm !== void 0) {
+        if (commonOperand) {
+          if (otherC.p[common] === c.p[common]) {
+            // they deleted the thing we're trying to move
+            return dest;
+          }
+          // otherC edits the same list we edit
+          var p = otherC.p[common];
+          var from = c.p[common];
+          var to = c.lm;
+          if (p < to || (p === to && from < to))
+            c.lm--;
+
+        }
+      }
+
+      if (otherC.p[common] < c.p[common]) {
+        c.p[common]--;
+      } else if (otherC.p[common] === c.p[common]) {
+        if (otherCplength < cplength) {
+          // we're below the deleted element, so -> noop
+          return dest;
+        } else if (c.ld !== void 0) {
+          if (c.li !== void 0) {
+            // we're replacing, they're deleting. we become an insert.
+            delete c.ld;
+          } else {
+            // we're trying to delete the same element, -> noop
+            return dest;
+          }
+        }
+      }
+
+    } else if (otherC.lm !== void 0) {
+      if (c.lm !== void 0 && cplength === otherCplength) {
+        // lm vs lm, here we go!
+        var from = c.p[common];
+        var to = c.lm;
+        var otherFrom = otherC.p[common];
+        var otherTo = otherC.lm;
+        if (otherFrom !== otherTo) {
+          // if otherFrom == otherTo, we don't need to change our op.
+
+          // where did my thing go?
+          if (from === otherFrom) {
+            // they moved it! tie break.
+            if (type === 'left') {
+              c.p[common] = otherTo;
+              if (from === to) // ugh
+                c.lm = otherTo;
+            } else {
+              return dest;
+            }
+          } else {
+            // they moved around it
+            if (from > otherFrom) c.p[common]--;
+            if (from > otherTo) c.p[common]++;
+            else if (from === otherTo) {
+              if (otherFrom > otherTo) {
+                c.p[common]++;
+                if (from === to) // ugh, again
+                  c.lm++;
+              }
+            }
+
+            // step 2: where am i going to put it?
+            if (to > otherFrom) {
+              c.lm--;
+            } else if (to === otherFrom) {
+              if (to > from)
+                c.lm--;
+            }
+            if (to > otherTo) {
+              c.lm++;
+            } else if (to === otherTo) {
+              // if we're both moving in the same direction, tie break
+              if ((otherTo > otherFrom && to > from) ||
+                  (otherTo < otherFrom && to < from)) {
+                if (type === 'right') c.lm++;
+              } else {
+                if (to > from) c.lm++;
+                else if (to === otherFrom) c.lm--;
+              }
+            }
+          }
+        }
+      } else if (c.li !== void 0 && c.ld === undefined && commonOperand) {
+        // li
+        var from = otherC.p[common];
+        var to = otherC.lm;
+        p = c.p[common];
+        if (p > from) c.p[common]--;
+        if (p > to) c.p[common]++;
+      } else {
+        // ld, ld+li, si, sd, na, oi, od, oi+od, any li on an element beneath
+        // the lm
+        //
+        // i.e. things care about where their item is after the move.
+        var from = otherC.p[common];
+        var to = otherC.lm;
+        p = c.p[common];
+        if (p === from) {
+          c.p[common] = to;
+        } else {
+          if (p > from) c.p[common]--;
+          if (p > to) c.p[common]++;
+          else if (p === to && from > to) c.p[common]++;
+        }
+      }
+    }
+    else if (otherC.oi !== void 0 && otherC.od !== void 0) {
+      if (c.p[common] === otherC.p[common]) {
+        if (c.oi !== void 0 && commonOperand) {
+          // we inserted where someone else replaced
+          if (type === 'right') {
+            // left wins
+            return dest;
+          } else {
+            // we win, make our op replace what they inserted
+            c.od = otherC.oi;
+          }
+        } else {
+          // -> noop if the other component is deleting the same object (or any parent)
+          return dest;
+        }
+      }
+    } else if (otherC.oi !== void 0) {
+      if (c.oi !== void 0 && c.p[common] === otherC.p[common]) {
+        // left wins if we try to insert at the same place
+        if (type === 'left') {
+          json.append(dest,{p: c.p, od:otherC.oi});
+        } else {
+          return dest;
+        }
+      }
+    } else if (otherC.od !== void 0) {
+      if (c.p[common] == otherC.p[common]) {
+        if (!commonOperand)
+          return dest;
+        if (c.oi !== void 0) {
+          delete c.od;
+        } else {
+          return dest;
+        }
+      }
+    }
+  }
+
+  json.append(dest,c);
+  return dest;
+};
+
+require('./bootstrapTransform')(json, json.transformComponent, json.checkValidOp, json.append);
+
+/**
+ * Register a subtype for string operations, using the text0 type.
+ */
+var text = require('./text0');
+
+json.registerSubtype(text);
+module.exports = json;
+
+
+},{"./bootstrapTransform":28,"./text0":31}],31:[function(require,module,exports){
+// DEPRECATED!
+//
+// This type works, but is not exported. Its included here because the JSON0
+// embedded string operations use this library.
+
+
+// A simple text implementation
+//
+// Operations are lists of components. Each component either inserts or deletes
+// at a specified position in the document.
+//
+// Components are either:
+//  {i:'str', p:100}: Insert 'str' at position 100 in the document
+//  {d:'str', p:100}: Delete 'str' at position 100 in the document
+//
+// Components in an operation are executed sequentially, so the position of components
+// assumes previous components have already executed.
+//
+// Eg: This op:
+//   [{i:'abc', p:0}]
+// is equivalent to this op:
+//   [{i:'a', p:0}, {i:'b', p:1}, {i:'c', p:2}]
+
+var text = module.exports = {
+  name: 'text0',
+  uri: 'http://sharejs.org/types/textv0',
+  create: function(initial) {
+    if ((initial != null) && typeof initial !== 'string') {
+      throw new Error('Initial data must be a string');
+    }
+    return initial || '';
+  }
+};
+
+/** Insert s2 into s1 at pos. */
+var strInject = function(s1, pos, s2) {
+  return s1.slice(0, pos) + s2 + s1.slice(pos);
+};
+
+/** Check that an operation component is valid. Throws if its invalid. */
+var checkValidComponent = function(c) {
+  if (typeof c.p !== 'number')
+    throw new Error('component missing position field');
+
+  if ((typeof c.i === 'string') === (typeof c.d === 'string'))
+    throw new Error('component needs an i or d field');
+
+  if (c.p < 0)
+    throw new Error('position cannot be negative');
+};
+
+/** Check that an operation is valid */
+var checkValidOp = function(op) {
+  for (var i = 0; i < op.length; i++) {
+    checkValidComponent(op[i]);
+  }
+};
+
+/** Apply op to snapshot */
+text.apply = function(snapshot, op) {
+  var deleted;
+
+  checkValidOp(op);
+  for (var i = 0; i < op.length; i++) {
+    var component = op[i];
+    if (component.i != null) {
+      snapshot = strInject(snapshot, component.p, component.i);
+    } else {
+      deleted = snapshot.slice(component.p, component.p + component.d.length);
+      if (component.d !== deleted)
+        throw new Error("Delete component '" + component.d + "' does not match deleted text '" + deleted + "'");
+
+      snapshot = snapshot.slice(0, component.p) + snapshot.slice(component.p + component.d.length);
+    }
+  }
+  return snapshot;
+};
+
+/**
+ * Append a component to the end of newOp. Exported for use by the random op
+ * generator and the JSON0 type.
+ */
+var append = text._append = function(newOp, c) {
+  if (c.i === '' || c.d === '') return;
+
+  if (newOp.length === 0) {
+    newOp.push(c);
+  } else {
+    var last = newOp[newOp.length - 1];
+
+    if (last.i != null && c.i != null && last.p <= c.p && c.p <= last.p + last.i.length) {
+      // Compose the insert into the previous insert
+      newOp[newOp.length - 1] = {i:strInject(last.i, c.p - last.p, c.i), p:last.p};
+
+    } else if (last.d != null && c.d != null && c.p <= last.p && last.p <= c.p + c.d.length) {
+      // Compose the deletes together
+      newOp[newOp.length - 1] = {d:strInject(c.d, last.p - c.p, last.d), p:c.p};
+
+    } else {
+      newOp.push(c);
+    }
+  }
+};
+
+/** Compose op1 and op2 together */
+text.compose = function(op1, op2) {
+  checkValidOp(op1);
+  checkValidOp(op2);
+  var newOp = op1.slice();
+  for (var i = 0; i < op2.length; i++) {
+    append(newOp, op2[i]);
+  }
+  return newOp;
+};
+
+/** Clean up an op */
+text.normalize = function(op) {
+  var newOp = [];
+
+  // Normalize should allow ops which are a single (unwrapped) component:
+  // {i:'asdf', p:23}.
+  // There's no good way to test if something is an array:
+  // http://perfectionkills.com/instanceof-considered-harmful-or-how-to-write-a-robust-isarray/
+  // so this is probably the least bad solution.
+  if (op.i != null || op.p != null) op = [op];
+
+  for (var i = 0; i < op.length; i++) {
+    var c = op[i];
+    if (c.p == null) c.p = 0;
+
+    append(newOp, c);
+  }
+
+  return newOp;
+};
+
+// This helper method transforms a position by an op component.
+//
+// If c is an insert, insertAfter specifies whether the transform
+// is pushed after the insert (true) or before it (false).
+//
+// insertAfter is optional for deletes.
+var transformPosition = function(pos, c, insertAfter) {
+  // This will get collapsed into a giant ternary by uglify.
+  if (c.i != null) {
+    if (c.p < pos || (c.p === pos && insertAfter)) {
+      return pos + c.i.length;
+    } else {
+      return pos;
+    }
+  } else {
+    // I think this could also be written as: Math.min(c.p, Math.min(c.p -
+    // otherC.p, otherC.d.length)) but I think its harder to read that way, and
+    // it compiles using ternary operators anyway so its no slower written like
+    // this.
+    if (pos <= c.p) {
+      return pos;
+    } else if (pos <= c.p + c.d.length) {
+      return c.p;
+    } else {
+      return pos - c.d.length;
+    }
+  }
+};
+
+// Helper method to transform a cursor position as a result of an op.
+//
+// Like transformPosition above, if c is an insert, insertAfter specifies
+// whether the cursor position is pushed after an insert (true) or before it
+// (false).
+text.transformCursor = function(position, op, side) {
+  var insertAfter = side === 'right';
+  for (var i = 0; i < op.length; i++) {
+    position = transformPosition(position, op[i], insertAfter);
+  }
+
+  return position;
+};
+
+// Transform an op component by another op component. Asymmetric.
+// The result will be appended to destination.
+//
+// exported for use in JSON type
+var transformComponent = text._tc = function(dest, c, otherC, side) {
+  //var cIntersect, intersectEnd, intersectStart, newC, otherIntersect, s;
+
+  checkValidComponent(c);
+  checkValidComponent(otherC);
+
+  if (c.i != null) {
+    // Insert.
+    append(dest, {i:c.i, p:transformPosition(c.p, otherC, side === 'right')});
+  } else {
+    // Delete
+    if (otherC.i != null) {
+      // Delete vs insert
+      var s = c.d;
+      if (c.p < otherC.p) {
+        append(dest, {d:s.slice(0, otherC.p - c.p), p:c.p});
+        s = s.slice(otherC.p - c.p);
+      }
+      if (s !== '')
+        append(dest, {d: s, p: c.p + otherC.i.length});
+
+    } else {
+      // Delete vs delete
+      if (c.p >= otherC.p + otherC.d.length)
+        append(dest, {d: c.d, p: c.p - otherC.d.length});
+      else if (c.p + c.d.length <= otherC.p)
+        append(dest, c);
+      else {
+        // They overlap somewhere.
+        var newC = {d: '', p: c.p};
+
+        if (c.p < otherC.p)
+          newC.d = c.d.slice(0, otherC.p - c.p);
+
+        if (c.p + c.d.length > otherC.p + otherC.d.length)
+          newC.d += c.d.slice(otherC.p + otherC.d.length - c.p);
+
+        // This is entirely optional - I'm just checking the deleted text in
+        // the two ops matches
+        var intersectStart = Math.max(c.p, otherC.p);
+        var intersectEnd = Math.min(c.p + c.d.length, otherC.p + otherC.d.length);
+        var cIntersect = c.d.slice(intersectStart - c.p, intersectEnd - c.p);
+        var otherIntersect = otherC.d.slice(intersectStart - otherC.p, intersectEnd - otherC.p);
+        if (cIntersect !== otherIntersect)
+          throw new Error('Delete ops delete different text in the same region of the document');
+
+        if (newC.d !== '') {
+          newC.p = transformPosition(newC.p, otherC);
+          append(dest, newC);
+        }
+      }
+    }
+  }
+
+  return dest;
+};
+
+var invertComponent = function(c) {
+  return (c.i != null) ? {d:c.i, p:c.p} : {i:c.d, p:c.p};
+};
+
+// No need to use append for invert, because the components won't be able to
+// cancel one another.
+text.invert = function(op) {
+  // Shallow copy & reverse that sucka.
+  op = op.slice().reverse();
+  for (var i = 0; i < op.length; i++) {
+    op[i] = invertComponent(op[i]);
+  }
+  return op;
+};
+
+require('./bootstrapTransform')(text, transformComponent, checkValidOp, append);
+
+},{"./bootstrapTransform":28}]},{},[3])(3)
+});

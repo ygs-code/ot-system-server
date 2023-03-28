@@ -10,16 +10,13 @@ import KoaRoute from "koa-router"; // koa 路由中间件
 
 import { verifyToken } from "@/redis";
 
-import controller from "../controller";
-import Sockets from "../sockets";
+import Controller from "../controller";
 
 class router {
-  constructor(app, server, parentRouter, socketRoute) {
+  constructor(app, parentRouter, socketRoute) {
     this.app = app;
-    this.server = server;
     this.router = parentRouter;
     this.socketRoute = socketRoute;
-    this.sockets = new Sockets(server);
     this.init();
   }
   createRouter() {
@@ -48,7 +45,7 @@ class router {
     this.socketRoute(
       "/socket/document",
       ({ request, socket, head, params }) => {
-        this.sockets.document({ request, socket, head, params });
+        Controller.document({ request, socket, head, params });
       }
     );
   }
@@ -80,20 +77,20 @@ class router {
   }
   query() {
     // 添加 接口
-    this.threeLevelRoute.get("/query", controller.query);
+    this.threeLevelRoute.get("/query", Controller.query);
   }
   create() {
     // 添加 接口
-    this.threeLevelRoute.post("/register", controller.create);
+    this.threeLevelRoute.post("/register", Controller.create);
   }
   edit() {
     // 添加 接口
-    this.threeLevelRoute.post("/edit", controller.edit);
+    this.threeLevelRoute.post("/edit", Controller.edit);
   }
   login() {
     // 添加 接口
-    // controller.a
-    // this.threeLevelRoute.post("/login", controller.login);
+    // Controller.a
+    // this.threeLevelRoute.post("/login", Controller.login);
   }
   verifyToken() {
     //检查token
@@ -119,7 +116,7 @@ class router {
   }
   verifyCode() {
     // 添加 接口
-    // this.threeLevelRoute.get("/getVerifyCode", controller.verifyCode);
+    // this.threeLevelRoute.get("/getVerifyCode", Controller.verifyCode);
   }
 }
 

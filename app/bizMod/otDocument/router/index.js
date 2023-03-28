@@ -16,9 +16,8 @@ import { router as DocumentRouter } from "../bizMod/document"; //DocumentRouter 
 import { initTable, initTableData } from "../db";
 // import { tables, CheckTable } from "../db"; //  db
 class router {
-  constructor(app, server, parentRouter, socketRoute) {
+  constructor(app, parentRouter, socketRoute) {
     this.app = app;
-    this.server = server;
     this.router = parentRouter;
     this.socketRoute = socketRoute;
     this.init();
@@ -55,7 +54,6 @@ class router {
     // new scriptRouter(this.app, this.twoLevelRoute);
     new DocumentRouter(
       this.app,
-      this.server,
       this.twoLevelRoute,
       this.socketRoute
     );

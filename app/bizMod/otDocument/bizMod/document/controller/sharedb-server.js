@@ -60,11 +60,8 @@ class DB {
 
     for (let key of keys) {
       let data = await getRedisDocument(key);
-      //   console.log("updateSqlODocument=========");
       await editOpsDocument(table, JSON.parse(data));
     }
-
-    // console.log("updateSqlODocument==", keys);
     clearTimeout(this.oTimer);
     if (flag) {
       return false;

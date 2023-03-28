@@ -10,9 +10,8 @@ import { verifyToken } from "@/redis/index";
 import noVerifyToken from "./noVerifyToken";
 
 class Route {
-  constructor(app, server, socketRoute) {
+  constructor(app,  socketRoute) {
     this.app = app;
-    this.server = server;
     this.socketRoute = socketRoute;
     // this.router = router;
     this.init();
@@ -75,7 +74,7 @@ class Route {
   }
   // 添加路由
   async addRouters() {
-    bizModRouter(this.app, this.server, this.router, this.socketRoute);
+    bizModRouter(this.app, this.router, this.socketRoute);
 
     //验证Token
     this.verifyToken();

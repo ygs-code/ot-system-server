@@ -92,7 +92,7 @@ class App {
   }
   async addRoute() {
     // 导入路由
-    await new Route(this.app, this.server, (...ags) => {
+    await new Route(this.app, (...ags) => {
       this.socketRoute(...ags);
     });
   }
@@ -119,11 +119,9 @@ class App {
     // https://www.cnblogs.com/huenchao/p/6234550.html  文档
 
     server.on("upgrade", (request, socket, head) => {
-      console.log("upgrade=========");
       const pathname = url.parse(request.url).pathname;
-      // // console.log('request.url==', request.url);
+
       const params = this.getUrlParams(request.url) || {}; // 如果没有id则不给连接
-      // const { documentId, documentType } = params; // 如果没有id则不给连接
 
       socket.on("end", () => {
         if (!socket.destroyed) {
@@ -138,33 +136,21 @@ class App {
       } else {
         socket.end();
       }
-
-      // if (!documentId || !documentType) {
-      //   return socket.end();
-      // }
-      // if (pathname === "/sharedb") {
-      //   wssShareDB.handleUpgrade(request, socket, head, (ws) => {
-      //     // 拿到参数 做拦截
-      //     wssShareDB.emit("connection", ws, request, params);
-      //   });
-      // } else {
-      //   socket.end();
-      // }
     });
 
     // this.server.on("clientError", (err, socket) => {
     //   socket.end("HTTP/1.1 400 Bad Request\r\n\r\n");
     // });
 
-    server.on("request", function (req, res) {
-      // 3.为服务器实例绑定 request 事件，监听客户端请求。
-      console.log("request1======");
-    });
+    // server.on("request", function (req, res) {
+    //   // 3.为服务器实例绑定 request 事件，监听客户端请求。
+    //   console.log("request1======");
+    // });
 
-    server.on("request", function (req, res) {
-      // 3.为服务器实例绑定 request 事件，监听客户端请求。
-      console.log("request2======");
-    });
+    // server.on("request", function (req, res) {
+    //   // 3.为服务器实例绑定 request 事件，监听客户端请求。
+    //   console.log("request2======");
+    // });
 
     // //监听服务器连接
     // this.server.on("connect", function (socket) {

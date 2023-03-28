@@ -16,10 +16,10 @@ import { exec } from "@/db/index.js";
 import { router as UserRouter } from "../bizMod/user"; //UserRouter 路由
 // import { tables, CheckTable } from "../db"; //  db
 class router {
-  constructor(app, server, parentRouter) {
+  constructor(app, parentRouter, socketRoute) {
     this.app = app;
-    this.server = server;
     this.router = parentRouter;
+    this.socketRoute = socketRoute;
     this.init();
   }
   createRouter() {
@@ -52,7 +52,7 @@ class router {
     // 为script模块添加路由
     // new scriptRouter(this.app, this.twoLevelRoute);
 
-    new UserRouter(this.app, this.server, this.twoLevelRoute);
+    new UserRouter(this.app, this.twoLevelRoute, this.socketRoute);
     // 添加路由
     this.router.use(this.twoLevelRoute.routes()); //挂载二级路由
   }

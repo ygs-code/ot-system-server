@@ -1,5 +1,5 @@
 import ShareDB from "@/modules/otServe/lib/server/index.js";
-import MemoryDB from "@/modules/otServe/lib/memory.js";
+import MemoryDB from "@/modules/otServe/lib/db/index.js";
 import moment from "moment";
 import { throttle, stabilization } from "@/utils";
 import {
@@ -9,7 +9,7 @@ import {
   createDocument,
   editDocument,
   getDocument,
-  removeDocument
+  removeDocument 
 } from "@/bizMod/otDocument/db/index.js";
 import { type } from "rich-text";
 
@@ -60,11 +60,9 @@ class DB {
 
     for (let key of keys) {
       let data = await getRedisDocument(key);
-      //   console.log("updateSqlODocument=========");
+ 
       await editOpsDocument(table, JSON.parse(data));
     }
-
-    // console.log("updateSqlODocument==", keys);
     clearTimeout(this.oTimer);
     if (flag) {
       return false;
@@ -115,24 +113,24 @@ class DB {
           }
           ops = JSON.stringify(ops);
 
-          let data = await setRedisDocument(
-            `${table}.${id}`,
-            JSON.stringify({ id, ops, update_by: userId })
-          )
-            .then(() => {
-              console.log("ops写入成功");
-              oDocumentThrottle(updateSqlFrequency, () => {
-                this.updateSqlODocument(table);
-              });
-            })
-            .catch(async (error) => {
-              console.log("ops写入错误");
-              let data = await editOpsDocument(table, {
-                id,
-                ops
-              });
-              return data;
-            });
+          // let data = await setRedisDocument(
+          //   `${table}.${id}`,
+          //   JSON.stringify({ id, ops, update_by: userId })
+          // )
+          //   .then(() => {
+          //     console.log("ops写入成功");
+          //     oDocumentThrottle(updateSqlFrequency, () => {
+          //       this.updateSqlODocument(table);
+          //     });
+          //   })
+          //   .catch(async (error) => {
+          //     console.log("ops写入错误");
+          //     let data = await editOpsDocument(table, {
+          //       id,
+          //       ops
+          //     });
+          //     return data;
+          //   });
         },
 
         getDocument: async (table, id) => {
@@ -167,55 +165,55 @@ class DB {
 
         // },
         editDocument: async (table, data) => {
-          const {
-            userId: user_id,
-            id,
-            v,
-            type,
-            data: {
-              ops: [{ insert: content }]
-            },
-            m: { ctime, mtime }
-          } = data;
+          // const {
+          //   userId: user_id,
+          //   id,
+          //   v,
+          //   type,
+          //   data: {
+          //     ops: [{ insert: content }]
+          //   },
+          //   m: { ctime, mtime }
+          // } = data;
 
-          const create_time = moment(ctime).format("YYYY-MM-DD HH:mm:ss");
-          const update_time = moment(mtime).format("YYYY-MM-DD HH:mm:ss");
+          // const create_time = moment(ctime).format("YYYY-MM-DD HH:mm:ss");
+          // const update_time = moment(mtime).format("YYYY-MM-DD HH:mm:ss");
 
-          if (id && user_id && type) {
-            let data = await setRedisDocument(
-              `${table}.${id}`,
-              JSON.stringify({
-                id,
-                // create_by: user_id,
-                update_by: user_id,
-                // title,
-                v,
-                type,
-                content,
-                create_time,
-                update_time
-              })
-            )
-              .then(() => {
-                console.log("文档写入成功");
-                documentThrottle(updateSqlFrequency, () => {
-                  this.updateSqlDocument(table);
-                });
-              })
-              .catch(async (error) => {
-                console.log("文档写入错误");
-                // await editDocument(table, {
-                //     id,
-                //     user_id,
-                //     // title,
-                //     v,
-                //     type,
-                //     content,
-                //     create_time,
-                //     update_time,
-                // });
-              });
-          }
+          // if (id && user_id && type) {
+          //   let data = await setRedisDocument(
+          //     `${table}.${id}`,
+          //     JSON.stringify({
+          //       id,
+          //       // create_by: user_id,
+          //       update_by: user_id,
+          //       // title,
+          //       v,
+          //       type,
+          //       content,
+          //       create_time,
+          //       update_time
+          //     })
+          //   )
+          //     .then(() => {
+          //       console.log("文档写入成功");
+          //       documentThrottle(updateSqlFrequency, () => {
+          //         this.updateSqlDocument(table);
+          //       });
+          //     })
+          //     .catch(async (error) => {
+          //       console.log("文档写入错误");
+          //       // await editDocument(table, {
+          //       //     id,
+          //       //     user_id,
+          //       //     // title,
+          //       //     v,
+          //       //     type,
+          //       //     content,
+          //       //     create_time,
+          //       //     update_time,
+          //       // });
+          //     });
+          // }
         },
 
         // 创建文档
