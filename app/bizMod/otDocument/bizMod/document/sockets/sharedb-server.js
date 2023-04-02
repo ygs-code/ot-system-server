@@ -9,7 +9,7 @@ import {
   createDocument,
   editDocument,
   getDocument,
-  removeDocument 
+  removeDocument
 } from "@/bizMod/otDocument/db/index.js";
 import { type } from "rich-text";
 
@@ -17,7 +17,7 @@ import {
   setDocument as setRedisDocument,
   getDocument as getRedisDocument
 } from "@/bizMod/otDocument/redis/index.js";
-import { Redis } from "@/redis"; 
+import { Redis } from "@/redis";
 
 // var { RedisClass, Redis, redisClient, expires } = require("../redis");
 
@@ -41,13 +41,12 @@ class DB {
   }
 
   async updateSqlDocument(table, flag) {
-    console.log('updateSqlDocument==')
     let keys = await Redis.getKeys(`${table}.*`);
     for (let key of keys) {
       let data = await getRedisDocument(key);
       await editDocument(table, JSON.parse(data));
     }
-    // console.log("updateSqlDocument==", keys);
+
     clearTimeout(this.timer);
     if (flag) {
       return false;
@@ -61,7 +60,7 @@ class DB {
 
     for (let key of keys) {
       let data = await getRedisDocument(key);
- 
+
       await editOpsDocument(table, JSON.parse(data));
     }
     clearTimeout(this.oTimer);
@@ -88,7 +87,7 @@ class DB {
           if (data.length) {
             data = JSON.parse(data[0].ops);
           }
-          // console.log("getOpsDocument==");
+
           return data;
         },
         //   createOpsDocument: async (table, id, ops) => {
@@ -119,13 +118,13 @@ class DB {
             JSON.stringify({ id, ops, update_by: userId })
           )
             .then(() => {
-              console.log("ops写入成功");
+              // console.log("ops写入成功");
               oDocumentThrottle(updateSqlFrequency, () => {
                 this.updateSqlODocument(table);
               });
             })
             .catch(async (error) => {
-              console.log("ops写入错误");
+              // console.log("ops写入错误");
               let data = await editOpsDocument(table, {
                 id,
                 ops
@@ -180,8 +179,6 @@ class DB {
           const create_time = moment(ctime).format("YYYY-MM-DD HH:mm:ss");
           const update_time = moment(mtime).format("YYYY-MM-DD HH:mm:ss");
 
-          console.log('table==',table)
-          console.log('id==',id)
           if (id && user_id && type) {
             let data = await setRedisDocument(
               `${table}.${id}`,
@@ -198,14 +195,13 @@ class DB {
               })
             )
               .then(() => {
-                console.log("文档写入成功");
+                // console.log("文档写入成功");
                 documentThrottle(updateSqlFrequency, () => {
-                  console.log('updateSqlDocument==')
                   this.updateSqlDocument(table);
                 });
               })
               .catch(async (error) => {
-                console.log("文档写入错误");
+                // console.log("文档写入错误");
                 // await editDocument(table, {
                 //     id,
                 //     user_id,
@@ -236,7 +232,6 @@ class DB {
           const create_time = moment(ctime).format("YYYY-MM-DD HH:mm:ss");
           const update_time = moment(mtime).format("YYYY-MM-DD HH:mm:ss");
 
-          console.log("type=====", type);
           if (id && user_id && type) {
             await Promise.all([
               await setRedisDocument(

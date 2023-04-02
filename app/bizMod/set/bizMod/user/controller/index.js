@@ -8,11 +8,30 @@ import {
   unauthorized,
   unsupported
 } from "@/constant";
+import { verifyToken } from "@/redis/index";
 
 import Service from "../service";
 
 @captureClassError()
 class Controller {
+  // 检查登录接口
+  static async checkLogin(ctx, next, parameter) {
+    let { request, cookies } = ctx;
+    const { header } = request;
+
+    const token = cookies.get("token") || header.token;
+
+    //
+    const data = await Service.checkLogin(ctx, next, {
+      token
+    });
+
+    return {
+      ...success,
+      data
+    };
+  }
+
   static async queryList(ctx, next, { parameter }) {
     const data = await Service.queryList(ctx, next, parameter);
 

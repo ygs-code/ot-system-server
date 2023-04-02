@@ -85,6 +85,34 @@ type VerifyCodeInfo {
   message: String
 }
 
+"""
+检查用户是否登录数据
+"""
+type CheckLoginData {
+  """
+  布尔值
+  """
+  flag: Boolean
+}
+
+"""
+检查用户是否登录
+"""
+type CheckLoginInfo {
+  """
+  请求状态
+  """
+  code: Int
+  """
+  用户信息数据
+  """
+  data: CheckLoginData
+  """
+  请求信息
+  """
+  message: String
+}
+
 # 定义输入类型
 input CreateUserInput {
   name: String!
@@ -181,7 +209,7 @@ input UserListInfoInput {
   email: String
   id: ID
   name: String
-  phone: String
+  phone: String 
   type: String
 }
 
@@ -193,6 +221,8 @@ extend type Query {
   getVerifyCode: VerifyCodeInfo
   # ! 是必填参数
   login(password: String!, name: String!, verificationCode: String!): LoginInfo
+  #  检查用户是否登录
+  checkLogin: CheckLoginInfo
 }
 
 extend type Mutation {
@@ -204,5 +234,4 @@ extend type Mutation {
 
   #   删除用户
   removeUser(id: ID): UserInfo
-   
 }

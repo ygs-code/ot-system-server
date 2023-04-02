@@ -10,7 +10,7 @@ import { verifyToken } from "@/redis/index";
 import noVerifyToken from "./noVerifyToken";
 
 class Route {
-  constructor(app,  socketRoute) {
+  constructor(app, socketRoute) {
     this.app = app;
     this.socketRoute = socketRoute;
     // this.router = router;
@@ -65,6 +65,8 @@ class Route {
           ...unauthorized,
           message: "登录回话已过期，请重新登录"
         };
+
+        throw new Error(JSON.stringify(ctx.response.body));
       });
 
       ctx.response.userInfo = data;

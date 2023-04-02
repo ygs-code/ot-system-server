@@ -15,6 +15,12 @@ import { createToken, verifyToken } from "@/redis";
 
 @captureClassError()
 class Service {
+  // 检查登录接口
+  static async checkLogin(ctx, next, { token }) {
+    return await verifyToken(token)
+      .then(() => ({ flag: true }))
+      .catch(() => ({ flag: false }));
+  }
   // 查询列表
   static async queryList(ctx, next, parameter) {
     const { pageNum, pageSize, email, id, name, phone, type } = parameter;

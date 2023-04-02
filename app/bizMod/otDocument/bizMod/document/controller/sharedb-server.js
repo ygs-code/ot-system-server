@@ -46,7 +46,7 @@ class DB {
       let data = await getRedisDocument(key);
       await editDocument(table, JSON.parse(data));
     }
-    // console.log("updateSqlDocument==", keys);
+  
     clearTimeout(this.timer);
     if (flag) {
       return false;
@@ -86,7 +86,6 @@ class DB {
           if (data.length) {
             data = JSON.parse(data[0].ops);
           }
-          // console.log("getOpsDocument==");
           return data;
         },
         //   createOpsDocument: async (table, id, ops) => {
@@ -117,13 +116,13 @@ class DB {
             JSON.stringify({ id, ops, update_by: userId })
           )
             .then(() => {
-              console.log("ops写入成功");
+              // console.log("ops写入成功");
               oDocumentThrottle(updateSqlFrequency, () => {
                 this.updateSqlODocument(table);
               });
             })
             .catch(async (error) => {
-              console.log("ops写入错误");
+              // console.log("ops写入错误");
               let data = await editOpsDocument(table, {
                 id,
                 ops
@@ -184,7 +183,7 @@ class DB {
               JSON.stringify({
                 id,
                 // create_by: user_id,
-                update_by: user_id,
+                update_by: user_id, 
                 // title,
                 v,
                 type,
@@ -194,13 +193,13 @@ class DB {
               })
             )
               .then(() => {
-                console.log("文档写入成功");
+                // console.log("文档写入成功");
                 documentThrottle(updateSqlFrequency, () => {
                   this.updateSqlDocument(table);
                 });
               })
               .catch(async (error) => {
-                console.log("文档写入错误");
+                // console.log("文档写入错误");
                 // await editDocument(table, {
                 //     id,
                 //     user_id,
@@ -231,7 +230,7 @@ class DB {
           const create_time = moment(ctime).format("YYYY-MM-DD HH:mm:ss");
           const update_time = moment(mtime).format("YYYY-MM-DD HH:mm:ss");
 
-          console.log("type=====", type);
+           
           if (id && user_id && type) {
             await Promise.all([
               await setRedisDocument(

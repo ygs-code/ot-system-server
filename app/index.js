@@ -9,7 +9,7 @@
 import "@babel/polyfill";
 
 import { config } from "dotenv";
-import { Server } from "http";
+// import { Server } from "http";
 import Koa from "koa";
 import url from "url";
 
@@ -29,7 +29,7 @@ class App {
   constructor() {
     //创建node实例
     this.app = new Koa();
-    this.server = Server(this.app);
+    // this.server = new Server(this.app);
     this.sockets = [];
     this.init();
   }
@@ -199,11 +199,11 @@ class App {
 
     // 原来是这个啊
     // 还是要用
-    this.$server = this.app.listen(port, () => {
+    this.server = this.app.listen(port, () => {
       console.log(`服务器启动成功:http://localhost:${port}/`);
     });
 
-    this.linstSocket(this.$server);
+    this.linstSocket(this.server);
 
     // this.$server.on("request", function (req, res) {
     //   // 3.为服务器实例绑定 request 事件，监听客户端请求。

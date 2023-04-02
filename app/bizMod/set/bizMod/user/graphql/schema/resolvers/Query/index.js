@@ -39,3 +39,13 @@ export const login = async (root, parameter) => {
 
   return data;
 };
+
+// 登录接口
+export const checkLogin = async (root, parameter) => {
+  const { ctx, next } = root;
+
+  //    登录检查
+  const data = await Controller.checkLogin(ctx, next, parameter);
+
+  return data;
+};

@@ -14,10 +14,9 @@ export const throttle = () => {
   return (time, callback) =>
     new Promise((resolve) => {
       const nowTime = new Date().getTime();
-      console.log(111)
-      console.log(!startTime || nowTime - startTime > time)
+
       if (!startTime || nowTime - startTime > time) {
-        console.log(222)
+
         startTime = nowTime;
         if (callback && callback instanceof Function) {
           callback();
