@@ -170,11 +170,16 @@ class DB {
             id,
             v,
             type,
-            data: {
-              ops: [{ insert: content }]
-            },
+            data: { ops = [] },
             m: { ctime, mtime }
           } = data;
+
+          const { insert: content } = ops.find((item) => {
+            const { insert } = item;
+            return insert !== undefined;
+          }) || {
+            insert: ""
+          };
 
           const create_time = moment(ctime).format("YYYY-MM-DD HH:mm:ss");
           const update_time = moment(mtime).format("YYYY-MM-DD HH:mm:ss");

@@ -137,6 +137,9 @@ class WssSharedb {
               op: {
                 ops: [
                   {
+                    retain: 1,
+                  },
+                  {
                     insert: ""
                   }
                 ]
@@ -164,7 +167,7 @@ class WssSharedb {
           return ws.terminate();
         }
         ws.isAlive = false;
-        ws.ping(); // 发送给客户端
+        ws.ping(); // 发送给客户端 
       });
     }, 30000);
   }
