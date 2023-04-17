@@ -95,7 +95,6 @@ export default {
     ]
   },
   devtool: "eval", // 生产环境和开发环境判断
-  mode: "production",
   plugins: [
     //体积包分析插件
     // new BundleAnalyzerPlugin(),

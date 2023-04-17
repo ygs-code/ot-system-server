@@ -39,7 +39,7 @@ const cacheLoader = (happypackId) => {
         "thread-loader",
         "cache-loader"
       ]
-    : [`happypack/loader?id=${happypackId}`]; 
+    : [`happypack/loader?id=${happypackId}`];
 };
 // console.log("__dirname : " + __dirname);
 // console.log("resolve   : " + resolve("./"));
@@ -52,12 +52,13 @@ export default {
     // myVue: [path.join(process.cwd(), "/app/myVue.js")], // 公共包抽取
     index: [
       "@babel/polyfill",
-      //添加编译缓存
-      "webpack/hot/poll?1000",
       //  path.join(process.cwd(), "/app/index.js")
       //入口主文件
       path.join(process.cwd(), "/app/index.js") // 如果没有配置 context 则需要这样引入  path.join(__dirname, "../../app/index.js")
-    ]
+    ].concat(
+      //添加编译缓存
+      isEnvDevelopment ? ["webpack/hot/poll?1000"] : []
+    )
   },
   // 出口
   output: {
