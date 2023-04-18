@@ -22,5 +22,5 @@ RUN echo '编译成功'
 EXPOSE 3003
 #程序启动脚本
 RUN echo '启动server服务器'
-CMD ["npm", "dev:n"]
+CMD ["npm", "prd:n"]
 RUN echo '启动成功'

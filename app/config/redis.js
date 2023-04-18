@@ -4,7 +4,7 @@ let REDIS_CONF = null;
 if (env === "development") {
   REDIS_CONF = {
     host: "127.0.0.1", //地址
-    port: "6378", // 端口
+    port: "6379", // 端口
     options: {
       auth_pass: 123456 // 密码
     }
@@ -13,7 +13,7 @@ if (env === "development") {
 if (env === "production") {
   REDIS_CONF = {
     host: "127.0.0.1",
-    port: "6378",
+    port: "6379",
     options: {
       auth_pass: 123456
     }
