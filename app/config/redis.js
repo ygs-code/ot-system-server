@@ -12,7 +12,7 @@ if (env === "development") {
 }
 if (env === "production") {
   REDIS_CONF = {
-    host: "127.0.0.1",
+    host: "172.16.0.2",
     port: "6379",
     options: {
       auth_pass: 123456
