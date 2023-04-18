@@ -6,3 +6,5 @@ Dockerfile
 README.md
 .gitignore
 dist
+package-lock.json
+yarn.lock
