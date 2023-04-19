@@ -15,6 +15,7 @@ import { exec } from "@/db/index.js";
 // import { router as scriptRouter } from "../bizMod/script"; //scriptRouter 路由
 import { router as UserRouter } from "../bizMod/user"; //UserRouter 路由
 // import { tables, CheckTable } from "../db"; //  db
+
 class router {
   constructor(app, parentRouter, socketRoute) {
     this.app = app;

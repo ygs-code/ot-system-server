@@ -10,20 +10,68 @@ import mysql from "mysql";
 
 import { MYSQL_CONF } from "../config/index";
 
-// 创建链接对象
-const connection = mysql.createConnection(MYSQL_CONF);
-// 统一执行 sql 的函数  文档 https://github.com/mysqljs/mysql
-const exec = async function () {
-  const parameter = arguments;
-  return await new Promise((resolve, reject) => {
-    connection.query(...parameter, (err, result) => {
+class DB {
+  static createConnection = (callback = () => {}) => {
+    if (DB.connection) {
+      DB.connection.destroy();
+      DB.connection = null;
+    }
+    DB.connection = mysql.createConnection(MYSQL_CONF);
+    DB.connection.connect((err) => {
       if (err) {
-        reject(err);
-        return;
+        console.log("Mysql数据库连失败");
+        callback(err);
+        clearTimeout(DB.connectionTimer);
+        DB.connectionTimer = setTimeout(() => {
+          DB.createConnection(callback);
+        }, 2000);
+        return false;
       }
-      resolve(result);
+      console.log("Mysql数据库连接成功");
+      callback();
     });
-  });
-};
+    DB.onError(callback, DB.connection);
+    DB.ping(DB.connection);
+    return DB.connection;
+  };
+  static onError = (callback, connection) => {
+    connection.on("error", (err) => {
+      console.log("err===", err);
+      if (err.code === "PROTOCOL_CONNECTION_LOST") {
+        this.createConnection(callback);
+      } else {
+        console.log("err:", err);
+      }
+    });
+  };
+  static ping = (connection) => {
+    // 每个小时ping一次数据库，保持数据库连接状态
+    clearInterval(DB.pingInterval);
+    // 每个小时ping一次数据库，保持数据库连接状态
+    DB.pingInterval = setInterval(() => {
+      connection.ping((err) => {
+        if (err) {
+          console.log("ping error: " + JSON.stringify(err));
+        }
+      });
+    }, 3600000 * 3);
+  };
+  static exec = async (...ags) => {
+    const parameter = ags;
+    return await new Promise((resolve, reject) => {
+      this.connection.query(...parameter, (err, result) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(result);
+      });
+    });
+  };
+}
 
-export { connection, exec };
+const { connection, exec, createConnection } = DB;
+
+export default DB;
+
+export { connection, exec, createConnection };

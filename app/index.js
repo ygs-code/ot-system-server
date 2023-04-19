@@ -14,12 +14,11 @@ import Koa from "koa";
 import url from "url";
 
 // import { port } from "./config";
-import { connection, exec } from "./db/index.js";
+import { createConnection, exec } from "./db/index.js";
 import initTable from "./db/sql/initTable.sql";
 import { Redis } from "./redis";
 import Route from "./routes/index";
 import { promise, stabilization } from "./utils";
-import debug from "debug";
 
 const {
   parsed: { port }
@@ -52,34 +51,27 @@ class App {
   }
   async connectRedis() {
     await promise((reslove, reject) => {
-      Redis.connect(() => {
-        console.log("Redis 链接成功");
-        reslove();
-      });
-      Redis.error(() => {
-        console.log("Redis 发生错误");
-        reject();
-      });
+      try {
+        Redis.connect(() => {
+          console.log("Redis 链接成功");
+          reslove();
+        });
+        Redis.error(() => {
+          console.log("Redis 发生错误");
+          // reject();
+        });
+      } catch (error) {
+        console.log("error:", error);
+      }
     });
   }
   async connectSql() {
     await promise((reslove, reject) => {
-      connection.connect((err) => {
-        if (err) {
-          console.log("Mysql数据库连失败");
-          reject();
-          throw err;
+      createConnection((err) => {
+        if (!err) {
+          reslove();
         }
-        console.log("Mysql数据库连接成功");
-        reslove();
       });
-      //   connection.end((err) => {
-      //     if (err) {
-      //       console.log("数据库连失败");
-      //       reject();
-      //       throw err;
-      //     }
-      //   });
     });
   }
   async initTable() {
@@ -88,7 +80,7 @@ class App {
   }
   socketRoute(path, callback) {
     this.sockets[path] = callback;
-    console.log("this.sockets===", this.sockets);
+
   }
   async addRoute() {
     // 导入路由
@@ -114,7 +106,7 @@ class App {
   }
 
   linstSocket(server) {
-    console.log("addSocket======");
+  
     // console.log("this.server======", this.server);
     // https://www.cnblogs.com/huenchao/p/6234550.html  文档
 
@@ -195,9 +187,9 @@ class App {
     //    kill(port, "tcp");
     // } catch (e) {}
 
-    await stabilization()(1000);
+    // await stabilization()(1000);
 
-    // 原来是这个啊
+    // console.log("port=====", port);
     // 还是要用
     this.server = this.app.listen(port, () => {
       console.log(`服务器启动成功:http://localhost:${port}/`);

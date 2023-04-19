@@ -10,19 +10,11 @@ import { Redis, redisClient } from "@/redis";
 
 import { expires } from "../config";
 
-
-console.log('redisClient===',redisClient)
-
 // 设置验证码
 export const setDocument = (key, value, time) => {
-  return Redis.set(
-    key,
-    value,
-    () => {},
-    {
-      pexpire: expires
-    }
-  );
+  return Redis.set(key, value, () => {}, {
+    pexpire: expires
+  });
 
   // callback = () => {}, options = () => {}
   // Redis.pexpire(key, time || expires);

@@ -1,9 +1,9 @@
 const env = process.env.NODE_ENV; // 环境参数
 let MYSQL_CONF = null;
-
+let { MYSQL_ADDRESS } = process.env; // 环境参数
 if (env === "development") {
   MYSQL_CONF = {
-    host: "127.0.0.1",
+    host: MYSQL_ADDRESS,
     user: "root",
     password: "123456",
     port: "3306",
@@ -14,7 +14,7 @@ if (env === "development") {
 }
 if (env === "production") {
   MYSQL_CONF = {
-    host: "172.16.0.2",
+    host: MYSQL_ADDRESS,
     user: "root",
     password: "123456",
     port: "3306",
@@ -23,4 +23,5 @@ if (env === "production") {
     multipleStatements: true // 是否许一个query中有多个MySQL语句 （默认：false）
   };
 }
+console.log("MYSQL_CONF=========", MYSQL_CONF);
 export { MYSQL_CONF };

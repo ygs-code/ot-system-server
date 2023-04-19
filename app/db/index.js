@@ -6,5 +6,10 @@
  * @Description: In User Settings Edit
  * @FilePath: /error-sytem/server/app/db/index.js
  */
-export { connection, exec } from "./mysql";
+
+import DB from "./mysql";
+
+export * from "./mysql";
 export * from "./utils";
+
+export default DB;
