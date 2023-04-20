@@ -170,22 +170,10 @@
         "dev:n": "nodemon    --exec cross-env NODE_ENV=development     babel-node ./dist/index.js    -r  dotenv/config  dotenv_config_path=.env.development",
         "test:n": "nodemon --exec cross-env NODE_ENV=production    babel-node ./dist/index.js  -r  dotenv/config  dotenv_config_path=.env.development",
         "prd:n": "nodemon  --exec cross-env NODE_ENV=production    babel-node ./dist/index.js  -r  dotenv/config  dotenv_config_path=.env.production",
-        "//注释5": "bable转义,一般用webpack转义,该指令只用来调试",
-        "babel": " babel ./app --watch --out-dir ./dist",
-        "//注释6": "建议不用dev:source这个指令,这个指令启动服务有可能会报错",
-        "dev:source": "nodemon  --exec cross-env  NODE_ENV=development  babel-node ./app/index.js",
-        "testflie": "node  ./test.js",
-        "//注释7": "编译dll文件",
-        "dll": "webpack   --progress --config ./scripts/webpack/config/webpack.dll.config.js",
         "//注释8单元测试命令": "运行单元测试",
         "test": "npm run jest",
         "//注释9": "生成测试覆盖率报告",
-        "coverage": "jest --coverage --config jest.config.ts",
-        "mocha": "mocha ./app/test/add.test.ts",
-        "test:webpack": "jest-webpack",
-        "jest": " babel-node ./scripts/test.js",
-        "add": " jest ./dist/__test__/add.test.js",
-        "graphql:demo": "nodemon  --exec cross-env  NODE_ENV=development  babel-node ./app/graphql/schema/graphql.demo.test.js"
+        "coverage": "jest --coverage --config jest.config.ts"
     },
     "author": "",
     "license": "ISC"
