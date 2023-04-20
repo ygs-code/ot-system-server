@@ -11,30 +11,34 @@ import mysql from "mysql";
 import { MYSQL_CONF } from "../config/index";
 
 class DB {
-  static createConnection = (callback = () => {}) => {
-    if (DB.connection) {
-      DB.connection.destroy();
-      DB.connection = null;
+  constructor() {
+    this.connection = null;
+    this.connectionTimer = this.pingInterval = null;
+  }
+  createConnection = (callback = () => {}) => {
+    if (this.connection) {
+      this.connection && this.connection.destroy();
+      this.connection = null;
     }
-    DB.connection = mysql.createConnection(MYSQL_CONF);
-    DB.connection.connect((err) => {
+    this.connection = mysql.createConnection(MYSQL_CONF);
+    this.connection.connect((err) => {
       if (err) {
         console.log("Mysql数据库连失败");
         callback(err);
-        clearTimeout(DB.connectionTimer);
-        DB.connectionTimer = setTimeout(() => {
-          DB.createConnection(callback);
+        clearTimeout(this.connectionTimer);
+        this.connectionTimer = setTimeout(() => {
+          this.createConnection(callback);
         }, 2000);
         return false;
       }
       console.log("Mysql数据库连接成功");
       callback();
     });
-    DB.onError(callback, DB.connection);
-    DB.ping(DB.connection);
-    return DB.connection;
+    this.onError(callback, this.connection);
+    this.ping(this.connection);
+    return this.connection;
   };
-  static onError = (callback, connection) => {
+  onError = (callback, connection) => {
     connection.on("error", (err) => {
       console.log("err===", err);
       if (err.code === "PROTOCOL_CONNECTION_LOST") {
@@ -44,11 +48,11 @@ class DB {
       }
     });
   };
-  static ping = (connection) => {
+  ping = (connection) => {
     // 每个小时ping一次数据库，保持数据库连接状态
-    clearInterval(DB.pingInterval);
+    clearInterval(this.pingInterval);
     // 每个小时ping一次数据库，保持数据库连接状态
-    DB.pingInterval = setInterval(() => {
+    this.pingInterval = setInterval(() => {
       connection.ping((err) => {
         if (err) {
           console.log("ping error: " + JSON.stringify(err));
@@ -56,7 +60,7 @@ class DB {
       });
     }, 3600000 * 3);
   };
-  static exec = async (...ags) => {
+  exec = async (...ags) => {
     const parameter = ags;
     return await new Promise((resolve, reject) => {
       this.connection.query(...parameter, (err, result) => {
@@ -70,8 +74,10 @@ class DB {
   };
 }
 
-const { connection, exec, createConnection } = DB;
+const db = new DB();
 
-export default DB;
+const { exec, createConnection } = db;
 
-export { connection, exec, createConnection };
+export { exec, createConnection };
+
+export default db;

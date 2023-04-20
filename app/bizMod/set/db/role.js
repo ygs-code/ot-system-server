@@ -7,7 +7,7 @@
  * @FilePath: /error-sytem/server/app/bizMod/abnormity/db/user.js
  */
 
-import { connection, exec, mergeCondition, sqlObjToAnd } from "@/db";
+import DB, { exec, mergeCondition, sqlObjToAnd } from "@/db";
 
 // 添加用户
 export const addRole = async ({ description, name }) => {
@@ -67,7 +67,7 @@ export const removeRole = async (id) => {
 //       permission p, #缩写表
 //       role_permission  rp #缩写表
 //     WHERE
-//       u.id = ${connection.escape(
+//       u.id = ${DB.connection.escape(
 //         id
 //       )} AND u.id=ur.user_id AND r.id=ur.role_id AND r.id=rp.role_id  AND p.id=rp.permission_id;  #查询条件
 //   `;
@@ -90,9 +90,9 @@ export const queryRoleList = async (options = {}, page = {}) => {
 
   sql += mergeCondition(options);
 
-  sql += `  ORDER BY update_time DESC  limit ${connection.escape(
+  sql += `  ORDER BY update_time DESC  limit ${DB.connection.escape(
     (pageNum - 1) * pageSize
-  )}, ${connection.escape(pageSize)};`;
+  )}, ${DB.connection.escape(pageSize)};`;
 
   // total 查询
   sql += ` SELECT FOUND_ROWS() as total;`;
@@ -105,9 +105,9 @@ export const editRole = async (parameter) => {
   let sql = `
    UPDATE role 
     SET 
-      description = ${connection.escape(description)}, 
-      name =  ${connection.escape(name)}
-   WHERE id = ${connection.escape(id)}
+      description = ${DB.connection.escape(description)}, 
+      name =  ${DB.connection.escape(name)}
+   WHERE id = ${DB.connection.escape(id)}
     `;
   return await exec(sql);
 };

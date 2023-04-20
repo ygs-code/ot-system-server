@@ -7,7 +7,7 @@
  * @FilePath: /error-sytem/server/app/bizMod/abnormity/db/user.js
  */
 
-import { connection, exec, mergeCondition, sqlObjToAnd } from "@/db";
+import DB, { exec, mergeCondition, sqlObjToAnd } from "@/db";
 
 // 添加权限
 export const addPermission = async ({
@@ -72,9 +72,9 @@ export const queryPermissionList = async (options = {}, page = {}) => {
 
   sql += mergeCondition(options);
 
-  sql += `  ORDER BY update_time DESC  limit ${connection.escape(
+  sql += `  ORDER BY update_time DESC  limit ${DB.connection.escape(
     (pageNum - 1) * pageSize
-  )}, ${connection.escape(pageSize)};`;
+  )}, ${DB.connection.escape(pageSize)};`;
 
   // total 查询
   sql += ` SELECT FOUND_ROWS() as total;`;
@@ -87,11 +87,11 @@ export const editPermission = async (parameter) => {
   let sql = `
    UPDATE permission 
     SET 
-      description = ${connection.escape(description)}, 
-      parent_id = ${connection.escape(parent_id)}, 
-      auth_key = ${connection.escape(auth_key)}, 
-      name =  ${connection.escape(name)}
-   WHERE id = ${connection.escape(id)}
+      description = ${DB.connection.escape(description)}, 
+      parent_id = ${DB.connection.escape(parent_id)}, 
+      auth_key = ${DB.connection.escape(auth_key)}, 
+      name =  ${DB.connection.escape(name)}
+   WHERE id = ${DB.connection.escape(id)}
     `;
   return await exec(sql);
 };

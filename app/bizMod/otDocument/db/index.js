@@ -11,6 +11,6 @@ import initTable from "./sql/initTable.sql";
 import initTableData from "./sql/initTableData.sql";
 
 export * from "./document";
-export { connection, exec } from "@/db";
+export { exec } from "@/db";
 
 export { initTable, initTableData };

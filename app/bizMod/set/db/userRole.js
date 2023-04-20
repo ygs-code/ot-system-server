@@ -7,7 +7,7 @@
  * @FilePath: /error-sytem/server/app/bizMod/abnormity/db/user.js
  */
 
-import { connection, exec, mergeCondition } from "@/db";
+import DB, { exec, mergeCondition } from "@/db";
 
 // 添加
 export const addUserRole = async ({ user_id, role_id }) => {
@@ -35,6 +35,8 @@ export const removeUserRole = async ({ user_id, role_id }) => {
 
 // 查询 列表
 export const queryUserRoleList = async (options = {}, page = {}) => {
+  console.log("DB1======", DB);
+
   const { pageNum = 1, pageSize = 10 } = page;
 
   let sql = `SELECT  SQL_CALC_FOUND_ROWS
@@ -48,9 +50,9 @@ export const queryUserRoleList = async (options = {}, page = {}) => {
 
   sql += mergeCondition(options);
 
-  sql += `  ORDER BY update_time DESC  limit ${connection.escape(
+  sql += `  ORDER BY update_time DESC  limit ${DB.connection.escape(
     (pageNum - 1) * pageSize
-  )}, ${connection.escape(pageSize)};`;
+  )}, ${DB.connection.escape(pageSize)};`;
 
   // total 查询
   sql += ` SELECT FOUND_ROWS() as total;`;

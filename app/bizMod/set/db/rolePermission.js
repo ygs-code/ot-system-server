@@ -7,7 +7,7 @@
  * @FilePath: /error-sytem/server/app/bizMod/abnormity/db/user.js
  */
 
-import { connection, exec, mergeCondition } from "@/db";
+import DB, { exec, mergeCondition } from "@/db";
 
 // 添加
 export const addRolePermission = async ({ role_id, permission_id }) => {
@@ -50,9 +50,9 @@ export const queryRolePermissionList = async (options = {}, page = {}) => {
 
   sql += mergeCondition(options);
 
-  sql += `  ORDER BY update_time DESC  limit ${connection.escape(
+  sql += `  ORDER BY update_time DESC  limit ${DB.connection.escape(
     (pageNum - 1) * pageSize
-  )}, ${connection.escape(pageSize)};`;
+  )}, ${DB.connection.escape(pageSize)};`;
   // total 查询
   sql += ` SELECT FOUND_ROWS() as total;`;
 

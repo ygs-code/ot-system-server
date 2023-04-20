@@ -8,7 +8,7 @@
  */
 import jwa from "jwa";
 
-import { connection, exec, mergeCondition, sqlObjToAnd } from "@/db";
+import DB, { exec, mergeCondition, sqlObjToAnd } from "@/db";
 // 密码加密
 const hmac = jwa("HS256");
 // 添加用户
@@ -36,7 +36,7 @@ const queryUser = async (data) => {
     select * from user where
   `;
   if (password) {
-    sql += ` password=${connection.escape(hmac.sign(password, ""))}`;
+    sql += ` password=${DB.connection.escape(hmac.sign(password, ""))}`;
     frontHasCondition = true;
   }
 
@@ -75,7 +75,7 @@ const queryUserRolePermission = async (id) => {
       permission p, #缩写表
       role_permission  rp #缩写表
     WHERE
-      u.id = ${connection.escape(
+      u.id = ${DB.connection.escape(
         id
       )} AND u.id=ur.user_id AND r.id=ur.role_id AND r.id=rp.role_id  AND p.id=rp.permission_id;  #查询条件
   `;
@@ -100,9 +100,9 @@ const queryUserList = async (options = {}, page = {}) => {
 
   sql += mergeCondition(options);
 
-  sql += `  ORDER BY update_time DESC  limit ${connection.escape(
+  sql += `  ORDER BY update_time DESC  limit ${DB.connection.escape(
     (pageNum - 1) * pageSize
-  )}, ${connection.escape(pageSize)};`;
+  )}, ${DB.connection.escape(pageSize)};`;
 
   // total 查询
   sql += ` SELECT FOUND_ROWS() as total;`;
@@ -115,11 +115,11 @@ const editUser = async (parameter) => {
   let sql = `
    UPDATE user 
     SET 
-      email = ${connection.escape(email)}, 
-      name =  ${connection.escape(name)}, 
-      phone =  ${connection.escape(phone)}, 
-      type =  ${connection.escape(type)}
-   WHERE id = ${connection.escape(id)}
+      email = ${DB.connection.escape(email)}, 
+      name =  ${DB.connection.escape(name)}, 
+      phone =  ${DB.connection.escape(phone)}, 
+      type =  ${DB.connection.escape(type)}
+   WHERE id = ${DB.connection.escape(id)}
     `;
   return await exec(sql);
 };

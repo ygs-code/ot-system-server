@@ -14,7 +14,8 @@ import Koa from "koa";
 import url from "url";
 
 // import { port } from "./config";
-import { createConnection, exec } from "./db/index.js";
+import DB, { createConnection, exec } from "./db/index.js";
+
 import initTable from "./db/sql/initTable.sql";
 import { Redis } from "./redis";
 import Route from "./routes/index";
@@ -32,7 +33,7 @@ class App {
     this.sockets = [];
     this.init();
   }
-  async init() {
+  init = async () => {
     // redis链接
     await this.connectRedis();
     // 数据库连接
@@ -48,8 +49,8 @@ class App {
 
     // 设置监听端口
     await this.listen();
-  }
-  async connectRedis() {
+  };
+  connectRedis = async () => {
     await promise((reslove, reject) => {
       try {
         Redis.connect(() => {
@@ -64,8 +65,8 @@ class App {
         console.log("error:", error);
       }
     });
-  }
-  async connectSql() {
+  };
+  connectSql = async () => {
     await promise((reslove, reject) => {
       createConnection((err) => {
         if (!err) {
@@ -73,23 +74,22 @@ class App {
         }
       });
     });
-  }
-  async initTable() {
-    await exec(initTable);
+  };
+  initTable = async () => {
+    await DB.exec(initTable);
     console.log("Mysql表初始化成功");
-  }
-  socketRoute(path, callback) {
+  };
+  socketRoute = (path, callback) => {
     this.sockets[path] = callback;
-
-  }
-  async addRoute() {
+  };
+  addRoute = async () => {
     // 导入路由
     await new Route(this.app, (...ags) => {
       this.socketRoute(...ags);
     });
-  }
+  };
   // 获取回调地址参数
-  getUrlParams(url) {
+  getUrlParams = (url) => {
     // 通过 ? 分割获取后面的参数字符串
     let urlStr = url.split("?")[1] || "";
 
@@ -103,10 +103,9 @@ class App {
       obj[arr[0]] = arr[1];
     }
     return obj;
-  }
+  };
 
-  linstSocket(server) {
-  
+  linstSocket = (server) => {
     // console.log("this.server======", this.server);
     // https://www.cnblogs.com/huenchao/p/6234550.html  文档
 
@@ -155,7 +154,7 @@ class App {
     //   console.log("connection=======");
     //   //客户端与服务器创立链接时触发connection事件
     // });
-  }
+  };
   onListening = () => {
     var addr = this.server.address();
     var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
@@ -182,7 +181,7 @@ class App {
         throw error;
     }
   };
-  async listen() {
+  listen = async () => {
     // try {
     //    kill(port, "tcp");
     // } catch (e) {}
@@ -210,7 +209,7 @@ class App {
     // this.$server.setTimeout(5 * 60 * 1000);
     // this.server.on("error", this.onError);
     // this.server.on("listening", this.onListening);
-  }
+  };
 }
 
 export default new App();

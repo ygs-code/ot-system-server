@@ -7,7 +7,7 @@
  * @FilePath: /error-sytem/server/app/bizMod/abnormity/db/user.js
  */
 
-import { connection, exec, mergeCondition, sqlObjToAnd } from "@/db";
+import DB, { exec, mergeCondition, sqlObjToAnd } from "@/db";
 
 // 查询权限列表
 export const queryDocumentList = async (table, options = {}, page = {}) => {
@@ -28,9 +28,9 @@ export const queryDocumentList = async (table, options = {}, page = {}) => {
 
   sql += mergeCondition(options);
 
-  sql += `  ORDER BY update_time DESC  limit ${connection.escape(
+  sql += `  ORDER BY update_time DESC  limit ${DB.connection.escape(
     (pageNum - 1) * pageSize
-  )}, ${connection.escape(pageSize)};`;
+  )}, ${DB.connection.escape(pageSize)};`;
 
   // total 查询
   sql += ` SELECT FOUND_ROWS() as total;`;
@@ -92,13 +92,13 @@ const editDocument = async (
   let sql = `
      UPDATE  ${table} 
         SET 
-        v = ${connection.escape(v)}, 
-        type =  ${connection.escape(type)}, 
-        content =  ${connection.escape(content)}, 
-        update_by =  ${connection.escape(update_by)}, 
-        create_time =  ${connection.escape(create_time)}, 
-        update_time =  ${connection.escape(update_time)}
-            WHERE id = ${connection.escape(id)};
+        v = ${DB.connection.escape(v)}, 
+        type =  ${DB.connection.escape(type)}, 
+        content =  ${DB.connection.escape(content)}, 
+        update_by =  ${DB.connection.escape(update_by)}, 
+        create_time =  ${DB.connection.escape(create_time)}, 
+        update_time =  ${DB.connection.escape(update_time)}
+            WHERE id = ${DB.connection.escape(id)};
      `;
   return await exec(sql);
 };
@@ -116,7 +116,7 @@ const getDocument = async (table, id) => {
           content,
           DATE_FORMAT(create_time, "%Y-%m-%d %H:%i:%S")  createTime,
           DATE_FORMAT(update_time, "%Y-%m-%d %H:%i:%S")  updateTime
-      from ${table}  WHERE id = ${connection.escape(id)}
+      from ${table}  WHERE id = ${DB.connection.escape(id)}
     `;
 
   return await exec(sql);
@@ -141,9 +141,9 @@ const editOpsDocument = async (table, { id, ops, update_by }) => {
   let sql = `
      UPDATE  ${table} 
         SET 
-        ops =  ${connection.escape(ops)},
-        update_by =  ${connection.escape(`${update_by}`)}
-            WHERE id = ${connection.escape(id)};
+        ops =  ${DB.connection.escape(ops)},
+        update_by =  ${DB.connection.escape(`${update_by}`)}
+            WHERE id = ${DB.connection.escape(id)};
      `;
 
   return await exec(sql);
@@ -158,7 +158,7 @@ const getOpsDocument = async (table, id) => {
         ops,
           DATE_FORMAT(create_time, "%Y-%m-%d %H:%i:%S")  createTime,
           DATE_FORMAT(update_time, "%Y-%m-%d %H:%i:%S")  updateTime
-      from ${table}  WHERE id = ${connection.escape(id)} 
+      from ${table}  WHERE id = ${DB.connection.escape(id)} 
     `;
 
   return await exec(sql);

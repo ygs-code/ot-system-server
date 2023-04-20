@@ -23,5 +23,4 @@ if (env === "production") {
     multipleStatements: true // 是否许一个query中有多个MySQL语句 （默认：false）
   };
 }
-console.log("MYSQL_CONF=========", MYSQL_CONF);
 export { MYSQL_CONF };
