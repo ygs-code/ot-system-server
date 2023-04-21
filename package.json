@@ -163,7 +163,7 @@
         "pm2log": "pm2 logs",
         "//注释3": "用pm2启动node程序",
         "dev": "npm run dev:p  -r  dotenv/config  dotenv_config_path=.env.development",
-        "dev:p": "cross-env NODE_ENV=development  pm2 start ./dist/index.js --watch   dotenv/config  dotenv_config_path=.env.development",
+        "dev:p": "cross-env NODE_ENV=development  pm2 start ./dist/index.js --watch  -r   dotenv/config  dotenv_config_path=.env.development",
         "test:p": "cross-env NODE_ENV=production  pm2 start ./dist/index.js --watch",
         "prd:p": "cross-env NODE_ENV=production   pm2 start ./dist/index.js --watch  -r  dotenv/config  dotenv_config_path=.env.production",
         "//注释4": "用nodemon启动node程序",
