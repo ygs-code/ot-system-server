@@ -2,7 +2,7 @@ FROM node:14-alpine
 #声明作者
 MAINTAINER robin
 #对外暴露的端口
-EXPOSE 3003
+# EXPOSE 3003
 RUN mkdir ot-system-server
 # 复制package.json文件
 COPY  package.json  /ot-system-server

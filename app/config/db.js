@@ -1,9 +1,9 @@
 const env = process.env.NODE_ENV; // 环境参数
 let MYSQL_CONF = null;
-let { MYSQL_ADDRESS } = process.env; // 环境参数
+let { MYSQL_IP } = process.env; // 环境参数
 if (env === "development") {
   MYSQL_CONF = {
-    host: MYSQL_ADDRESS,
+    host: MYSQL_IP,
     user: "root",
     password: "123456",
     port: "3306",
@@ -14,7 +14,7 @@ if (env === "development") {
 }
 if (env === "production") {
   MYSQL_CONF = {
-    host: MYSQL_ADDRESS,
+    host: MYSQL_IP,
     user: "root",
     password: "123456",
     port: "3306",
