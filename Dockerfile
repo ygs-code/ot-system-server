@@ -21,7 +21,7 @@ COPY  .  /ot-system-server
 #进入到server目录下面，类似cd
 WORKDIR /ot-system-server
 # RUN echo 'webpack打包编译生产代码'
-RUN npm run build:prd
+RUN echo '编译打包server' & npm run build:prd
 RUN echo 'redis镜像build打包成功'
 
 # RUN echo '编译成功'
