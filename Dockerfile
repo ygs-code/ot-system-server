@@ -2,9 +2,6 @@ FROM node:14-alpine
 #声明作者
 MAINTAINER robin
 
-
-
-
 ARG    REDIS_ADDRESS  # redis ip  
 ARG    REDIS_PORT  # redis 端口
 ARG    MYSQL_ADDRESS  # mysql ip  
@@ -22,7 +19,6 @@ ARG    ADMIN_PORT  # admin 端口
 ARG    ADMIN_SERVER_NAME 
 ARG    ADMIN_PUBLICPATH 
 
-
 ENV    REDIS_ADDRESS = ${REDIS_ADDRESS} # redis ip  
 ENV    REDIS_PORT = ${REDIS_PORT} # redis 端口
 ENV    MYSQL_ADDRESS = ${MYSQL_ADDRESS} # mysql ip  
@@ -39,8 +35,6 @@ ENV    ADMIN_ADDRESS = ${ADMIN_ADDRESS} # admin ip
 ENV    ADMIN_PORT = ${ADMIN_PORT} # admin 端口
 ENV    ADMIN_SERVER_NAME = ${ADMIN_SERVER_NAME}
 ENV    ADMIN_PUBLICPATH = ${ADMIN_PUBLICPATH}
-
-
 
 #对外暴露的端口
 # EXPOSE 3003
