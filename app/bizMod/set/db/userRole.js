@@ -35,7 +35,7 @@ export const removeUserRole = async ({ user_id, role_id }) => {
 
 // 查询 列表
 export const queryUserRoleList = async (options = {}, page = {}) => {
-  console.log("DB1======", DB);
+ 
 
   const { pageNum = 1, pageSize = 10 } = page;
 

@@ -155,7 +155,7 @@ export default {
     hints: "warning",
     // 过滤文件
     assetFilter: function (assetFilename) {
-      // console.log('assetFilename==========', assetFilename,assetFilename.endsWith('.js'))
+ 
       // 只要监听js文件，过滤其他文件判断
       return assetFilename.endsWith(".js");
     }

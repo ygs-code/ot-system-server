@@ -106,7 +106,7 @@ class App {
   };
 
   linstSocket = (server) => {
-    // console.log("this.server======", this.server);
+
     // https://www.cnblogs.com/huenchao/p/6234550.html  文档
 
     server.on("upgrade", (request, socket, head) => {
@@ -135,7 +135,7 @@ class App {
 
     // server.on("request", function (req, res) {
     //   // 3.为服务器实例绑定 request 事件，监听客户端请求。
-    //   console.log("request1======");
+
     // });
 
     // server.on("request", function (req, res) {

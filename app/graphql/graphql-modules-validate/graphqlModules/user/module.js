@@ -6,13 +6,13 @@
  * @FilePath: /graphql-demo/src/demo/GraphQLModules/user/module.js
  * @Description:
  */
-import { createModule, gql } from 'graphql-modules';
+import { createModule, gql } from "graphql-modules";
 
 export const UserModule = {
-    id: 'user-module', // id不能与其他模块重名
-    dirname: __dirname,
-    typeDefs: [
-        `
+  id: "user-module", // id不能与其他模块重名
+  dirname: __dirname,
+  typeDefs: [
+    `
             extend type Query {
                 getUser: User
             }
@@ -27,34 +27,31 @@ export const UserModule = {
             extend type Mutation {
                 updateUser(id: ID, name: String!): User!
             }
-        `,
-    ],
-    // 这里并没有校验resolvers重复性，所以需要我们自己实现校验
-    resolvers: {
-        Mutation: {
-            updateUser(root, parameter, source, fieldASTs) {
-                console.log('root==', root);
-                console.log('parameter==', parameter);
-                const { name, id } = parameter;
-                return {
-                    name: '成功更新用户',
-                    id,
-                    type: 1,
-                    address: '中国广东深圳',
-                };
-            },
-        },
-        Subscription: {},
-        Query: {
-            getUser: (root, parameter, source, fieldASTs) => {
-       
-                return {
-                    id: '1',
-                    name: '用户1模块',
-                    address: '中国广东深圳',
-                    type: 1,
-                };
-            },
-        },
+        `
+  ],
+  // 这里并没有校验resolvers重复性，所以需要我们自己实现校验
+  resolvers: {
+    Mutation: {
+      updateUser(root, parameter, source, fieldASTs) {
+        const { name, id } = parameter;
+        return {
+          name: "成功更新用户",
+          id,
+          type: 1,
+          address: "中国广东深圳"
+        };
+      }
     },
+    Subscription: {},
+    Query: {
+      getUser: (root, parameter, source, fieldASTs) => {
+        return {
+          id: "1",
+          name: "用户1模块",
+          address: "中国广东深圳",
+          type: 1
+        };
+      }
+    }
+  }
 };

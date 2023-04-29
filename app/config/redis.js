@@ -2,6 +2,7 @@ const env = process.env.NODE_ENV; // 环境参数
 let REDIS_CONF = null;
 
 let { REDIS_ADDRESS } = process.env; // 环境参数
+ 
 
 if (env === "development") {
   REDIS_CONF = {
