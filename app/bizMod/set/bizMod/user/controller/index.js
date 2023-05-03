@@ -31,7 +31,123 @@ class Controller {
       data
     };
   }
+  // 登录
+  static async login(ctx, next, parameter) {
+    const { response } = ctx;
 
+    const { verificationCode } = parameter;
+
+    return await getVerifyCode(verificationCode)
+      .then(async () => {
+        //添加service
+        const data = await Service.login(ctx, next, parameter);
+
+        const getMessage = (data) => {
+          const { status, token, userInfo } = data;
+          const message = {
+            1: () => ({
+              ...unauthorized,
+              message: "用户名错误，请重新输入用户名"
+            }),
+            2: () => ({
+              ...unauthorized,
+              message: "密码错误请重新输入密码"
+            }),
+            3: () => ({
+              code: 200,
+              message: "登录成功",
+              data: {
+                token,
+                ...userInfo
+              }
+            })
+          };
+          return message[status]();
+        };
+
+        return getMessage(data);
+      })
+      .catch((error) => {
+        let message;
+        let code;
+        if (error) {
+          message = `系统错误:${
+            typeof error === "object" ? JSON.stringify(error) : error
+          }`;
+        } else {
+          message = "验证码错误,或者已过期";
+          code = 400;
+        }
+
+        response.console.error(message, __filename);
+        return {
+          message,
+          code,
+          data: {}
+        };
+      });
+    // } catch (e) {
+
+    // }
+  }
+
+  static async logOut(ctx, next, parameter) {
+    const { response } = ctx;
+
+    const { verificationCode } = parameter;
+
+    return await this.checkLogin(ctx, next, parameter).then(async (res) => {
+      const { data: { flag } = {} } = res;
+
+      let data = {};
+      console.log("res====", res);
+      if (flag) {
+        let { request, cookies } = ctx;
+        const { header } = request;
+
+        const token = cookies.get("token") || header.token;
+
+        data = await Service.logOut(ctx, next, {
+          token
+        });
+      }
+      //添加service
+      // const data = await Service.logOut(ctx, next, parameter);
+
+      // const getMessage = (data) => {
+      //   const { status, token, userInfo } = data;
+      //   const message = {
+      //     1: () => ({
+      //       ...unauthorized,
+      //       message: "用户名错误，请重新输入用户名"
+      //     }),
+      //     2: () => ({
+      //       ...unauthorized,
+      //       message: "密码错误请重新输入密码"
+      //     }),
+      //     3: () => ({
+      //       code: 200,
+      //       message: "登录成功",
+      //       data: {
+      //         token,
+      //         ...userInfo
+      //       }
+      //     })
+      //   };
+      //   return message[status]();
+      // };
+
+      // return getMessage(data);
+
+      console.log('data===',data)
+
+      return {
+        code: 200,
+        message: "操作成功",
+        data
+      };
+    });
+  }
   static async queryList(ctx, next, { parameter }) {
     const data = await Service.queryList(ctx, next, parameter);
 
@@ -206,65 +322,6 @@ class Controller {
     return getMessage(status);
   }
 
-  // 登录
-  static async login(ctx, next, parameter) {
-    const { response } = ctx;
-
-    const { verificationCode } = parameter;
-
-    return await getVerifyCode(verificationCode)
-      .then(async () => {
-        //添加service
-        const data = await Service.login(ctx, next, parameter);
-
-        const getMessage = (data) => {
-          const { status, token, userInfo } = data;
-          const message = {
-            1: () => ({
-              ...unauthorized,
-              message: "用户名错误，请重新输入用户名"
-            }),
-            2: () => ({
-              ...unauthorized,
-              message: "密码错误请重新输入密码"
-            }),
-            3: () => ({
-              code: 200,
-              message: "登录成功",
-              data: {
-                token,
-                ...userInfo
-              }
-            })
-          };
-          return message[status]();
-        };
-
-        return getMessage(data);
-      })
-      .catch((error) => {
-        let message;
-        let code;
-        if (error) {
-          message = `系统错误:${
-            typeof error === "object" ? JSON.stringify(error) : error
-          }`;
-        } else {
-          message = "验证码错误,或者已过期";
-          code = 400;
-        }
-
-        response.console.error(message, __filename);
-        return {
-          message,
-          code,
-          data: {}
-        };
-      });
-    // } catch (e) {
-
-    // }
-  }
   // 验证码
   static async getVerifyCode(ctx, next) {
     var parameter = ctx.request.body; // 获取请求参数

@@ -11,7 +11,7 @@ import {
 } from "@/bizMod/set/db";
 import { setVerifyCode } from "@/bizMod/set/redis";
 import { tokenExpires } from "@/config";
-import { createToken, verifyToken } from "@/redis";
+import { createToken, verifyToken, Redis } from "@/redis";
 
 @captureClassError()
 class Service {
@@ -21,6 +21,17 @@ class Service {
       .then(() => ({ flag: true }))
       .catch(() => ({ flag: false }));
   }
+  // 检查登录接口
+  static async logOut(ctx, next, { token }) {
+    console.log("Redis=====", Redis);
+
+    await Redis.del(token);
+
+    return {
+      flag: true
+    };
+  }
+
   // 查询列表
   static async queryList(ctx, next, parameter) {
     const { pageNum, pageSize, email, id, name, phone, type } = parameter;

@@ -202,6 +202,36 @@ type UserListInfo {
   message: String
 }
 
+"""
+检查用户是否登录数据
+"""
+type LogOutInfoData {
+  """
+  布尔值
+  """
+  flag: Boolean
+}
+
+"""
+退出登录
+"""
+type logOutInfo {
+  """
+  请求状态
+  """
+  code: Int
+  """
+  用户信息数据
+  """
+  data: LogOutInfoData
+  """
+  请求信息
+  """
+  message: String
+
+}
+
+
 # 定义输入类型
 input UserListInfoInput {
   pageSize: Int
@@ -219,8 +249,7 @@ extend type Query {
   getUserInfo(id: ID): LoginInfo
   # ! 是必填参数
   getVerifyCode: VerifyCodeInfo
-  # ! 是必填参数
-  login(password: String!, name: String!, verificationCode: String!): LoginInfo
+
   #  检查用户是否登录
   checkLogin: CheckLoginInfo
 }
@@ -231,7 +260,10 @@ extend type Mutation {
 
   #   编辑用户
   editUser(parameter: EditUserInput!): UserInfo
-
   #   删除用户
   removeUser(id: ID): UserInfo
+    # 登录
+  login(password: String!, name: String!, verificationCode: String!): LoginInfo
+
+  logOut:logOutInfo
 }
