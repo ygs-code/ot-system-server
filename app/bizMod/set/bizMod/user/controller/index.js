@@ -139,7 +139,7 @@ class Controller {
 
       // return getMessage(data);
 
-      console.log('data===',data)
+      console.log("data===", data);
 
       return {
         code: 200,

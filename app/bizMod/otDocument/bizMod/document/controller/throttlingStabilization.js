@@ -9,40 +9,40 @@
 
 // 节流函数
 const throttle = () => {
-    let startTime = null;
-    return (time, callback = () => {}) =>
-        new Promise((resolve) => {
-            const nowTime = new Date().getTime();
-            if (!startTime || nowTime - startTime > time) {
-                startTime = nowTime;
-                if (callback && callback instanceof Function) {
-                    callback();
-                }
+  let startTime = null;
+  return (time, callback = () => {}) =>
+    new Promise((resolve) => {
+      const nowTime = new Date().getTime();
+      if (!startTime || nowTime - startTime > time) {
+        startTime = nowTime;
+        if (callback && callback instanceof Function) {
+          callback();
+        }
 
-                resolve();
-            }
-        });
+        resolve();
+      }
+    });
 };
 
 // 防抖函数
 const stabilization = () => {
-    let timer = null;
-    return (time, callback) =>
-        new Promise((resolve) => {
-            if (timer) {
-                clearTimeout(timer);
-            }
-            timer = setTimeout(() => {
-                if (callback && callback instanceof Function) {
-                    callback();
-                }
+  let timer = null;
+  return (time, callback) =>
+    new Promise((resolve) => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+      timer = setTimeout(() => {
+        if (callback && callback instanceof Function) {
+          callback();
+        }
 
-                resolve();
-            }, time);
-        });
+        resolve();
+      }, time);
+    });
 };
 
 module.exports = {
-    throttle,
-    stabilization,
+  throttle,
+  stabilization
 };

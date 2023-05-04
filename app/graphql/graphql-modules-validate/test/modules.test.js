@@ -7,21 +7,22 @@
  * @Description:
  */
 
-import user from '../graphqlModules/user'
-import marketing from '../graphqlModules/marketing'
-import assert from 'assert'
+import assert from "assert";
 
-describe('isArray', function () {
-  describe('#isArray', function () {
-    it('Check whether the module is an array', function () {
-      assert.equal(user instanceof Array, true)
-    })
+import marketing from "../graphqlModules/marketing";
+import user from "../graphqlModules/user";
 
-    it('Check whether the module is an array', function () {
-      assert.equal(marketing instanceof Array, true)
-    })
-  })
-})
+describe("isArray", function () {
+  describe("#isArray", function () {
+    it("Check whether the module is an array", function () {
+      assert.equal(user instanceof Array, true);
+    });
+
+    it("Check whether the module is an array", function () {
+      assert.equal(marketing instanceof Array, true);
+    });
+  });
+});
 
 // id: 'marketing-module', // id不能与其他模块重名
 // dirname: __dirname,
@@ -44,24 +45,24 @@ describe('isArray', function () {
 // // 这里并没有校验resolvers重复性，所以需要我们自己实现校验
 // resolvers: {
 
-describe('modules', function () {
-  describe('#modules', function () {
-    const { id, dirname, typeDefs, resolvers } = user[0]
+describe("modules", function () {
+  describe("#modules", function () {
+    const { id, dirname, typeDefs, resolvers } = user[0];
 
-    it('Id in the test module', function () {
-      assert.equal(!!id, true)
-    })
+    it("Id in the test module", function () {
+      assert.equal(!!id, true);
+    });
 
-    it('Dirname in the test module', function () {
-      assert.equal(!!dirname, true)
-    })
+    it("Dirname in the test module", function () {
+      assert.equal(!!dirname, true);
+    });
 
-    it('typeDefs in the test module', function () {
-      assert.equal(typeDefs instanceof Array, true)
-    })
+    it("typeDefs in the test module", function () {
+      assert.equal(typeDefs instanceof Array, true);
+    });
 
-    it('resolvers in the test module', function () {
-      assert.equal(resolvers instanceof Object, true)
-    })
-  })
-})
+    it("resolvers in the test module", function () {
+      assert.equal(resolvers instanceof Object, true);
+    });
+  });
+});

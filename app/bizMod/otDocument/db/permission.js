@@ -7,7 +7,7 @@
  * @FilePath: /error-sytem/server/app/bizMod/abnormity/db/user.js
  */
 
-import DB, {  exec, mergeCondition, sqlObjToAnd } from "@/db";
+import DB, { exec, mergeCondition, sqlObjToAnd } from "@/db";
 
 // 添加权限
 export const addPermission = async ({

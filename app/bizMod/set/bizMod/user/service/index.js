@@ -11,7 +11,7 @@ import {
 } from "@/bizMod/set/db";
 import { setVerifyCode } from "@/bizMod/set/redis";
 import { tokenExpires } from "@/config";
-import { createToken, verifyToken, Redis } from "@/redis";
+import { createToken, Redis, verifyToken } from "@/redis";
 
 @captureClassError()
 class Service {

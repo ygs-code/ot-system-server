@@ -15,7 +15,6 @@ import url from "url";
 
 // import { port } from "./config";
 import DB, { createConnection, exec } from "./db/index.js";
-
 import initTable from "./db/sql/initTable.sql";
 import { Redis } from "./redis";
 import Route from "./routes/index";
@@ -106,7 +105,6 @@ class App {
   };
 
   linstSocket = (server) => {
-
     // https://www.cnblogs.com/huenchao/p/6234550.html  文档
 
     server.on("upgrade", (request, socket, head) => {

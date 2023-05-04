@@ -30,8 +30,6 @@ export const getVerifyCode = async (root, parameter) => {
   return data;
 };
 
-
-
 // 登录接口
 export const checkLogin = async (root, parameter) => {
   const { ctx, next } = root;

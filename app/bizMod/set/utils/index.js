@@ -6,6 +6,5 @@
  * @Description: In User Settings Edit
  * @FilePath: /error-sytem/server/app/bizMod/set/utils/index.js
  */
- 
- 
-export const aa = ()=>{}
+
+export const aa = () => {};

@@ -7,9 +7,8 @@ class Sockets {
   init() {
     this.wssShareDB = new WssSharedb().wss;
   }
-   
+
   document({ request, socket, head, params }) {
- 
     const { documentId, documentType } = params; // 如果没有id则不给连接
     if (!documentId || !documentType) {
       return socket.end();

@@ -1,23 +1,23 @@
-import ShareDB from "@/modules/otServe/lib/server/index.js";
-import MemoryDB from "@/modules/otServe/lib/memory.js";
 import moment from "moment";
-import { throttle, stabilization } from "@/utils";
-import {
-  createOpsDocument,
-  editOpsDocument,
-  getOpsDocument,
-  createDocument,
-  editDocument,
-  getDocument,
-  removeDocument
-} from "@/bizMod/otDocument/db/index.js";
 import { type } from "rich-text";
 
 import {
-  setDocument as setRedisDocument,
-  getDocument as getRedisDocument
+  createDocument,
+  createOpsDocument,
+  editDocument,
+  editOpsDocument,
+  getDocument,
+  getOpsDocument,
+  removeDocument
+} from "@/bizMod/otDocument/db/index.js";
+import {
+  getDocument as getRedisDocument,
+  setDocument as setRedisDocument
 } from "@/bizMod/otDocument/redis/index.js";
+import MemoryDB from "@/modules/otServe/lib/memory.js";
+import ShareDB from "@/modules/otServe/lib/server/index.js";
 import { Redis } from "@/redis";
+import { stabilization, throttle } from "@/utils";
 
 // var { RedisClass, Redis, redisClient, expires } = require("../redis");
 
@@ -46,7 +46,7 @@ class DB {
       let data = await getRedisDocument(key);
       await editDocument(table, JSON.parse(data));
     }
-  
+
     clearTimeout(this.timer);
     if (flag) {
       return false;
@@ -183,7 +183,7 @@ class DB {
               JSON.stringify({
                 id,
                 // create_by: user_id,
-                update_by: user_id, 
+                update_by: user_id,
                 // title,
                 v,
                 type,
@@ -230,7 +230,6 @@ class DB {
           const create_time = moment(ctime).format("YYYY-MM-DD HH:mm:ss");
           const update_time = moment(mtime).format("YYYY-MM-DD HH:mm:ss");
 
-           
           if (id && user_id && type) {
             await Promise.all([
               await setRedisDocument(

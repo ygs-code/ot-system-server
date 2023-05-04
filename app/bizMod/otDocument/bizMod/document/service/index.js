@@ -162,7 +162,7 @@ class Service {
   }
   // 删除权限
   static async remove(ctx, next, { id }) {
-    return await removeDocument('document',id)
+    return await removeDocument("document", id)
       .catch(() => {
         return {
           status: 1

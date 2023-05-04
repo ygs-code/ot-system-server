@@ -5,8 +5,9 @@ import { forbidden, serverError, success, unsupported } from "@/constant";
 
 import Service from "../service";
 import Sockets from "../sockets";
+
 @captureClassError()
-class Controller {  
+class Controller {
   static async document({ request, socket, head, params }) {
     // 转换数据
     Sockets.document({ request, socket, head, params });

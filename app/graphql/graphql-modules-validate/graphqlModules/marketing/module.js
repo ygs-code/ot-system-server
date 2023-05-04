@@ -6,13 +6,13 @@
  * @FilePath: /graphql-demo/src/demo/GraphQLModules/user/module.js
  * @Description:
  */
-import { createModule, gql } from 'graphql-modules';
+import { createModule, gql } from "graphql-modules";
 
 export const MarketingModule = {
-    id: 'marketing-module', // id不能与其他模块重名
-    dirname: __dirname,
-    typeDefs: [
-        `
+  id: "marketing-module", // id不能与其他模块重名
+  dirname: __dirname,
+  typeDefs: [
+    `
             type Discount {
                 id: ID
                 name: String
@@ -25,30 +25,27 @@ export const MarketingModule = {
             extend type Mutation {
                 updateDiscount(id: ID!, name: String!): Discount!
             }
-        `,
-    ],
-    // 这里并没有校验resolvers重复性，所以需要我们自己实现校验
-    resolvers: {
-        Mutation: {
-            updateDiscount(root, parameter, source, fieldASTs) {
-            
-                const { id } = parameter;
-                return {
-                    name: '成功更新优惠券',
-                    id,
-                };
-            },
-        },
-        Subscription: {},
-        Query: {
-            getDiscount: (root, parameter, source, fieldASTs) => {
-              
-           
-                return {
-                    id: '1',
-                    name: '营销模块 恭喜你获得7折扣',
-                };
-            },
-        },
+        `
+  ],
+  // 这里并没有校验resolvers重复性，所以需要我们自己实现校验
+  resolvers: {
+    Mutation: {
+      updateDiscount(root, parameter, source, fieldASTs) {
+        const { id } = parameter;
+        return {
+          name: "成功更新优惠券",
+          id
+        };
+      }
     },
-}
+    Subscription: {},
+    Query: {
+      getDiscount: (root, parameter, source, fieldASTs) => {
+        return {
+          id: "1",
+          name: "营销模块 恭喜你获得7折扣"
+        };
+      }
+    }
+  }
+};

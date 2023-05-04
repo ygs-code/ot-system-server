@@ -16,7 +16,6 @@ export const throttle = () => {
       const nowTime = new Date().getTime();
 
       if (!startTime || nowTime - startTime > time) {
-
         startTime = nowTime;
         if (callback && callback instanceof Function) {
           callback();

@@ -35,8 +35,6 @@ export const removeUserRole = async ({ user_id, role_id }) => {
 
 // 查询 列表
 export const queryUserRoleList = async (options = {}, page = {}) => {
- 
-
   const { pageNum = 1, pageSize = 10 } = page;
 
   let sql = `SELECT  SQL_CALC_FOUND_ROWS

@@ -78,6 +78,6 @@ const db = new DB();
 
 const { exec, createConnection } = db;
 
-export { exec, createConnection };
+export { createConnection, exec };
 
 export default db;

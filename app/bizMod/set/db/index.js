@@ -15,6 +15,6 @@ export * from "./role";
 export * from "./rolePermission";
 export * from "./user";
 export * from "./userRole";
-export {  exec } from "@/db";
+export { exec } from "@/db";
 
 export { initTable, initTableData };

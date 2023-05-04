@@ -9,4 +9,4 @@
 // export   "./typeDefs";
 // export { default as schema } from "./typeDefs";
 
-export default './typeDefs'
+export default "./typeDefs";

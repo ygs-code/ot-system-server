@@ -6,9 +6,9 @@
  * @Description: In User Settings Edit
  * @FilePath: /error-sytem/server/app/controller/user.js
  */
+import { unauthorized, unsupported } from "../constant";
 import userService from "../service/user";
-import { unsupported, unauthorized } from "../constant";
- 
+
 class Controller {
   static async add(ctx, next) {
     // ctx.set("Content-Type", "application/json")

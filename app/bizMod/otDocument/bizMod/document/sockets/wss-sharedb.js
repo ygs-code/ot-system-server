@@ -1,27 +1,28 @@
-import moment from "moment";
-import { type } from "rich-text";
-
-import WebSocket from "ws";
-import WebSocketJSONStream from "websocket-json-stream";
-import ShareDBLogger from "sharedb-logger";
-import db from "./sharedb-server";
-
-import {
-  createOpsDocument,
-  editOpsDocument,
-  getOpsDocument,
-  createDocument,
-  editDocument,
-  getDocument,
-  removeDocument
-} from "../../../db";
-import {
-  setDocument as setRedisDocument,
-  getDocument as getRedisDocument
-} from "@/bizMod/otDocument/redis/index.js";
-import { Redis } from "@/redis";
 import debug from "debug";
 import { parseInt } from "lodash";
+import moment from "moment";
+import { type } from "rich-text";
+import ShareDBLogger from "sharedb-logger";
+import WebSocketJSONStream from "websocket-json-stream";
+import WebSocket from "ws";
+
+import {
+  getDocument as getRedisDocument,
+  setDocument as setRedisDocument
+} from "@/bizMod/otDocument/redis/index.js";
+import { Redis } from "@/redis";
+
+import {
+  createDocument,
+  createOpsDocument,
+  editDocument,
+  editOpsDocument,
+  getDocument,
+  getOpsDocument,
+  removeDocument
+} from "../../../db";
+import db from "./sharedb-server";
+
 const backend = db.backend;
 
 const $debug = debug("quill-sharedb-cursors:sharedb");
@@ -137,7 +138,7 @@ class WssSharedb {
               op: {
                 ops: [
                   {
-                    retain: 1,
+                    retain: 1
                   },
                   {
                     insert: ""
@@ -167,9 +168,9 @@ class WssSharedb {
           return ws.terminate();
         }
         ws.isAlive = false;
-        ws.ping(); // 发送给客户端 
+        ws.ping(); // 发送给客户端
       });
     }, 30000);
   }
 }
-export default  WssSharedb;
+export default WssSharedb;

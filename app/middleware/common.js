@@ -24,10 +24,9 @@ const cors = function (options = {}) {
   return async function cors(ctx, next) {
     const { request, response, socket } = ctx;
 
-    const { socket: resSocket ,status} = response;
+    const { socket: resSocket, status } = response;
     const { socket: reqSocket } = request;
 
- 
     // always set vary Origin Header
     // https://github.com/rs/cors/issues/10
     ctx.vary("Origin");

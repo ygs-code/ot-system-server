@@ -149,7 +149,15 @@
     "webpack-merge": "^5.7.0",
     "webpack-node-externals": "^2.5.2",
     "webpackbar": "^5.0.0-3",
-    "websocket-json-stream": "^0.0.3"
+    "websocket-json-stream": "^0.0.3",
+    "@babel/register": "^7.21.0",
+    "@commitlint/cli": "^17.0.2",
+    "@commitlint/config-conventional": "^17.0.2",
+    "commitizen": "^4.2.4",
+    "detect-port": "^1.5.1",
+    "husky": "^8.0.1",
+    "rimraf": "^5.0.0",
+    "lint-staged": "^13.0.0"
   },
   "devDependencies": {},
   "config": {

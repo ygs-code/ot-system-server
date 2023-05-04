@@ -145,6 +145,8 @@ const execute = (command, options = { stdio: "inherit" }) => {
     command[0] += ".cmd";
   }
 
+  console.log('command[0]==',command[0])
+  console.log('transformCmd(command.slice(1))==',transformCmd(command.slice(1)))
   const proc = spawn(command[0], transformCmd(command.slice(1)), options);
 
   // 进程错误

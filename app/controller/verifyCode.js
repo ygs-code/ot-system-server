@@ -13,7 +13,7 @@ class Controller {
     ctx.response.body = {
       code: 200,
       data,
-      message: "验证码获取成功",
+      message: "验证码获取成功"
     };
   }
 }

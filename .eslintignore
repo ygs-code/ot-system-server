@@ -19,6 +19,15 @@ webpack/**/*
 **/webpack/**/*
 **/webpack/**/*
 
+
+view
+view/*
+view/**/*
+**/view
+**/view/**/*
+**/view/**/*
+
+
 bin
 bin/*
 bin/**/*

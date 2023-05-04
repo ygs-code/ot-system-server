@@ -1,5 +1,7 @@
 /* @flow strict */
 
+/* eslint-disable */
+
 type EditorThemeParam = {
   name: string,
   url: string,
@@ -52,13 +54,6 @@ function getEditorThemeParams(editorTheme: EditorThemeParam): EditorTheme {
   );
 }
 
-/**
- * When express-graphql receives a request which does not Accept JSON, but does
- * Accept HTML, it may present GraphiQL, the in-browser GraphQL explorer IDE.
- *
- * When shown, it will be pre-populated with the result of having executed the
- * requested query.
- */
 export function renderGraphiQL(data: GraphiQLData): string {
   const queryString = data.query;
   const variablesString = data.variables
@@ -191,3 +186,5 @@ add "&raw" to the end of the URL within a browser.
 </body>
 </html>`;
 }
+
+/* eslint-enable   */

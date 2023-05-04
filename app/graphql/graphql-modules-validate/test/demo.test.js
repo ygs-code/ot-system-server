@@ -4,7 +4,7 @@
  * @LastEditors: Yao guan shou
  * @LastEditTime: 2022-06-07 15:30:21
  * @FilePath: /graphql-demo/graphql-modules-validate/test/demo.test.js
- * @Description: 
+ * @Description:
  */
 // import { describe, it } from "mocha";
 // import assert from "assert";

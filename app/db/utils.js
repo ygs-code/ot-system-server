@@ -1,6 +1,7 @@
 import { CheckDataType } from "@/utils";
 
 import DB from "./mysql";
+
 const sqlObjToAnd = (obj) => {
   let sql = "";
   let keys = Object.keys(obj);
@@ -37,9 +38,9 @@ const sqlObjToAndLike = (obj) => {
     if (CheckDataType.isString(obj[key])) {
       obj[key] = obj[key].trim();
     }
-    sql += `${index !== 0 ? "  AND  " : ""} ${key}  like  ${DB.connection.escape(
-      "%" + obj[key] + "%"
-    )}`;
+    sql += `${
+      index !== 0 ? "  AND  " : ""
+    } ${key}  like  ${DB.connection.escape("%" + obj[key] + "%")}`;
     index += 1;
   }
   return sql;
@@ -60,9 +61,9 @@ const sqlObjToOr = (obj) => {
     if (CheckDataType.isString(obj[key])) {
       obj[key] = obj[key].trim();
     }
-    sql += `${index !== 0 ? "  OR  " : ""} ${key}  like  %${DB.connection.escape(
-      obj[key]
-    )}%`;
+    sql += `${
+      index !== 0 ? "  OR  " : ""
+    } ${key}  like  %${DB.connection.escape(obj[key])}%`;
     index += 1;
   }
   return sql;
@@ -81,7 +82,7 @@ const sqlObjToOrLike = (obj) => {
       continue;
     }
 
-    if (CheckDataType.isString(obj[key])) {s
+    if (CheckDataType.isString(obj[key])) {
       obj[key] = obj[key].trim();
     }
     sql += `${index !== 0 ? "  OR  " : ""} ${key}  like  ${DB.connection.escape(
