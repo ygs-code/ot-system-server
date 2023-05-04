@@ -152,7 +152,17 @@
     "websocket-json-stream": "^0.0.3"
   },
   "devDependencies": {},
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
   "scripts": {
+    "git": "node  -r @babel/register  ./bin/git.js",
+    "commit": "git-cz",
+    "commitlint": "npx --no-install commitlint --edit $1",
+    "lint-staged": "lint-staged",
+    "husky-install": "husky install",
     "//注释1": "webpack编译node源码",
     "build:dev": "cross-env NODE_ENV=development       babel-node ./scripts/webpack/index.js   -r  dotenv/config  dotenv_config_path=.env.development",
     "build:prd": "cross-env NODE_ENV=production        babel-node ./scripts/webpack/index.js   -r  dotenv/config  dotenv_config_path=.env.production",
