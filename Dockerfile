@@ -36,8 +36,9 @@ ENV    ADMIN_PORT=${ADMIN_PORT}
 ENV    ADMIN_SERVER_NAME=${ADMIN_SERVER_NAME}
 ENV    ADMIN_PUBLICPATH=${ADMIN_PUBLICPATH}
 
+RUN apk add --no-cache curl
 #对外暴露的端口
-# EXPOSE 3003
+EXPOSE 3003/tcp
 RUN mkdir ot-system-server
 # 复制package.json文件
 COPY  package.json  /ot-system-server
