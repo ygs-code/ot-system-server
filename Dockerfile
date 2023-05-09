@@ -2,6 +2,17 @@ FROM node:14-alpine
 #声明作者
 MAINTAINER robin
 
+#对外暴露的端口
+RUN mkdir ot-system-server
+# 复制package.json文件
+COPY  package.json  /ot-system-server
+WORKDIR /ot-system-server
+# 删除 node_modules 所有文件
+# RUN echo 'dist , node_modules目录下所有文件，以及清理缓存'
+RUN echo '删除 dist , node_modules目录下所有文件 , 以及清理缓存' & rm -rf ./node_modules & rm -rf  ./dist & rm -rf package-lock.json & rm -rf yarn.lock & npm cache clean --force &
+RUN echo '安装node_modules依赖包' & npm install --production 
+
+
 ARG    REDIS_ADDRESS  # redis ip  
 ARG    REDIS_PORT  # redis 端口
 ARG    MYSQL_ADDRESS  # mysql ip  
@@ -35,19 +46,6 @@ ENV    ADMIN_ADDRESS=${ADMIN_ADDRESS}
 ENV    ADMIN_PORT=${ADMIN_PORT} 
 ENV    ADMIN_SERVER_NAME=${ADMIN_SERVER_NAME}
 ENV    ADMIN_PUBLICPATH=${ADMIN_PUBLICPATH}
-
-#RUN apk add --no-cache curl
-#对外暴露的端口
-#EXPOSE 3003/tcp
-RUN mkdir ot-system-server
-# 复制package.json文件
-COPY  package.json  /ot-system-server
-WORKDIR /ot-system-server
-# 删除 node_modules 所有文件
-# RUN echo 'dist , node_modules目录下所有文件，以及清理缓存'
-RUN echo '删除 dist , node_modules目录下所有文件 , 以及清理缓存' & rm -rf ./node_modules & rm -rf  ./dist & rm -rf package-lock.json & rm -rf yarn.lock & npm cache clean --force &
-RUN echo '安装node_modules依赖包' & npm install --production 
-
 
 #清理缓存
 ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
