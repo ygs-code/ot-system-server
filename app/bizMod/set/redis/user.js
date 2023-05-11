@@ -12,7 +12,7 @@ import { verifyCodeExpires } from "../config";
 // 设置验证码
 export const setVerifyCode = (key, value, time) => {
   // 设置值
-  Redis.set(key, value);
+  Redis.set(key, value.toString().toLocaleLowerCase());
   // 设置过期时间
   Redis.pexpire(key, time || verifyCodeExpires);
 };
@@ -21,5 +21,5 @@ export const getVerifyCode = (key) => {
   if (key === undefined) {
     return Promise.reject();
   }
-  return Redis.get(key);
+  return Redis.get(key.toString().toLocaleLowerCase());
 };

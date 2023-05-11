@@ -23,8 +23,6 @@ class Service {
   }
   // 检查登录接口
   static async logOut(ctx, next, { token }) {
-    console.log("Redis=====", Redis);
-
     await Redis.del(token);
 
     return {
