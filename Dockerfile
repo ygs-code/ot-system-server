@@ -48,7 +48,7 @@ ENV    ADMIN_SERVER_NAME=${ADMIN_SERVER_NAME}
 ENV    ADMIN_PUBLICPATH=${ADMIN_PUBLICPATH}
 
 #清理缓存
-ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=40&format=h" skipcache
 #移动当前目录下面的文件到server目录下
 COPY  .  /ot-system-server
 # RUN echo '复制成功'
