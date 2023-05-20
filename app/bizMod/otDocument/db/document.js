@@ -44,6 +44,29 @@ const removeDocument = async (table, id) => {
   return await exec(sql, { id });
 };
 
+//查询文档
+export const queryDocument = async (table, data) => {
+  const condition = sqlObjToAnd(data);
+  // id 查询
+  let sql = `
+    select 
+        create_by createBy,
+        update_by updateBy,
+        id,   # 如果这里是查询所有则为*
+        title,
+        v,
+        content,
+        DATE_FORMAT(create_time, "%Y-%m-%d %H:%i:%S")  createTime,
+        DATE_FORMAT(update_time, "%Y-%m-%d %H:%i:%S")  updateTime
+    from ${table} where
+  `;
+
+  if (condition) {
+    sql += `${condition}`;
+  }
+
+  return await exec(sql);
+};
 // 添加文档
 const createDocument = async (
   table,

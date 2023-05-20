@@ -35,7 +35,6 @@ class Controller {
   static async query(ctx, next, parameter) {
     //添加service
     const { data, status } = await Service.query(ctx, next, parameter);
-
     const mapData = {
       1: () => {
         return {
@@ -46,7 +45,7 @@ class Controller {
       2: () => {
         return {
           ...forbidden,
-          message: "权限id不正确，查询不到对应权限信息",
+          message: "文档id不正确，查询不到对应文档信息",
           data
         };
       },
@@ -54,14 +53,7 @@ class Controller {
       3: () => {
         return {
           ...forbidden,
-          message: "权限id不正确，查询不到对应权限信息",
-          data
-        };
-      },
-      4: () => {
-        return {
-          ...forbidden,
-          message: "登录回话已过期，请重新登录",
+          message: "文档id不正确，查询不到对应文档信息",
           data
         };
       }
