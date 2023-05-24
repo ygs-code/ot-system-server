@@ -125,42 +125,42 @@ class Service {
     //   });
   }
   // 编辑权限
-  static async edit(ctx, next, parameter) {
-    const { description, id, name, parent_id, auth_key } = parameter;
-    let isHas = [];
-    /*
-     1 查询权限
-    */
-    let DocumentInfo = await queryDocument({
-      id
-    });
-    DocumentInfo = DocumentInfo[0] || {};
+  // static async edit(ctx, next, parameter) {
+  //   const { description, id, name, parent_id, auth_key } = parameter;
+  //   let isHas = [];
+  //   /*
+  //    1 查询权限
+  //   */
+  //   let DocumentInfo = await queryDocument("document",{
+  //     id
+  //   });
+  //   DocumentInfo = DocumentInfo[0] || {};
 
-    // 更新name
-    if (name !== DocumentInfo.name) {
-      isHas = await queryDocument({
-        name
-      });
-      if (isHas.length) {
-        return {
-          status: 1
-        };
-      }
-    }
+  //   // 更新name
+  //   if (name !== DocumentInfo.name) {
+  //     isHas = await queryDocument({
+  //       name
+  //     });
+  //     if (isHas.length) {
+  //       return {
+  //         status: 1
+  //       };
+  //     }
+  //   }
 
-    await editDocument({
-      description,
-      id,
-      name,
-      parent_id,
-      auth_key
-    });
+  //   await editDocument({
+  //     description,
+  //     id,
+  //     name,
+  //     parent_id,
+  //     auth_key
+  //   });
 
-    return {
-      status: 2
-    };
-  }
-  // 删除权限
+  //   return {
+  //     status: 2
+  //   };
+  // }
+  // 删除
   static async remove(ctx, next, { id }) {
     return await removeDocument("document", id)
       .catch(() => {
@@ -174,11 +174,10 @@ class Service {
         };
       });
   }
-  // 数据库中查询权限
+  // 查询
   static async query(ctx, next, parameter) {
     const { id } = parameter || {};
-
-    return await queryDocument({
+    return await queryDocument("document", {
       id
     })
       .then((DocumentInfo) => {

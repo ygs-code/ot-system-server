@@ -16,9 +16,8 @@ export const getDocumentList = async (root, parameter) => {
   return await Controller.queryList(ctx, next, parameter);
 };
 
-// 获取 信息
+// 获取 文档信息
 export const getDocumentInfo = async (root, parameter) => {
   const { ctx = {}, next = {} } = root;
-
   return await Controller.query(ctx, next, parameter);
 };
