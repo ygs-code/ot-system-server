@@ -8,7 +8,7 @@
  */
 import "@babel/polyfill";
 
-import { config } from "dotenv";
+// import { config } from "dotenv";
 // import { Server } from "http";
 import Koa from "koa";
 import url from "url";
@@ -19,10 +19,15 @@ import initTable from "./db/sql/initTable.sql";
 import { Redis } from "./redis";
 import Route from "./routes/index";
 import { promise, stabilization } from "./utils";
+// const {
+//   parsed: { port }
+// } = config();
 
-const {
-  parsed: { port }
-} = config();
+let {
+  NODE_ENV, // 环境参数
+  SERVER_ADDRESS,
+  SERVER_PORT
+} = process.env; // 环境参数
 
 class App {
   constructor() {
@@ -163,7 +168,10 @@ class App {
       throw error;
     }
 
-    var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+    var bind =
+      typeof SERVER_PORT === "string"
+        ? "Pipe " + SERVER_PORT
+        : "Port " + SERVER_PORT;
 
     // handle specific listen errors with friendly messages
     switch (error.code) {
@@ -185,11 +193,10 @@ class App {
     // } catch (e) {}
 
     // await stabilization()(1000);
-
     // console.log("port=====", port);
     // 还是要用
-    this.server = this.app.listen(port, () => {
-      console.log(`服务器启动成功:http://localhost:${port}/`);
+    this.server = this.app.listen(SERVER_PORT, () => {
+      console.log(`服务器启动成功:http://${SERVER_ADDRESS}:${SERVER_PORT}/`);
     });
 
     this.linstSocket(this.server);
