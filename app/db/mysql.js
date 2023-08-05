@@ -35,6 +35,7 @@ class DB {
       callback();
     });
     this.onError(callback, this.connection);
+    this.onEnd(callback, this.connection);
     this.ping(this.connection);
     return this.connection;
   };
@@ -48,8 +49,15 @@ class DB {
       }
     });
   };
+  onEnd = (callback, connection) => {
+    connection.on("end", (err) => {
+      if (err) {
+        this.createConnection(callback);
+      }
+    });
+  };
   ping = (connection) => {
-    // 每个小时ping一次数据库，保持数据库连接状态
+    // 每个半小时ping一次数据库，保持数据库连接状态
     clearInterval(this.pingInterval);
     // 每个小时ping一次数据库，保持数据库连接状态
     this.pingInterval = setInterval(() => {
@@ -58,7 +66,7 @@ class DB {
           console.log("ping error: " + JSON.stringify(err));
         }
       });
-    }, 3600000 * 3);
+    }, 1000 * 60 * 30);
   };
   exec = async (...ags) => {
     const parameter = ags;
