@@ -75,7 +75,15 @@ module.exports = {
     "no-else-return": 2, // 禁止 if 语句中 return 语句之后有 else 块。如果 if 块中包含了一个 return 语句，else 块就成了多余的了。可以将其内容移至块外。例：// incorrect function foo() {     if (x) {         return y;     } else {         return z;     } } // correct function foo() {     if (x) {         return y;     }     return z; } 复制代码
     // "wrap-iife": 1, // 要求 IIFE 使用括号括起来。你可以立即调用函数表达式，而不是函数声明。创建一个立即执行函数 (IIFE) 的一个通用技术是用括号包裹一个函数声明。括号内的函数被解析为一个表达式，而不是一个声明。
     "@babel/object-curly-spacing": "off",
-    "prettier/prettier": 2,
+    // "prettier/prettier": 2,
+          // 防止与 Prettierrc 配置文件 冲突
+          "prettier/prettier": [
+            "error",
+            {},
+            {
+              "usePrettierrc": true
+            }
+          ],
     "no-debugger": 0,
     // "react/prop-types": 0,
     "no-prototype-builtins": 0,
