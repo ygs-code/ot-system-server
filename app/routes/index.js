@@ -59,6 +59,10 @@ class Route {
         return await next();
       }
 
+      response.console.info(
+        `\n 客户端graphql请求:\n [operationName:${operationName}]\n`
+      );
+
       const token = cookies.get("token") || header.token;
       let data = await verifyToken(token).catch(() => {
         ctx.response.body = {
@@ -172,7 +176,7 @@ class Route {
       const clientSchema = mutation;
 
       response.console.info(
-        `\n 客户端graphql请求:\n [operationName:${operationName}]\n [clientSchema:${clientSchema}]\n [variables:${JSON.stringify(
+        `[clientSchema:${clientSchema}]\n [variables:${JSON.stringify(
           variables
         )}]`
       );
